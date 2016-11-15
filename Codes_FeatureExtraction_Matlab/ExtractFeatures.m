@@ -81,7 +81,6 @@ end
 % extracted: all features, all global features, all local features
 if typeflag.all
     feat_Intensity = zeros(N_slices_total,7);
-    feat_Grad = zeros(N_slices_total,11);
     feat_Hist = zeros(N_slices_total,6);
     feat_SVD = zeros(N_slices_total,780);
     feat_GLCM = zeros(N_slices_total,672);
@@ -115,7 +114,6 @@ if typeflag.all
 elseif typeflag.global
     % if only all global features should be extracted
     feat_Intensity = zeros(N_slices_total,7);
-    feat_Grad = zeros(N_slices_total,11);
     feat_Hist = zeros(N_slices_total,6);
     feat_SVD = zeros(N_slices_total,780);
     feat_GLCM = zeros(N_slices_total,672);
@@ -216,11 +214,6 @@ for iI = 1:length(images)
         % Intensity-based features
         if (typeflag.global || typeflag.texture || typeflag.corr || typeflag.entropy)
             feat_Intensity(iCounter,:) = IntensityF(I,typeflag);
-        end
-        
-        % Gradient-Based features
-        if (typeflag.global || typeflag.gradient || typeflag.texture)
-            feat_Grad(iCounter,:)  = GradientBased_mod(I);
         end
         
         % Histogram-based features
@@ -420,7 +413,7 @@ feat_vector = [feat_Affine feat_RCovD feat_Connectivity feat_DCT...
     feat_Gilles feat_Hankel feat_Harris feat_Hu feat_LAW feat_LOSIB... 
     feat_LineProfile feat_LoG feat_MSER feat_Quadtree feat_SURF feat_SVD...
     feat_SalientRegion feat_TopHat feat_Unitary feat_Zernike feat_GLCM... 
-    feat_Fractal feat_Grad feat_Hist feat_Intensity feat_LBP...
+    feat_Fractal feat_Hist feat_Intensity feat_LBP...
     feat_RunLength feat_Skeleton];
 
 
