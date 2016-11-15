@@ -1,4 +1,16 @@
-This readme file explains the usage of typeflag.
+------------------------------------------------------------------------
+1. How to use this toolbox
+------------------------------------------------------------------------
+
+There are two ways to use the functions provided by ImFEATbox:
+1.) Directly use the feature extraction functions
+    Note: in order to work properly, most of the feature extraction functions require preprocessing of the images,
+    i.e. the images should be segmented and converted to a 255 gray scale. 
+2.) Use the provided script 'ExtractFeatures.m' for feature extraction
+    
+------------------------------------------------------------------------
+2. Usage of typeflag
+------------------------------------------------------------------------
 
 typeflag is a struct which serves to choose only certain categories of features for feature extraction. 
 Note: the categories we assigned the features to are not necessarily the only ones the features might belong to. 
