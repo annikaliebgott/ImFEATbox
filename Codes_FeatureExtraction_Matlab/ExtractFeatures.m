@@ -105,12 +105,13 @@ if typeflag.all
     feat_Connectivity = zeros(N_slices_total,47);
     feat_Harris = zeros(N_slices_total,10);
     feat_LineProfile = zeros(N_slices_total,122);
-    feat_LAW = zeros(N_slices_total,58);
+    feat_Law = zeros(N_slices_total,58);
     feat_LoG = zeros(N_slices_total,261);
     feat_Gilles = zeros(N_slices_total,6);
     feat_SURF = zeros(N_slices_total,11);
     feat_LOSIB = zeros(N_slices_total,34);
-    feat_RCovD= zeros(N_slices_total,15);
+    feat_RCovD = zeros(N_slices_total,15);
+    feat_Sector = zeros(N_slices_total,5);
 elseif typeflag.global
     % if only all global features should be extracted
     feat_Intensity = zeros(N_slices_total,7);
@@ -129,7 +130,8 @@ elseif typeflag.global
     feat_Unitary = zeros(N_slices_total,73);
     feat_Zernike = zeros(N_slices_total,92);
     feat_Hu = zeros(N_slices_total,8);
-    feat_Affine = zeros(N_slices_total,6);    
+    feat_Affine = zeros(N_slices_total,6);
+    feat_Sector = zeros(N_slices_total,5);    
 elseif typeflag.local
     % if only all local features should be extracted
     feat_LBP = zeros(N_slices_total,1024);
@@ -140,7 +142,7 @@ elseif typeflag.local
     feat_Connectivity = zeros(N_slices_total,47);
     feat_Harris = zeros(N_slices_total,10);
     feat_LineProfile = zeros(N_slices_total,122);
-    feat_LAW = zeros(N_slices_total,58);
+    feat_Law = zeros(N_slices_total,58);
     feat_LoG = zeros(N_slices_total,261);
     feat_Gilles = zeros(N_slices_total,6);            
 end
@@ -224,6 +226,11 @@ for iI = 1:length(images)
         % Singular Value Decompostion
         if (typeflag.global || typeflag.texture)
             feat_SVD(iCounter,:) = SVDF(I);
+        end
+        
+        % Sector Decompostion
+        if (typeflag.global || typeflag.texture)
+            feat_Sector(iCounter,:) = SectorF(I);
         end
         
         % -----------------------------------------------------------------
@@ -368,7 +375,7 @@ for iI = 1:length(images)
         
         % LAW
         if (typeflag.local || typeflag.texture || typeflag.moments)
-            feat_LAW(iCounter,:) = LawF(I);
+            feat_Law(iCounter,:) = LawF(I);
         end
         
         % Laplacian of Gaussian
@@ -410,10 +417,10 @@ end
 
 feat_vector = [feat_Affine feat_RCovD feat_Connectivity feat_DCT...
     feat_DistTrafo feat_EBR_IBR feat_FormFactor feat_Fourier...
-    feat_Gilles feat_Hankel feat_Harris feat_Hu feat_LAW feat_LOSIB... 
+    feat_Gilles feat_Hankel feat_Harris feat_Hu feat_Law feat_LOSIB... 
     feat_LineProfile feat_LoG feat_MSER feat_Quadtree feat_SURF feat_SVD...
     feat_SalientRegion feat_TopHat feat_Unitary feat_Zernike feat_GLCM... 
     feat_Fractal feat_Hist feat_Intensity feat_LBP...
-    feat_RunLength feat_Skeleton];
+    feat_RunLength feat_Skeleton feat_Sector];
 
 
