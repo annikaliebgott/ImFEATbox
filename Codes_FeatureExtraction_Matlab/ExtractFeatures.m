@@ -45,9 +45,26 @@ end
 
 %% set typeflag to choose which types of features are being extracted
 typeflag = struct;
+
+% If you wish to extract all features provided by ImFEATbox, set
+% typefla.all = true
 typeflag.all = true;
+
+% If you don't wish to extract all features, you can chose the desired
+% feature categories here
+% Note: if typeflag.all = true, all other flags are automatically also set 
+% to true. All changes set manually will be overwritten!
+typeflag.global = true;
+typeflag.local = false;
+typeflag.corr = false;
+typeflag.gradient = false;
+typeflag.moments = false;
+typeflag.texture = false;
+typeflag.form = false;
+typeflag.entropy = true;
+typeflag.transform = false;
+
 if typeflag.all
-    % all features provided by ImFEATbox are being extracted
     typeflag.global = true;
     typeflag.local = true;
     typeflag.corr = true;
@@ -57,17 +74,6 @@ if typeflag.all
     typeflag.form = true;
     typeflag.entropy = true;
     typeflag.transform = true;
-else
-    % choose which feature categories you wish to extract
-    typeflag.global = true;
-    typeflag.local = false;
-    typeflag.corr = false;
-    typeflag.gradient = false;
-    typeflag.moments = false;
-    typeflag.texture = false;
-    typeflag.form = false;
-    typeflag.entropy = true;
-    typeflag.transform = false;
 end
 
 %% Preallocate feature arrays for speed 
