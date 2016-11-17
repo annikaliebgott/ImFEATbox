@@ -94,6 +94,15 @@ if typeflag.all
     feat_TopHat = zeros(N_slices_total,60);
     feat_Skeleton = zeros(N_slices_total,17);
     feat_Unitary = zeros(N_slices_total,73);
+    if strcmp(houghtype,'both')
+        feat_Hough = zeros(N_slices_total,393);
+    end
+    if strcmp(houghtype,'linear')
+        feat_Hough = zeros(N_slices_total,381);
+    end
+    if strcmp(houghtype,'circular')
+        feat_Hough = zeros(N_slices_total,12);
+    end
     feat_Zernike = zeros(N_slices_total,92);
     feat_Hu = zeros(N_slices_total,8);
     feat_Affine = zeros(N_slices_total,6);
@@ -128,6 +137,15 @@ elseif typeflag.global
     feat_TopHat = zeros(N_slices_total,60);
     feat_Skeleton = zeros(N_slices_total,17);
     feat_Unitary = zeros(N_slices_total,73);
+    if strcmp(houghtype,'both')
+        feat_Hough = zeros(N_slices_total,393);
+    end
+    if strcmp(houghtype,'linear')
+        feat_Hough = zeros(N_slices_total,381);
+    end
+    if strcmp(houghtype,'circular')
+        feat_Hough = zeros(N_slices_total,12);
+    end
     feat_Zernike = zeros(N_slices_total,92);
     feat_Hu = zeros(N_slices_total,8);
     feat_Affine = zeros(N_slices_total,6);
@@ -166,6 +184,11 @@ N_blobs = 120;
 
 % set threshold for Quadtree decomposition feature extraction
 threshold_quadtree = 0.27;
+
+% set parameters for Hough transform features
+houghtype = 'both';
+arc_min = pi/2;
+
 
 %% Choose optional steps
 % set which preprocessing steps are desired
@@ -297,7 +320,11 @@ for iI = 1:length(images)
             feat_Unitary(iCounter,:) = UnitaryTrafoF(I);
         end
         
-        
+        % Hough Transform
+        if (typeflag.global || typeflag.transform || typeflag.form ||...
+                (typeflag.moments && ~strcmp(houghtype,'circular')))
+            feat_Hough(iCounter,:) = HoughTrafoF(I,houghtype,arc_min,plotflag,typeflag);
+        end    
         
         % -----------------------------------------------------------------
         % Moment features
@@ -421,6 +448,6 @@ feat_vector = [feat_Affine feat_RCovD feat_Connectivity feat_DCT...
     feat_LineProfile feat_LoG feat_MSER feat_Quadtree feat_SURF feat_SVD...
     feat_SalientRegion feat_TopHat feat_Unitary feat_Zernike feat_GLCM... 
     feat_Fractal feat_Hist feat_Intensity feat_LBP...
-    feat_RunLength feat_Skeleton feat_Sector];
+    feat_RunLength feat_Skeleton feat_Sector feat_Hough];
 
 
