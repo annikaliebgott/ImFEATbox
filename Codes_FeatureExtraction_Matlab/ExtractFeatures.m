@@ -76,6 +76,30 @@ if typeflag.all
     typeflag.transform = true;
 end
 
+%% Set parameters
+% set GLCM parameters for GLCM feature extraction
+values = [1;2;4;8;16;32;64;128];
+offset0 = [zeros(size(values,1),1) values];
+offset1 = [-values values];
+offset2 = [-values zeros(size(values,1),1)];
+offset3 = [-values -values];
+offset = [offset0 ; offset1 ; offset2 ; offset3];
+GLCMParameters.DisplacementVector = offset;
+GLCMParameters.NumLevels = 255;
+
+% set filter parameters for LBP feature extraction
+RadialLBP = [8 1; 16 2;24 3;32 4];
+
+% set desired number of blobs for Laplacian of Gaussian feature extraction
+N_blobs = 120;
+
+% set threshold for Quadtree decomposition feature extraction
+threshold_quadtree = 0.27;
+
+% set parameters for Hough transform features
+houghtype = 'both';
+arc_min = pi/2;
+
 %% Preallocate feature arrays for speed 
 % implemented only for settings where a high number of features are being 
 % extracted: all features, all global features, all local features
@@ -164,30 +188,6 @@ elseif typeflag.local
     feat_LoG = zeros(N_slices_total,261);
     feat_Gilles = zeros(N_slices_total,6);            
 end
-
-%% Set parameters
-% set GLCM parameters for GLCM feature extraction
-values = [1;2;4;8;16;32;64;128];
-offset0 = [zeros(size(values,1),1) values];
-offset1 = [-values values];
-offset2 = [-values zeros(size(values,1),1)];
-offset3 = [-values -values];
-offset = [offset0 ; offset1 ; offset2 ; offset3];
-GLCMParameters.DisplacementVector = offset;
-GLCMParameters.NumLevels = 255;
-
-% set filter parameters for LBP feature extraction
-RadialLBP = [8 1; 16 2;24 3;32 4];
-
-% set desired number of blobs for Laplacian of Gaussian feature extraction
-N_blobs = 120;
-
-% set threshold for Quadtree decomposition feature extraction
-threshold_quadtree = 0.27;
-
-% set parameters for Hough transform features
-houghtype = 'both';
-arc_min = pi/2;
 
 
 %% Choose optional steps
