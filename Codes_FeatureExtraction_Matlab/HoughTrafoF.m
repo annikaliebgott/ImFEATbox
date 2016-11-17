@@ -255,8 +255,9 @@ if strcmp(houghtype,'circular') || strcmp(houghtype,'both')
     arc_mean = mean(mean_arc_relevant);
     
     % radius with the highest number of detected circles and relevant
-    % circles
-    r_N_max = radius(N_c_relevant == max(N_c_relevant));
+    % circles. If more than one radius has the same highest number of
+    % detected circles, the smallest radius is used as a feature.
+    r_N_max = min(radius(N_c_relevant == max(N_c_relevant)));
     
     % mean radius for all detected circles and all relevant circles
     r_mean = radius*N_c_relevant/N_c_sum_relevant;
