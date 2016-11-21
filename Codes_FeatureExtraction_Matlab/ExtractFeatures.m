@@ -33,8 +33,10 @@
 
 %% import images to extract the features from
 % Note: this script expects images to be saved as cell arrays
-data = load('images.mat');
-images = data.images;
+% data = load('images.mat');
+% images = data.images;
+data = load('testimages_pp.mat');
+images = data.testimages_pp;
 
 % Determine total number of 2D images to extract features from
 N_slices_total = 0;
@@ -47,13 +49,14 @@ end
 typeflag = struct;
 
 % If you wish to extract all features provided by ImFEATbox, set
-% typefla.all = true
-typeflag.all = true;
+% typeflag.all = true
+typeflag.all = false;
 
 % If you don't wish to extract all features, you can chose the desired
 % feature categories here
 % Note: if typeflag.all = true, all other flags are automatically also set 
 % to true. All changes set manually will be overwritten!
+
 typeflag.global = true;
 typeflag.local = false;
 typeflag.corr = false;
@@ -61,7 +64,7 @@ typeflag.gradient = false;
 typeflag.moments = false;
 typeflag.texture = false;
 typeflag.form = false;
-typeflag.entropy = true;
+typeflag.entropy = false;
 typeflag.transform = false;
 
 if typeflag.all
@@ -75,6 +78,7 @@ if typeflag.all
     typeflag.entropy = true;
     typeflag.transform = true;
 end
+ 
 
 %% Set parameters
 % set GLCM parameters for GLCM feature extraction
@@ -99,6 +103,16 @@ threshold_quadtree = 0.27;
 % set parameters for Hough transform features
 houghtype = 'both';
 arc_min = pi/2;
+
+%% Choose optional steps
+% set which preprocessing steps are desired
+doSegmentation = true;
+doGrayscaling = true;
+
+% set whether visualizations included in some feature extraction algorithms
+% should be plotted or not (note: increases computation time)
+plotflag = false;
+
 
 %% Preallocate feature arrays for speed 
 % implemented only for settings where a high number of features are being 
@@ -173,7 +187,6 @@ elseif typeflag.global
     feat_Zernike = zeros(N_slices_total,92);
     feat_Hu = zeros(N_slices_total,8);
     feat_Affine = zeros(N_slices_total,6);
-    feat_Sector = zeros(N_slices_total,5);    
 elseif typeflag.local
     % if only all local features should be extracted
     feat_LBP = zeros(N_slices_total,1024);
@@ -186,23 +199,15 @@ elseif typeflag.local
     feat_LineProfile = zeros(N_slices_total,122);
     feat_Law = zeros(N_slices_total,58);
     feat_LoG = zeros(N_slices_total,261);
-    feat_Gilles = zeros(N_slices_total,6);            
+    feat_Gilles = zeros(N_slices_total,6);        
+    feat_Sector = zeros(N_slices_total,5);    
 end
 
 
-%% Choose optional steps
-% set which preprocessing steps are desired
-doSegmentation = true;
-doGrayscaling = true;
-
-% set whether visualizations included in some feature extraction algorithms
-% should be plotted or not (note: increases computation time)
-plotflag = false;
-
+%% Preprocess images and extract features
 
 iCounter = 1;
 
-%% Preprocess images
 for iI = 1:length(images)
     I_3D = images{iI};
     %     image3D = Struct_Final.TestSample;
@@ -251,11 +256,7 @@ for iI = 1:length(images)
             feat_SVD(iCounter,:) = SVDF(I);
         end
         
-        % Sector Decompostion
-        if (typeflag.global || typeflag.texture)
-            feat_Sector(iCounter,:) = SectorF(I);
-        end
-        
+
         % -----------------------------------------------------------------
         % Geometrical features
         % -----------------------------------------------------------------
@@ -381,7 +382,11 @@ for iI = 1:length(images)
             feat_Connectivity(iCounter,:) = ConnectivityF(I);
         end
 
-
+        % Sector Decomposition
+        if typeflag.local
+            feat_Sector(iCounter,:) = SectorF(I);
+        end
+        
         % -----------------------------------------------------------------
         % Line features
         % -----------------------------------------------------------------
@@ -393,7 +398,7 @@ for iI = 1:length(images)
         
         % Line profile
         if (typeflag.local || typeflag.texture || typeflag.moments || typeflag.corr)
-            feat_LineProfile(iCounter,:) = LineProfileF(I,typeflag);
+            feat_LineProfile(iCounter,:) = LineProfileF(I,plotflag, typeflag);
         end
         
         % -----------------------------------------------------------------
@@ -425,7 +430,7 @@ for iI = 1:length(images)
         end
         
         % LOSIB
-        if (typeflag.local || typeflag.texture)
+        if typeflag.texture
             feat_LOSIB(iCounter,:) = LOSIBF(I);
         end
         
@@ -441,6 +446,107 @@ for iI = 1:length(images)
 end
 
 %% Return feature vector for further image processing
+
+if ~exist('feat_Intensity','var')
+    feat_Intensity = [];
+end    
+if ~exist('feat_Hist','var')
+    feat_Hist = [];
+end    
+if ~exist('feat_SVD','var')
+    feat_SVD = [];
+end    
+if ~exist('feat_GLCM','var')
+    feat_GLCM = [];
+end    
+if ~exist('feat_RunLength','var')
+    feat_RunLength = [];
+end    
+if ~exist('feat_Fractal','var')
+    feat_Fractal= [];
+end    
+if ~exist('feat_FormFactor','var')
+    feat_FormFactor = [];
+end    
+if ~exist('feat_Fourier','var')
+    feat_Fourier = [];
+end    
+if ~exist('feat_DCT','var')
+    feat_DCT = [];
+end    
+if ~exist('feat_Hankel','var')
+    feat_Hankel = [];
+end    
+if ~exist('feat_DistTrafo','var')
+    feat_DistTrafo = [];
+end    
+if ~exist('feat_TopHat','var')
+    feat_TopHat = [];
+end    
+if ~exist('feat_Skeleton','var')
+    feat_Skeleton = [];
+end    
+if ~exist('feat_Unitary','var')
+    feat_Unitary = [];
+end    
+if ~exist('feat_Hough','var')
+    feat_Hough = [];
+end    
+if ~exist('feat_Zernike','var')
+    feat_Zernike = [];
+end    
+if ~exist('feat_Hu','var')
+    feat_Hu = [];
+end    
+if ~exist('feat_Affine','var')
+    feat_Affine = [];
+end    
+if ~exist('feat_LBP','var')
+    feat_LBP = [];
+end    
+if ~exist('feat_MSER','var')
+    feat_MSER = [];
+end    
+if ~exist('feat_SalientRegion','var')
+    feat_SalientRegion = [];
+end    
+if ~exist('feat_Quadtree','var')
+    feat_Quadtree = [];
+end    
+if ~exist('feat_EBR_IBR','var')
+    feat_EBR_IBR = [];
+end    
+if ~exist('feat_Connectivity','var')
+    feat_Connectivity = [];
+end    
+if ~exist('feat_Harris','var')
+    feat_Harris = [];
+end    
+if ~exist('feat_LineProfile','var')
+    feat_LineProfile = [];
+end    
+if ~exist('feat_Law','var')
+    feat_Law = [];
+end    
+if ~exist('feat_LoG','var')
+    feat_LoG = [];
+end    
+if ~exist('feat_Gilles','var')
+    feat_Gilles = [];
+end    
+if ~exist('feat_SURF','var')
+    feat_SURF = [];
+end    
+if ~exist('feat_LOSIB','var')
+    feat_LOSIB = [];
+end    
+if ~exist('feat_RCovD','var')
+    feat_RCovD = [];
+end    
+if ~exist('feat_Sector','var')
+    feat_Sector = [];
+end    
+
 
 feat_vector = [feat_Affine feat_RCovD feat_Connectivity feat_DCT...
     feat_DistTrafo feat_EBR_IBR feat_FormFactor feat_Fourier...

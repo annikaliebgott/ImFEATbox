@@ -1,4 +1,4 @@
-function Out = LineProfileF(I,typeflag)
+function Out = LineProfileF(I,plotflag,typeflag)
 % Input:     - I: A 2D image
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
@@ -57,8 +57,7 @@ x4 = [1 x_max];
 y4 = [y_half y_half];
 
 % view line profile
-visualize = 0;
-if visualize
+if plotflag
     x = [x1 x2];
     y = [y1 y2];
     improfile(I,x,y),grid on;

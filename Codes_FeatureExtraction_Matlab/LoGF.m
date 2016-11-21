@@ -79,6 +79,9 @@ m2_points_y = moment(points(:,2),2);
 m4_points_x = moment(points(:,1),4);
 m4_points_y = moment(points(:,2),4);
 
+sca_moment2 = moment(sca,2);
+sca_moment4 = moment(sca,4);
+
 if (typeflag.local || typeflag.texture)
     
     weight_points = sum(points(3));
@@ -114,9 +117,6 @@ if (typeflag.local || typeflag.texture)
     sca_mean = mean2(sca);
     sca_std = std2(sca);
 end
-
-sca_moment2 = moment(sca,2);
-sca_moment4 = moment(sca,4);
 
 
 %% return feature vector

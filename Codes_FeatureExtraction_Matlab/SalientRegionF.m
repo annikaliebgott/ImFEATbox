@@ -111,7 +111,7 @@ for w = [2 4 8]
     
 end
 
-if typeflag.texture
+if typeflag.texture || typeflag.local
     % search for maxima in the final saliency map M
     max_position = [1,1];
     for i = 1 : y_length
@@ -145,7 +145,7 @@ mom_M_4 = mean(moment(M,4));
 %     plot(I,'+','red');
 
 %% return features
-if typeflag.texture
+if typeflag.texture || typeflag.local
     Out = [mean_colum mean_row st_colum st_row max_position mom_M_2 mom_M_4];
 else
     Out = [mom_M_2 mom_M_4];

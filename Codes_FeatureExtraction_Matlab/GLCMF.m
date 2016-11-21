@@ -67,14 +67,18 @@ if ~exist('typeflag', 'var')
    typeflag.corr = true;
    typeflag.entropy = true;
 end    
-    
+
+if typeflag.global || typeflag.texture
+    typeflag.corr = true;
+    typeflag.entropy = true;
+end    
 
 GLCM_Matrices = graycomatrix(Image, 'offset', InputParameters.DisplacementVector,...
     'NumLevels',InputParameters.NumLevels,...
     'GrayLimits', InputParameters.GrayLimits,...
     'Symmetric', false);
 
-if typeflag.texture
+if typeflag.texture || typeflag.global
     % extract all features of GLCM
     Out = zeros(size(GLCM_Matrices,3),21);
 elseif typeflag.corr
