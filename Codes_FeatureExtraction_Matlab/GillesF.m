@@ -22,7 +22,7 @@ function Out = GillesF(I)
 BW = im2bw(I, graythresh(I));    
 im = BW(:,:,1);
 
-% variables, finetuning should be done here for MRI images!!!!!
+% define a region mask
 radius = 10;
 mask = fspecial('disk',radius) > 0;
 
