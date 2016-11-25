@@ -33,10 +33,8 @@
 
 %% import images to extract the features from
 % Note: this script expects images to be saved as cell arrays
-% data = load('images.mat');
-% images = data.images;
-data = load('testimages_pp.mat');
-images = data.testimages_pp;
+data = load('images.mat');
+images = data.images;
 
 % Determine total number of 2D images to extract features from
 N_slices_total = 0;
