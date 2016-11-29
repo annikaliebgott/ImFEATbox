@@ -49,8 +49,7 @@ end
 typeflag = struct;
 
 % If you wish to extract all features provided by ImFEATbox, set
-% typeflag.all = true
-typeflag.all = false;
+typeflag.all = true
 
 % If you don't wish to extract all features, you can chose the desired
 % feature categories here
