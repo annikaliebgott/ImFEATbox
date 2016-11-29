@@ -4,9 +4,10 @@ function Out = HoughTrafoF(I,houghtype,arc_min,plotflag,typeflag)
 %              should be performed (circular, linear or both)
 %              default: houghtype = 'both'
 %            - arc_min: circles are treated relevant only if their arc is
-%              at least arc_min
+%              at least arc_min. 
 %              default: arc_min = pi/2
-%            - plotflag: A locical flag to enable/disable visualization
+%            - plotflag: A locical flag to enable/disable visualization.
+%              default: plotflag = false;
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
 %                   + typeflag.global: all features 

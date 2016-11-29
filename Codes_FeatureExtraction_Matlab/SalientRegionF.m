@@ -1,5 +1,9 @@
-function Out = SalientRegionF(I,typeflag)
+function Out = SalientRegionF(I,b,R1,typeflag)
 % Input:     - I: A 2D image
+%            - b: border of rectangles used for determination of Haar
+%              feature. Default: b = 14
+%            - R1: inner region, usually chosen to be one pixel, if noisy 
+%              choose NxN pixles. Default: R1 = 1;
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
 %                   + typeflag.texture: all features
@@ -36,7 +40,12 @@ if ~exist('typeflag','var')
    typeflag.texture = true;
    typeflag.moments = true;
 end    
-
+if ~exist('b','var')
+   b = 14; 
+end    
+if ~exist('R1','var')
+   R1 = 1; 
+end    
 
 %% saliency calculation
 
@@ -58,21 +67,17 @@ C = zeros(y_length, x_length);
 C_horizontal = zeros(y_length, x_length);
 C_vertical = zeros(y_length, x_length);
 
-% set border
-b = 14;
-b2 = 12;
-% [horz, vert] = Haarfeature_new(I,j,i,length), length = 1 (1 pixel). For
-% other lengths modification of HaarF.m is necessary
+% [horz, vert] = Haarfeature_new(I,j,i,length,b-2), length = 1 (1 pixel).
+% For other lengths modification of HaarF.m is necessary
 for i = b : (y_length - b)
     for j = b : (x_length - b)
-        [horz, vert] = HaarF(I,j,i,1,b2);
+        [horz, vert] = HaarF(I,j,i,1,b-2);
         C_horizontal(i,j) = horz;
         C_vertical(i,j) = vert;
     end
 end
 
 % various scales for the detection filter
-% w = [2 4 8]: higher or smaller values would result in bad saliency values
 for w = [2 4 8]
     
     % determine the width of the detection filter
@@ -81,11 +86,7 @@ for w = [2 4 8]
     % move the detection filter in a raster scan fashion over the image
     for i = (w_R2) : (y_length-w_R2)
         for j = (w_R2) : (x_length-w_R2)
-            
-            % inner region R1 is usually chosen to be one pixel,
-            % if noisy  choose NxN pixles
-            R1 = 1;
-            
+                      
             % Haar features
             % feature vector for R1
             v_q = sum([C_horizontal(i,j); C_vertical(i,j)]);

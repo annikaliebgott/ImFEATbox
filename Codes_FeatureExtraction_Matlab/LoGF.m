@@ -1,4 +1,4 @@
-function Out = LoGF(I, N_blobs, typeflag)
+function Out = LoGF(I, sigma, N_blobs, typeflag)
 % Input:     - I: A 2D image
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
@@ -7,7 +7,10 @@ function Out = LoGF(I, N_blobs, typeflag)
 %                   + typeflag.moments: only features based on moments
 %              default: all features are being extracted
 %              For more information see README.txt
-%            - N_blobs: Desired number of points of interests
+%            - N_blobs: Desired number of points of interests. 
+%              default: N_blobs = 120;
+%            - sigma: a struct containing the fields begin, end and step.
+%              default: sigma.begin = 2, sigma.end = 15, sigma.step = 1
 %
 %
 % Output:    - Out: A (1x261) vector containing 261 metrics calculated from
@@ -34,15 +37,26 @@ if ~exist('typeflag','var')
    typeflag.moments = true;
 end 
 
+if ~exist('N_blobs','var')
+   N_blobs = 120; 
+end    
+
+if ~exist('sigma','var') || ~isfield('sigma','begin')
+   sigma.begin = 2;
+end    
+if ~exist('sigma','var') || ~isfield('sigma','end')
+   sigma.end = 15;
+end    
+if ~exist('sigma','var') || ~isfield('sigma','step')
+   sigma.step = 1;
+end    
+
 % convert input image
 I = double(I);
 
 
 % Laplacian of Gaussian parameters
-sigma_begin = 2;
-sigma_end = 15;
-sigma_step = 1;
-sigma_array = sigma_begin:sigma_step:sigma_end;
+sigma_array = sigma.begin:sigma.step:sigma.end;
 sigma_nb = numel(sigma_array);
 
 % variable

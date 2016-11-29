@@ -73,7 +73,7 @@
     N_corners = size(temp,1);
 
 
-    %% consturct the smallest parallelogram with the points
+    %% construct the smallest parallelogram with the points
 
     % matrix with all paralleograms
     para = [];

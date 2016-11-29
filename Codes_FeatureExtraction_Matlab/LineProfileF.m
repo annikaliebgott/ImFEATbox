@@ -8,6 +8,8 @@ function Out = LineProfileF(I,plotflag,typeflag)
 %                   + typeflag.moments: only features based on moments
 %              default: all features are being extracted
 %              For more information see README.txt
+%            - plotflag: logical flag to enable/disable visualization.
+%              default: plotflag = false;
 %
 %
 % Output:    - Out: A (1x122) vector containing 122 metrics calculated from
@@ -34,6 +36,9 @@ if ~exist('typeflag','var')
    typeflag.corr = true;
    typeflag.moments = true;
 end    
+if~exist('plotflag','var')
+    plotflag = false;
+end
 
 %% Extract the intensity profile along different line segments
 

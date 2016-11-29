@@ -1,4 +1,4 @@
-function [Out] = GLCMF(Image, InputParameters, typeflag)
+function [Out] = GLCMF(Image,InputParameters, typeflag)
 % Input:     - I: A 2D image
 %            - InputParameters : A structure containing parameters:
 %                   + DisplacementVector: A (nx2) vector composed of offset 

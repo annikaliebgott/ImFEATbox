@@ -1,6 +1,8 @@
-function Out = GillesF(I)
+function Out = GillesF(I,radius,th)
 % Input:     - I: A 2D image
-%
+%            - radius: radius of the region mask. Default: radius = 10
+%            - th: only keep points above a threshold defined by th.
+%              Default: th = 0.95
 %
 % Output:    - Out: A (1x6) vector containing 6 metrics calculated from
 %                   detected Gilles points
@@ -14,7 +16,12 @@ function Out = GillesF(I)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 
-
+if ~exist('radius','var')
+    radius = 10;
+end    
+if ~exist('th','var')
+    th = 0.95;
+end    
 
 %% extract Gilles points
 
@@ -23,7 +30,6 @@ BW = im2bw(I, graythresh(I));
 im = BW(:,:,1);
 
 % define a region mask
-radius = 10;
 mask = fspecial('disk',radius) > 0;
 
 % compute local entropy
@@ -33,7 +39,7 @@ loc_entropy = entropyfilt(im,mask);
 [~,~,local_max] = findLocalMaximum(loc_entropy,radius);
 
 % keep only points above a threshold
-[row,col] = find(local_max > 0.95*max(local_max(:)));
+[row,col] = find(local_max > th*max(local_max(:)));
 
 % normalize coordinates for better comparison of different sized images
 points_gilles = [row col]/numel(I);
