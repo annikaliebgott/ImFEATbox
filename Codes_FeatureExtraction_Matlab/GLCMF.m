@@ -65,6 +65,7 @@ end
 if ~exist('typeflag', 'var')
    typeflag.global = true; 
    typeflag.texture = true;
+   typeflag.form = true;
    typeflag.corr = true;
    typeflag.entropy = true;
 end    
