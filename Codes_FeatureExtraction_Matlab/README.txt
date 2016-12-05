@@ -5,7 +5,7 @@
 There are two ways to use the functions provided by ImFEATbox:
 1.) Directly use the feature extraction functions
     Note: in order to work properly, most of the feature extraction functions require preprocessing of the images,
-    i.e. the images should be segmented and converted to a 255 gray scale. 
+    i.e. the images can be segmented and converted to N gray scales (done inside the script). 
 2.) Use the provided script 'ExtractFeatures.m' for feature extraction
     
 ------------------------------------------------------------------------

@@ -1,16 +1,21 @@
-function [SegmentedImage BinaryImage] = Segmentation(I, Margin , Iteration, Smoothness,plotflag)
+function [SegmentedImage, SegmentedBackground, BinaryImage] = Segmentation(I, Margin, cSegParam, iDim, plotflag)
 % Function to segment the MR images based on Chan-Vese model
 %
 % Input     - I: A 2D image. Color images will be converted to grayscale                
 %           - Margin: Margin values from the edges of the image for 
 %             rectangular initial masking. Binary image representing 
 %             initialization. Initial state position being close to object.
-%           - Iteration: Number of iterarions to run for Chan-Vese model  
-%           - Smoothness: Smoothnes Factor. Higher value leads to smoother
-%             boundaries, smooth out details.
+%           - cParam: Chan-Vese parameters:
+%                     - cParam{1} = Lambda 1: inside
+%                     - cParam{2} = Lambda 2: outside
+%                     - cParam{3} = mu: step size
+%                     - cParam{4} = Smoothness: Smoothnes Factor. Higher value leads to smoother
+%                                   boundaries, smooth out details
+%                     - cParam{5} = Iteration: Number of iterarions to run for Chan-Vese model                      
 %           - plotflag: flag to enable/disable visualization
 %
 % Output    - SegmentedImage: The main image with black backgrounds
+%           - SegmentedBackground
 %           - BinaryImage: The black and white map of segmentation.
 %            (1: foreground, 0: background)
 %
@@ -26,6 +31,7 @@ function [SegmentedImage BinaryImage] = Segmentation(I, Margin , Iteration, Smoo
 % https://github.com/annikaliebgott/ImFEATbox
 %
 % Contact: annika.liebgott@iss.uni-stuttgart.de
+% Modified: thomas.kuestner@iss.uni-stuttgart.de
 % ************************************************************************
 %
 % Implementation based on:  T. F. Chan and L. A. Vese, "Active contours 
@@ -53,21 +59,34 @@ if(any(size(I)~=size(MaskImage)))
     error('Image and MaskImage Must Be in The Same Size');
 end
 
-% Perform segmentation by means of Chan-Vese model MATLAB function.
-BinaryImage = activecontour(I,MaskImage,Iteration,'Chan-Vese',Smoothness);
+if(iDim == 2) % 2D segmentation
+    % Perform segmentation by means of Chan-Vese model MATLAB function.
+    BinaryImage = activecontour(abs(I),MaskImage, cSegParam{5}, 'Chan-Vese',cSegParam{4});
+elseif(iDim == 3) % 3D segmentation
+    BinaryImage = ChanVese('exe', abs(I), MaskImage, [], cSegParam);
+else
+    error('Segmentation(): Undefined segmentation algorithm');
+end
 
 [a b] = find(BinaryImage==1);
 
-SegmentedImage = zeros([abs(max(a)-min(a)) abs(max(a)-min(a))]);
+% segmented + keep image size
+% SegmentedImage(BinaryImage) = I(BinaryImage);
+% SegmentedBackground(~BinarayImage) = I(~BinaryImage);
+
+% segmented and cropped
+SegmentedImage = zeros([abs(max(a)-min(a))+1, abs(max(b)-min(b))+1]);
 
 % Replace the background with zero pixels
 for i=1:1:size(BinaryImage,1)
     for j=1:1:size(BinaryImage,2)
         if BinaryImage (i,j) == 1;
-            SegmentedImage(i,j) = I(i,j);
+            SegmentedImage(i-min(a)+1,j-min(b)+1) = I(i,j);
         end
     end
 end
+SegmentedBackground = zeros(size(I));
+SegmentedBackground(~BinaryImage) = I(~BinaryImage);
 
 if plotflag==1
     % display results
