@@ -28,8 +28,11 @@
 % https://github.com/annikaliebgott/ImFEATbox
 %
 % Contact: annika.liebgott@iss.uni-stuttgart.de
+% Modified: thomas.kuestner@iss.uni-stuttgart.de
 % ************************************************************************
 
+%% add necessary paths
+addpath(genpath([pwd,filesep,'Segmentation']));
 
 %% import images to extract the features from
 % Note: this script expects images to be saved as cell arrays
@@ -146,11 +149,30 @@ transformation.H = false;
 transformation.R = false;
 transformation.C = true;
 
-%% Choose optional steps
-% set which preprocessing steps are desired
-doSegmentation = true;
-doGrayscaling = true;
+%% Preprocessing steps
+% segmentation
+% perform segmentation and subsequently process:
+% 0: no segmentation -> process whole image
+% 1: segmentation -> process foreground image
+% 2: segmentation -> process background image
+doSegmentation = 0;
 
+% Chan-Vese parameters
+% lambda1, lambda2, mu, smoothness, iterations
+cSegParam = {1, 1, 0.2, 4, 100};
+% margin from edges
+iMargin = 10;
+
+
+% scaling
+% scale image into gray scale value range 
+% (ATTENTION: slice-wise scaling -> adapt for 3D features)
+% doGrayscaling=0: no scaling
+% scalar doGraysacling > 0: scaling into range [0 doGraysacling]
+% vector doGraysacling: scaling into range [doGraysacling(1) doGraysacling(2)]
+doGrayscaling = 0;
+
+%% Debugging
 % set whether visualizations included in some feature extraction algorithms
 % should be plotted or not (note: increases computation time)
 plotflag = false;
@@ -368,25 +390,35 @@ iCounter = 1;
 
 for iI = 1:length(images)
     I_3D = images{iI};
-    %     image3D = Struct_Final.TestSample;
-    
-    for iSlice = 1:size(I_3D,3)
-        
+   
+    for iSlice = 1:size(I_3D,3)        
         % preprocessing, if necessary
-        if doSegmentation || doGrayscaling
-            for j = 1:size(I_3D,3)
-                % Segmentation
-                if doSegmentation
-                    SegmentedImage = Segmentation(I_3D(:,:,j), 10 , 1000, 4,0);
+        if doSegmentation > 0 || any(doGrayscaling > 0)
+            % Segmentation
+            if doSegmentation > 0
+                [SegmentedImage, SegmentedBackground] = Segmentation(I_3D(:,:,iSlice), iMargin , cSegParam, 2, plotflag); % 2D segmentation
+                if(doSegmentation == 1)
+                    I = SegmentedImage;
+                elseif(doSegmentation == 2)
+                    I = SegmentedBackground;
                 end
-                % Convert image to 255 gray scale image
-                if doGrayscaling
-                    I = floor(mat2gray(SegmentedImage)*255);
-                end
+            else
+                I = I_3D(:,:,iSlice);
             end
+            % Scaling: convert image to N gray scale values
+            if any(doGrayscaling > 0)
+                if(isscalar(doGrayscaling))
+                    iRange = [0 doGrayscaling];
+                else
+                    iRange = doGrayscaling;
+                end
+                I = scaleImg(I,iRange);
+            end
+        else
+            I = I_3D(:,:,iSlice); 
         end
         
-        I = I_3D(:,:,iSlice);
+
         
         %% feature extraction
         
