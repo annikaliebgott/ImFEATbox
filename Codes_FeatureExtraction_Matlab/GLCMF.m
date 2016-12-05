@@ -14,6 +14,7 @@ function [Out] = GLCMF(Image,InputParameters, typeflag)
 %                   + typeflag.form: all features
 %                   + typeflag.texture: all features
 %                   + typeflag.corr: only features based on correlation
+%                   + typeflag.entropy: only features based on entropy
 %              default: all features are being extracted
 %              For more information see README.txt
 %
