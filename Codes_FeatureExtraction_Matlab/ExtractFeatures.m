@@ -420,7 +420,7 @@ for iI = 1:length(images)
         % -----------------------------------------------------------------
         
         % Gray Level Co-occurance Matrix
-        if (typeflag.global || typeflag.texture || typeflag.corr || typeflag.entropy)
+        if (typeflag.global || typeflag.texture || typeflag.form || typeflag.corr || typeflag.entropy)
             feat_GLCM(iCounter,:) = GLCMF(I, GLCMParameters, typeflag);
         end
         
