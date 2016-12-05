@@ -33,6 +33,10 @@ if ~exist('typeflag','var')
    typeflag.entropy = true;
 end    
 
+if typeflag.global || typeflag.texture
+    typeflag.entropy = true;
+end    
+
 % Check for color image and convert to grayscale
 if(numel(size(I))==3)
     if(size(I,3)==3)

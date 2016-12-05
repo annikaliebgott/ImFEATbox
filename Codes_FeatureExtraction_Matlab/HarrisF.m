@@ -1,6 +1,9 @@
-function Out = HarrisF(I,plotflag)
+function Out = HarrisF(I,plotflag, N_s)
 % Input:     - I: A 2D image
 %            - plotflat: a flag to enable/disable visualization   
+%              Default: plotflag = false
+%            - N_s: number of points considered to be the strongest points.
+%              Default: N_s = ceil(0.1*N)
 %
 % Output:    - Out: A (1x10) vector containing 10 metrics calculated based
 %                   on corner points detected with Harris-Stephens algorithm
@@ -19,7 +22,9 @@ function Out = HarrisF(I,plotflag)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 
-
+if~exist('plotflag','var')
+    plotflag = false
+end    
 % convert image
 I = double(I);
 
@@ -30,7 +35,11 @@ corners = detectHarrisFeatures(I);
 %% extract features
 c = corners.Location;  
 N = corners.Count;
-N_s = ceil(0.1*N);
+
+if ~exist('N_s','var')
+    N_s = ceil(0.1*N);
+end
+
 c_s = corners.selectStrongest(N_s).Location;
 
 % determine center  of gravity for all points

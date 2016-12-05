@@ -1,5 +1,7 @@
-function Out = SURF(I)
+function Out = SURF(I,N_s)
 % Input:     - I: A 2D image
+%            - N_s: % desired number of strongest points to be selected.
+%              Default: N_s = 25
 %
 %
 % Output:    - Out: A (1x11) vector containing 11 metrics 
@@ -22,6 +24,10 @@ function Out = SURF(I)
 %                           Features (SURF). Comput. Vis. Image Underst. 
 %                           110, 3 (June 2008), 346-359
 
+if ~exist('N_s','var')
+    N_s = 25; 
+end    
+
 %% calculation of SURF key points
 
 % convert image
@@ -36,11 +42,8 @@ L = points.Location;
 %Number of detected points
 N_points = points.length;
 
-% desired number of strongest points to be selected
-N_s = 25;
-
 % Location of the N_s strongest key points
-L_s = points.selectStrongest(25).Location;
+L_s = points.selectStrongest(N_s).Location;
 
 % metric describing the strength of the detected points
 M = points.Metric;
@@ -80,6 +83,3 @@ end
 Out = [N_points std_M std_L std_L_s... 
     mean_M x_gravity y_gravity x_gravity_s y_gravity_s];
 
-
-% see reference:
-% http://de.mathworks.com/help/vision/ref/detectsurffeatures.html#btack4t

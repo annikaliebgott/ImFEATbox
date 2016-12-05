@@ -35,6 +35,10 @@ if ~exist('typeflag','var')
     typeflag.corr = true;
 end
 
+if typeflag.global || typeflag.form
+    typeflag.corr = true;
+end    
+
 % convert image
 BW = im2bw(double(I));
 [L,N] = bwlabel(BW);

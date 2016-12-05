@@ -1,4 +1,4 @@
-function [Out] = GLCMF(Image, InputParameters, typeflag)
+function [Out] = GLCMF(Image,InputParameters, typeflag)
 % Input:     - I: A 2D image
 %            - InputParameters : A structure containing parameters:
 %                   + DisplacementVector: A (nx2) vector composed of offset 
@@ -10,10 +10,11 @@ function [Out] = GLCMF(Image, InputParameters, typeflag)
 %                   into number of gray levels specified by NumLevels
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
-%                   + typeflag.local: all features 
+%                   + typeflag.global: all features 
 %                   + typeflag.form: all features
 %                   + typeflag.texture: all features
 %                   + typeflag.corr: only features based on correlation
+%                   + typeflag.entropy: only features based on entropy
 %              default: all features are being extracted
 %              For more information see README.txt
 %
@@ -64,17 +65,22 @@ end
 if ~exist('typeflag', 'var')
    typeflag.global = true; 
    typeflag.texture = true;
+   typeflag.form = true;
    typeflag.corr = true;
    typeflag.entropy = true;
 end    
-    
+
+if typeflag.global || typeflag.texture
+    typeflag.corr = true;
+    typeflag.entropy = true;
+end    
 
 GLCM_Matrices = graycomatrix(Image, 'offset', InputParameters.DisplacementVector,...
     'NumLevels',InputParameters.NumLevels,...
     'GrayLimits', InputParameters.GrayLimits,...
     'Symmetric', false);
 
-if typeflag.texture
+if typeflag.texture || typeflag.global
     % extract all features of GLCM
     Out = zeros(size(GLCM_Matrices,3),21);
 elseif typeflag.corr

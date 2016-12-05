@@ -1,4 +1,4 @@
-function Out = LineProfileF(I,typeflag)
+function Out = LineProfileF(I,plotflag,typeflag)
 % Input:     - I: A 2D image
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
@@ -8,6 +8,8 @@ function Out = LineProfileF(I,typeflag)
 %                   + typeflag.moments: only features based on moments
 %              default: all features are being extracted
 %              For more information see README.txt
+%            - plotflag: logical flag to enable/disable visualization.
+%              default: plotflag = false;
 %
 %
 % Output:    - Out: A (1x122) vector containing 122 metrics calculated from
@@ -34,6 +36,9 @@ if ~exist('typeflag','var')
    typeflag.corr = true;
    typeflag.moments = true;
 end    
+if~exist('plotflag','var')
+    plotflag = false;
+end
 
 %% Extract the intensity profile along different line segments
 
@@ -57,8 +62,7 @@ x4 = [1 x_max];
 y4 = [y_half y_half];
 
 % view line profile
-visualize = 0;
-if visualize
+if plotflag
     x = [x1 x2];
     y = [y1 y2];
     improfile(I,x,y),grid on;

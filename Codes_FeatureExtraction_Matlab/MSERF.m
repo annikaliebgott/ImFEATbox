@@ -1,6 +1,6 @@
 function Out = MSERF(I,plotflag)
 % Input:     - I: A 2D image
-%
+%            - plotflag: logical flag to enable/disable visualization
 %
 % Output:    - Out: A (1x15) vector containing 15 metrics based on detected
 %              maximally stable extremal regions in the image

@@ -1,6 +1,8 @@
-function Out = FractalDimensionF(I,PlotFlag) 
+function Out = FractalDimensionF(I,plotflag,width) 
 % Input:     - I: A 2D image
-%            - PlotFlag: A locical flag to enable/disable visualization
+%            - plotflag: A locical flag to enable/disable visualization.
+%              Default: false
+%            - width: largest size of the box. Default: width = 256
 %
 % Output:    - Out: A (1x27) vector containing 27 metrics based on
 %                   self-similarity of image structures
@@ -23,6 +25,12 @@ function Out = FractalDimensionF(I,PlotFlag)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 
+if ~exist('plotflag','var')
+    plotflag = false; 
+end    
+if ~exist('width','var')
+    width = 256;
+end
 
 dim = ndims(I); 
 if dim > 2
@@ -33,14 +41,13 @@ end
 % Spliting the Image into the small grids and copute the fractal dimension
 
 % The largest size of the box
-width = 256;    
 p = log(width)/log(2);   
-RescaledI = imresize(I,[256 256]);
+RescaledI = imresize(I,[width width]);
 
 % Allocation of the number of box size
 counter=0;
 counter_dbc = 0;
-counter_tpsa =0;
+counter_tpsa = 0;
 step = width./2.^(1:p);
 N_mbc = zeros(1,length(step));
 N_tpsa = zeros(1,length(step));
@@ -136,7 +143,7 @@ D2 = polyfit(x2, y2, 1);
 FD_TPSA = 2 - D2(1);
 
 % Plotting
-if PlotFlag == 1
+if plotflag
     
     % Figure 1
     f0 = polyval(D0,x0);
