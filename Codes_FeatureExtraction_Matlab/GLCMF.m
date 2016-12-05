@@ -10,7 +10,7 @@ function [Out] = GLCMF(Image,InputParameters, typeflag)
 %                   into number of gray levels specified by NumLevels
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
-%                   + typeflag.local: all features 
+%                   + typeflag.global: all features 
 %                   + typeflag.form: all features
 %                   + typeflag.texture: all features
 %                   + typeflag.corr: only features based on correlation
