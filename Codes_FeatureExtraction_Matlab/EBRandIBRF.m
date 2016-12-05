@@ -182,7 +182,7 @@
 
         % correlation
         Corr = corrcoef(C2,C3);
-        corr_C2C3(i) = Corr(1,2); %mean, min, max of corr_C2C3?
+        corr_C2C3(i) = Corr(1,2);
     end
 
 
