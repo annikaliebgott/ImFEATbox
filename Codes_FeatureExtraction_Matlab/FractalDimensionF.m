@@ -26,7 +26,7 @@ function Out = FractalDimensionF(I,plotflag,width)
 % ************************************************************************
 
 if ~exist('plotflag','var')
-    PlotFlag = false; 
+    plotflag = false; 
 end    
 if ~exist('width','var')
     width = 256;

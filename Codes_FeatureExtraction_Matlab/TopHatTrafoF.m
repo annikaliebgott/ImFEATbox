@@ -1,5 +1,7 @@
 function Out = TopHatTrafoF(I,SE,typeflag)
 % Input:     - I: A 2D image
+%            - SE: a struct containing structuring elements for the
+%            transform
 %            - typeflag: Struct of logicals to permit extracting features
 %              based on desired characteristics:
 %                   + typeflag.global: all features

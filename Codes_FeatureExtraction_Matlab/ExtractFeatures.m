@@ -1,12 +1,12 @@
 %% Main script to carry out the feature extraction
 %
 % This script calls all feature extraction allgorithms provided by
-% ImFEATbox. 
+% ImFEATbox.
 %
 % Output:   feat_vec: an [NxM] array of M features extracted from N images.
 %
 % The basic steps to successfully carry out the feature extraction:
-% 1.)   Import the images of which you want to extract the features. 
+% 1.)   Import the images of which you want to extract the features.
 %       Note: this script expects images to be cell arrays
 % 2.)   Set typeflag to define which features you wish to extract.
 %       For more information about typeflag: see README.txt
@@ -33,8 +33,6 @@
 
 %% import images to extract the features from
 % Note: this script expects images to be saved as cell arrays
-% data = load('images.mat');
-% images = data.images;
 data = load('testimages_pp.mat');
 images = data.testimages_pp;
 
@@ -49,11 +47,12 @@ end
 typeflag = struct;
 
 % If you wish to extract all features provided by ImFEATbox, set
-typeflag.all = true
+% typeflag.all = true
+typeflag.all = false;
 
 % If you don't wish to extract all features, you can chose the desired
 % feature categories here
-% Note: if typeflag.all = true, all other flags are automatically also set 
+% Note: if typeflag.all = true, all other flags are automatically also set
 % to true. All changes set manually will be overwritten!
 
 typeflag.global = true;
@@ -77,10 +76,10 @@ if typeflag.all
     typeflag.entropy = true;
     typeflag.transform = true;
 end
- 
+
 
 %% Set parameters
-% set GLCM parameters for GLCM feature extraction
+% GLCMF.m: set GLCM parameters for GLCM feature extraction
 values = [1;2;4;8;16;32;64;128];
 offset0 = [zeros(size(values,1),1) values];
 offset1 = [-values values];
@@ -90,18 +89,62 @@ offset = [offset0 ; offset1 ; offset2 ; offset3];
 GLCMParameters.DisplacementVector = offset;
 GLCMParameters.NumLevels = 255;
 
-% set filter parameters for LBP feature extraction
+% LocalBinaryPatternF.m: set filter parameters for LBP feature extraction
 RadialLBP = [8 1; 16 2;24 3;32 4];
 
-% set desired number of blobs for Laplacian of Gaussian feature extraction
+% LoGF.m: set desired number of blobs for Laplacian of Gaussian feature
+% extraction
 N_blobs = 120;
 
-% set threshold for Quadtree decomposition feature extraction
+% QuadtreeDecompositionF.m: set threshold for Quadtree decomposition
+% feature extraction
 threshold_quadtree = 0.27;
 
-% set parameters for Hough transform features
+% HoughTrafoF.m: set type and minimum arc for Hough transform features
 houghtype = 'both';
 arc_min = pi/2;
+
+% HarrisF.m: choose number of points considered to be the strongest points
+N_s_Harris = 25;
+
+% FractalDimensionF.m: choose largest box size
+width = 256;
+
+% GillesF.m: define mask radius and threshold factor
+radius_Gilles = 10;
+threshold_Gilles = 0.95;
+
+% LoGF.m: define LoG-parameters begin, end and step size for sigma_array
+sigma.begin = 2;
+sigma.end = 15;
+sigma.step = 1;
+
+% SURF.m: choose number of points considered to be the strongest points
+N_s_SURF = 25;
+
+% SalientRegionF.m: set border of rectangles for Haar feature calculation
+% and inner Region
+border_Salient = 14;
+R1 = 1;
+
+% TopHatTrafoF.m: create morphological structruning element (STREL)
+SE = cell(zeros);
+SE{1} = strel('arbitrary', [1 0 0;1 0 0;1 0 1]);
+SE{2} = strel('ball', 15,5);
+SE{3} = strel('diamond', 13);
+SE{4} = strel('disk', 15);
+SE{5} = strel('line', 10, 45);
+SE{6} = strel('octagon', 3);
+SE{7} = strel('pair', [2 2]);
+SE{8} = strel('periodicline', 2, [1 -2]);
+SE{9} = strel('rectangle', [3 5]);
+% SE{10} = strel('square', 11);
+
+% UnitaryTrafoF.m: choose which transformations you wish to carry out
+transformation.WH = false;
+transformation.H = false;
+transformation.R = false;
+transformation.C = true;
 
 %% Choose optional steps
 % set which preprocessing steps are desired
@@ -113,8 +156,8 @@ doGrayscaling = true;
 plotflag = false;
 
 
-%% Preallocate feature arrays for speed 
-% implemented only for settings where a high number of features are being 
+%% Preallocate feature arrays for speed
+% implemented only for settings where a high number of features are being
 % extracted: all features, all global features, all local features
 if typeflag.all
     feat_Intensity = zeros(N_slices_total,7);
@@ -128,9 +171,67 @@ if typeflag.all
     feat_DCT = zeros(N_slices_total,2901);
     feat_Hankel = zeros(N_slices_total,75);
     feat_DistTrafo = zeros(N_slices_total,56);
-    feat_TopHat = zeros(N_slices_total,60);
+    feat_TopHat = zeros(N_slices_total,6*size(SE,2));
     feat_Skeleton = zeros(N_slices_total,17);
-    feat_Unitary = zeros(N_slices_total,73);
+    if transformation.WH && transformation.H && transformation.R && transformation.C
+        feat_Unitary = zeros(N_slices_total,73);
+    else
+        if transformation.WH
+            if transformation.H
+                if transformation.R
+                    % WH + H + R
+                    feat_Unitary = zeros(N_slices_total,15);
+                elseif transformation.C
+                    % WH + H + C
+                    feat_Unitary = zeros(N_slices_total,68);
+                else
+                    % WH + H
+                    feat_Unitary = zeros(N_slices_total,10);
+                end
+            elseif transformation.R
+                if transformation.C
+                    % WH + R + C
+                    feat_Unitary = zeros(N_slices_total,68);
+                else
+                    % WH + R
+                    feat_Unitary = zeros(N_slices_total,10);
+                end
+            elseif transformation.C
+                % WH + C
+                feat_Unitary = zeros(N_slices_total,63);
+            else
+                % WH
+                feat_Unitary = zeros(N_slices_total,5);
+            end
+        elseif transformation.H
+            if transformation.R
+                if transformation.C
+                    % H + R + C
+                    feat_Unitary = zeros(N_slices_total,68);
+                else
+                    % H + R
+                    feat_Unitary = zeros(N_slices_total,10);
+                end
+            elseif transformation.C
+                % H + C
+                feat_Unitary = zeros(N_slices_total,63);
+            else
+                % H
+                feat_Unitary = zeros(N_slices_total,5);
+            end
+        elseif transformation.R
+            if transformation.C
+                % R + C
+                feat_Unitary = zeros(N_slices_total,63);
+            else
+                % R
+                feat_Unitary = zeros(N_slices_total,5);
+            end
+        else
+            % C
+            feat_Unitary = zeros(N_slices_total,58);
+        end
+    end
     if strcmp(houghtype,'both')
         feat_Hough = zeros(N_slices_total,393);
     end
@@ -171,9 +272,67 @@ elseif typeflag.global
     feat_DCT = zeros(N_slices_total,2901);
     feat_Hankel = zeros(N_slices_total,75);
     feat_DistTrafo = zeros(N_slices_total,56);
-    feat_TopHat = zeros(N_slices_total,60);
+    feat_TopHat = zeros(N_slices_total,6*size(SE,2));
     feat_Skeleton = zeros(N_slices_total,17);
-    feat_Unitary = zeros(N_slices_total,73);
+    if transformation.WH && transformation.H && transformation.R && transformation.C
+        feat_Unitary = zeros(N_slices_total,73);
+    else
+        if transformation.WH
+            if transformation.H
+                if transformation.R
+                    % WH + H + R
+                    feat_Unitary = zeros(N_slices_total,15);
+                elseif transformation.C
+                    % WH + H + C
+                    feat_Unitary = zeros(N_slices_total,68);
+                else
+                    % WH + H
+                    feat_Unitary = zeros(N_slices_total,10);
+                end
+            elseif transformation.R
+                if transformation.C
+                    % WH + R + C
+                    feat_Unitary = zeros(N_slices_total,68);
+                else
+                    % WH + R
+                    feat_Unitary = zeros(N_slices_total,10);
+                end
+            elseif transformation.C
+                % WH + C
+                feat_Unitary = zeros(N_slices_total,63);
+            else
+                % WH
+                feat_Unitary = zeros(N_slices_total,5);
+            end
+        elseif transformation.H
+            if transformation.R
+                if transformation.C
+                    % H + R + C
+                    feat_Unitary = zeros(N_slices_total,68);
+                else
+                    % H + R
+                    feat_Unitary = zeros(N_slices_total,10);
+                end
+            elseif transformation.C
+                % H + C
+                feat_Unitary = zeros(N_slices_total,63);
+            else
+                % H
+                feat_Unitary = zeros(N_slices_total,5);
+            end
+        elseif transformation.R
+            if transformation.C
+                % R + C
+                feat_Unitary = zeros(N_slices_total,63);
+            else
+                % R
+                feat_Unitary = zeros(N_slices_total,5);
+            end
+        else
+            % C
+            feat_Unitary = zeros(N_slices_total,58);
+        end
+    end
     if strcmp(houghtype,'both')
         feat_Hough = zeros(N_slices_total,393);
     end
@@ -198,8 +357,8 @@ elseif typeflag.local
     feat_LineProfile = zeros(N_slices_total,122);
     feat_Law = zeros(N_slices_total,58);
     feat_LoG = zeros(N_slices_total,261);
-    feat_Gilles = zeros(N_slices_total,6);        
-    feat_Sector = zeros(N_slices_total,5);    
+    feat_Gilles = zeros(N_slices_total,6);
+    feat_Sector = zeros(N_slices_total,5);
 end
 
 
@@ -255,7 +414,7 @@ for iI = 1:length(images)
             feat_SVD(iCounter,:) = SVDF(I);
         end
         
-
+        
         % -----------------------------------------------------------------
         % Geometrical features
         % -----------------------------------------------------------------
@@ -272,9 +431,9 @@ for iI = 1:length(images)
         
         % Fractal Dimensions
         if (typeflag.global || typeflag.form)
-            feat_Fractal(iCounter,:) = FractalDimensionF(I,plotflag);
+            feat_Fractal(iCounter,:) = FractalDimensionF(I,plotflag,width);
         end
-
+        
         % Form Factor
         if (typeflag.global || typeflag.form || typeflag.corr)
             feat_FormFactor(iCounter,:) = FormFactorF(I,typeflag);
@@ -283,7 +442,7 @@ for iI = 1:length(images)
         % -----------------------------------------------------------------
         % Transformation features
         % -----------------------------------------------------------------
-               
+        
         % feat_Fouier
         if (typeflag.global || typeflag.transform || typeflag.corr || typeflag.moments)
             feat_Fourier(iCounter,:) = FourierTrafoF(I,typeflag);
@@ -307,7 +466,7 @@ for iI = 1:length(images)
         
         % Top-hat Transform
         if (typeflag.global || typeflag.transform || typeflag.form || typeflag.moments)
-            feat_TopHat(iCounter,:) = TopHatTrafoF(I,typeflag);
+            feat_TopHat(iCounter,:) = TopHatTrafoF(I,SE,typeflag);
         end
         
         % Skeletonization
@@ -315,16 +474,16 @@ for iI = 1:length(images)
             feat_Skeleton(iCounter,:) = SkeletonizationF(I,typeflag);
         end
         
-        % various other transforms
+        % Various unitary transforms
         if (typeflag.global || typeflag.transform)
-            feat_Unitary(iCounter,:) = UnitaryTrafoF(I);
+            feat_Unitary(iCounter,:) = UnitaryTrafoF(I,transformation);
         end
         
         % Hough Transform
         if (typeflag.global || typeflag.transform || typeflag.form ||...
                 (typeflag.moments && ~strcmp(houghtype,'circular')))
             feat_Hough(iCounter,:) = HoughTrafoF(I,houghtype,arc_min,plotflag,typeflag);
-        end    
+        end
         
         % -----------------------------------------------------------------
         % Moment features
@@ -362,7 +521,7 @@ for iI = 1:length(images)
         
         % Salient Region
         if (typeflag.local || typeflag.texture || typeflag.moments)
-            feat_SalientRegion(iCounter,:) = SalientRegionF(I,typeflag);
+            feat_SalientRegion(iCounter,:) = SalientRegionF(I,border_Salient,R1,typeflag);
         end
         
         % Quadtree Decomposition
@@ -380,7 +539,7 @@ for iI = 1:length(images)
         if typeflag.local || typeflag.texture
             feat_Connectivity(iCounter,:) = ConnectivityF(I);
         end
-
+        
         % Sector Decomposition
         if typeflag.local
             feat_Sector(iCounter,:) = SectorF(I);
@@ -392,7 +551,7 @@ for iI = 1:length(images)
         
         % Harris Detector
         if (typeflag.local || typeflag.texture)
-            feat_Harris(iCounter,:) = HarrisF(I,plotflag);
+            feat_Harris(iCounter,:) = HarrisF(I,plotflag, N_s_Harris);
         end
         
         % Line profile
@@ -411,12 +570,12 @@ for iI = 1:length(images)
         
         % Laplacian of Gaussian
         if (typeflag.local || typeflag.texture || typeflag.moments)
-            feat_LoG(iCounter,:) = LoGF(I,N_blobs,typeflag);
+            feat_LoG(iCounter,:) = LoGF(I,N_blobs,sigma,typeflag);
         end
         
         % Gilles Points
         if (typeflag.local || typeflag.entropy)
-            feat_Gilles(iCounter,:) = GillesF(I);
+            feat_Gilles(iCounter,:) = GillesF(I, radius_Gilles, threshold_Gilles);
         end
         
         % #################################################################
@@ -425,7 +584,7 @@ for iI = 1:length(images)
         
         % SURF
         if typeflag.texture;
-            feat_SURF(iCounter,:) = SURF(I);
+            feat_SURF(iCounter,:) = SURF(I,N_s_SURF);
         end
         
         % LOSIB
@@ -437,7 +596,7 @@ for iI = 1:length(images)
         if (typeflag.corr || typeflag.moments)
             feat_RCovD(iCounter,:) = RCovDsF(I,typeflag);
         end
-
+        
         iCounter = iCounter + 1;
         
         
@@ -448,110 +607,110 @@ end
 
 if ~exist('feat_Intensity','var')
     feat_Intensity = [];
-end    
+end
 if ~exist('feat_Hist','var')
     feat_Hist = [];
-end    
+end
 if ~exist('feat_SVD','var')
     feat_SVD = [];
-end    
+end
 if ~exist('feat_GLCM','var')
     feat_GLCM = [];
-end    
+end
 if ~exist('feat_RunLength','var')
     feat_RunLength = [];
-end    
+end
 if ~exist('feat_Fractal','var')
     feat_Fractal= [];
-end    
+end
 if ~exist('feat_FormFactor','var')
     feat_FormFactor = [];
-end    
+end
 if ~exist('feat_Fourier','var')
     feat_Fourier = [];
-end    
+end
 if ~exist('feat_DCT','var')
     feat_DCT = [];
-end    
+end
 if ~exist('feat_Hankel','var')
     feat_Hankel = [];
-end    
+end
 if ~exist('feat_DistTrafo','var')
     feat_DistTrafo = [];
-end    
+end
 if ~exist('feat_TopHat','var')
     feat_TopHat = [];
-end    
+end
 if ~exist('feat_Skeleton','var')
     feat_Skeleton = [];
-end    
+end
 if ~exist('feat_Unitary','var')
     feat_Unitary = [];
-end    
+end
 if ~exist('feat_Hough','var')
     feat_Hough = [];
-end    
+end
 if ~exist('feat_Zernike','var')
     feat_Zernike = [];
-end    
+end
 if ~exist('feat_Hu','var')
     feat_Hu = [];
-end    
+end
 if ~exist('feat_Affine','var')
     feat_Affine = [];
-end    
+end
 if ~exist('feat_LBP','var')
     feat_LBP = [];
-end    
+end
 if ~exist('feat_MSER','var')
     feat_MSER = [];
-end    
+end
 if ~exist('feat_SalientRegion','var')
     feat_SalientRegion = [];
-end    
+end
 if ~exist('feat_Quadtree','var')
     feat_Quadtree = [];
-end    
+end
 if ~exist('feat_EBR_IBR','var')
     feat_EBR_IBR = [];
-end    
+end
 if ~exist('feat_Connectivity','var')
     feat_Connectivity = [];
-end    
+end
 if ~exist('feat_Harris','var')
     feat_Harris = [];
-end    
+end
 if ~exist('feat_LineProfile','var')
     feat_LineProfile = [];
-end    
+end
 if ~exist('feat_Law','var')
     feat_Law = [];
-end    
+end
 if ~exist('feat_LoG','var')
     feat_LoG = [];
-end    
+end
 if ~exist('feat_Gilles','var')
     feat_Gilles = [];
-end    
+end
 if ~exist('feat_SURF','var')
     feat_SURF = [];
-end    
+end
 if ~exist('feat_LOSIB','var')
     feat_LOSIB = [];
-end    
+end
 if ~exist('feat_RCovD','var')
     feat_RCovD = [];
-end    
+end
 if ~exist('feat_Sector','var')
     feat_Sector = [];
-end    
+end
 
 
 feat_vector = [feat_Affine feat_RCovD feat_Connectivity feat_DCT...
     feat_DistTrafo feat_EBR_IBR feat_FormFactor feat_Fourier...
-    feat_Gilles feat_Hankel feat_Harris feat_Hu feat_Law feat_LOSIB... 
+    feat_Gilles feat_Hankel feat_Harris feat_Hu feat_Law feat_LOSIB...
     feat_LineProfile feat_LoG feat_MSER feat_Quadtree feat_SURF feat_SVD...
-    feat_SalientRegion feat_TopHat feat_Unitary feat_Zernike feat_GLCM... 
+    feat_SalientRegion feat_TopHat feat_Unitary feat_Zernike feat_GLCM...
     feat_Fractal feat_Hist feat_Intensity feat_LBP...
     feat_RunLength feat_Skeleton feat_Sector feat_Hough];
 
