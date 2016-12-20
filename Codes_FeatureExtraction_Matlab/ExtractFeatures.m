@@ -418,7 +418,11 @@ for iI = 1:length(images)
             I = I_3D(:,:,iSlice); 
         end
         
-
+        % Display warning message in case I contains complex numbers
+        if any(imag(I(:))~=0)
+           disp('Warning: image contains complex numbers.') 
+           disp('Some feature extraction algorithms can not process complex values and therefore only use the real part.') 
+        end    
         
         %% feature extraction
         
