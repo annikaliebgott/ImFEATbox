@@ -1,16 +1,16 @@
 function [Out] = GLCMF(Image,InputParameters, typeflag)
 % Input:     - I: A 2D image
 %            - InputParameters : A structure containing parameters:
-%                   + DisplacementVector: A (nx2) vector composed of offset 
+%                   + DisplacementVector: A (nx2) vector composed of offset
 %                   and orientation (default = [0 1])
-%                   + NumLevels: An integer number specifying the number of 
+%                   + NumLevels: An integer number specifying the number of
 %                   gray level intensities (default = 8)
-%                   + GrayLimits: A (1x2) vector containing the min/max 
+%                   + GrayLimits: A (1x2) vector containing the min/max
 %                   gray levels which are needed to sort gray levels of I
 %                   into number of gray levels specified by NumLevels
-%            - typeflag: Struct of logicals to permit extracting features 
+%            - typeflag: Struct of logicals to permit extracting features
 %              based on desired characteristics:
-%                   + typeflag.global: all features 
+%                   + typeflag.global: all features
 %                   + typeflag.form: all features
 %                   + typeflag.texture: all features
 %                   + typeflag.corr: only features based on correlation
@@ -19,13 +19,13 @@ function [Out] = GLCMF(Image,InputParameters, typeflag)
 %              For more information see README.txt
 %
 %
-% Output:    - Out: A (1xn*21) vector containing n*21 metrics calculated 
+% Output:    - Out: A (1xn*21) vector containing n*21 metrics calculated
 %              from the gray level co-occurence matrix
 %
 % ************************************************************************
-% Implemented for MRI feature extraction by the Department of Diagnostic 
-% and Interventional Radiology, University Hospital of Tuebingen, Germany 
-% and the Institute of Signal Processing and System Theory University of 
+% Implemented for MRI feature extraction by the Department of Diagnostic
+% and Interventional Radiology, University Hospital of Tuebingen, Germany
+% and the Institute of Signal Processing and System Theory University of
 % Stuttgart, Germany. Last modified: November 2016
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
@@ -35,9 +35,9 @@ function [Out] = GLCMF(Image,InputParameters, typeflag)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 %
-% Implementation based on:  R. Haralick; K. Shanmugam; I. Dinstein (1973): 
-%                           "Textural Features for Image Classification". 
-%                           IEEE Transactions on Systems, Man, and 
+% Implementation based on:  R. Haralick; K. Shanmugam; I. Dinstein (1973):
+%                           "Textural Features for Image Classification".
+%                           IEEE Transactions on Systems, Man, and
 %                           Cybernetics. SMC-3 (6): 610–621.
 
 
@@ -48,9 +48,11 @@ if(numel(size(Image))==3)       %if image is 3D
     end
 end
 
+% graycomatrix.m can't process complex input values
+Image = double(real(Image));
 
 % Default Parameters (Offset value = 1 pixel)
-if ~exist('InputParameters','var') || ~isfield(InputParameters,'DisplacementVector') 
+if ~exist('InputParameters','var') || ~isfield(InputParameters,'DisplacementVector')
     InputParameters.DisplacementVector = [0 1];
 end
 
@@ -63,17 +65,17 @@ if ~exist('InputParameters','var') || ~isfield(InputParameters,'GrayLimits')
 end
 
 if ~exist('typeflag', 'var')
-   typeflag.global = true; 
-   typeflag.texture = true;
-   typeflag.form = true;
-   typeflag.corr = true;
-   typeflag.entropy = true;
-end    
+    typeflag.global = true;
+    typeflag.texture = true;
+    typeflag.form = true;
+    typeflag.corr = true;
+    typeflag.entropy = true;
+end
 
 if typeflag.global || typeflag.texture
     typeflag.corr = true;
     typeflag.entropy = true;
-end    
+end
 
 GLCM_Matrices = graycomatrix(Image, 'offset', InputParameters.DisplacementVector,...
     'NumLevels',InputParameters.NumLevels,...
