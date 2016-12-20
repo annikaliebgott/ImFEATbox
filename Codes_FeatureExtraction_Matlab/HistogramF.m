@@ -1,5 +1,4 @@
 
-
 function Out = HistogramF(I,typeflag)
 % Input:     - I: A 2D image
 %            - typeflag: Struct of logicals to permit extracting features 

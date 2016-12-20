@@ -32,6 +32,9 @@ if ~exist('typeflag','var')
 end    
 
 % converte image
+% im2bw can't process complex input values
+I = double(real(I)); 
+
 % graythresh(): Global image threshold using Otsu's method
 BW = im2bw(I, graythresh(I));
 

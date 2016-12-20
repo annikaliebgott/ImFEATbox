@@ -35,7 +35,11 @@ end
 
 %% Transformation
 % converte image
-BW1 = im2bw(double(I));
+
+% im2bw can't process complex input values
+I = double(real(I)); 
+
+BW1 = im2bw(double(real(I)));
 
 % skeletonization
 BW2 = bwmorph(BW1,'skel',Inf);

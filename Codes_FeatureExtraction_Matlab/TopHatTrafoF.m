@@ -50,6 +50,9 @@ if ~exist('SE','var')
     SE{10} = strel('square', 11);
 end
 
+% imtophat.m can't process complex values
+I = double(real(I)); 
+
 
 %% top-hat filtering
 N_SE = size(SE,2);

@@ -1,6 +1,6 @@
 function Out = SURF(I,N_s)
 % Input:     - I: A 2D image
-%            - N_s: % desired number of strongest points to be selected.
+%            - N_s: desired number of strongest points to be selected.
 %              Default: N_s = 25
 %
 %

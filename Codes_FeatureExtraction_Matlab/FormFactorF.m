@@ -17,7 +17,7 @@ function Out = FormFactorF(I,typeflag)
 % Implemented for MRI feature extraction by the Department of Diagnostic
 % and Interventional Radiology, University Hospital of Tuebingen, Germany
 % and the Institute of Signal Processing and System Theory University of
-% Stuttgart, Germany. Last modified: November 2016
+% Stuttgart, Germany. Last modified: December 2016
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
 % extraction and analysis. Available online at:
@@ -39,8 +39,8 @@ if typeflag.global || typeflag.form
     typeflag.corr = true;
 end    
 
-% convert image
-BW = im2bw(double(I));
+% convert image, image must be real valued!
+BW = im2bw(double(real(I)));
 [L,N] = bwlabel(BW);
 
 % check if any objects have been detected

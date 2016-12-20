@@ -16,7 +16,7 @@ function Out = DCTF(I,typeflag)
 % Implemented for MRI feature extraction by the Department of Diagnostic 
 % and Interventional Radiology, University Hospital of Tuebingen, Germany 
 % and the Institute of Signal Processing and System Theory University of 
-% Stuttgart, Germany. Last modified: November 2016
+% Stuttgart, Germany. Last modified: December 2016
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
 % extraction and analysis. Available online at:
@@ -73,8 +73,12 @@ for z = 1:3
     if typeflag.transform || typeflag.global
         f(z,idx+1:idx+100) = [shiftdim(eUB(1:50), 1) shiftdim(eVB(1:50), 1)];
         idx = idx+100;
-
-        coefB = [B(1,1), B(1,40), B(20,60), B(80,100) B(100, 150)];
+        
+        if size(B,2) < 150
+            coefB = [B(1,1), B(1,40), B(20,60), B(80,100) B(100, size(B,2))];
+        else
+            coefB = [B(1,1), B(1,40), B(20,60), B(80,100) B(100, 150)];
+        end
         f(z,idx+1:idx+length(coefB)) = coefB;
         idx = idx + length(coefB);
 
@@ -99,7 +103,11 @@ for z = 1:3
         % output of some coefficients
         % 3D zigzag transversal to select 25% of the coefficents
         if typeflag.transform || typeflag.global        
-            coefB2 = [B(1,1), B(1,40), B(20,60), B(80,100) B(100, 150)];
+            if size(B2,2) < 150
+                coefB2 = [B2(1,1), B2(1,40), B2(20,60), B2(80,100) B2(100, size(B,2))];
+            else
+                coefB2 = [B2(1,1), B2(1,40), B2(20,60), B2(80,100) B2(100, 150)];
+            end
             f(z,idx+1:idx+length(coefB2)) = coefB2;
             idx = idx + length(coefB2);
 

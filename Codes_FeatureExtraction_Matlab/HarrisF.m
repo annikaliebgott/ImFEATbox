@@ -1,9 +1,9 @@
 function Out = HarrisF(I,plotflag, N_s)
 % Input:     - I: A 2D image
-%            - plotflat: a flag to enable/disable visualization   
+%            - plotflag: a flag to enable/disable visualization   
 %              Default: plotflag = false
 %            - N_s: number of points considered to be the strongest points.
-%              Default: N_s = ceil(0.1*N)
+%              Default: N_s = ceil(0.1*N) (N: number of detected corners)
 %
 % Output:    - Out: A (1x10) vector containing 10 metrics calculated based
 %                   on corner points detected with Harris-Stephens algorithm
@@ -23,7 +23,7 @@ function Out = HarrisF(I,plotflag, N_s)
 % ************************************************************************
 
 if~exist('plotflag','var')
-    plotflag = false
+    plotflag = false;
 end    
 % convert image
 I = double(I);

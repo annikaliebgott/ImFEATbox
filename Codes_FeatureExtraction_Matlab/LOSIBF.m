@@ -1,7 +1,9 @@
 function Out = LOSIBF(I, radius, neighbors)
 % Input:     - I: A 2D image
-%            - radius:
-%            - neighbors: Number of neighbors (default: neighbors = 16)
+%            - radius: radius to consider around a pixel.
+%              default: radius = 5                
+%            - neighbors: Number of neighbors to consider
+%              default: neighbors = 16
 %
 % Output:    - Out: A (1x34) vector containing 34 metrics 
 %

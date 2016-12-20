@@ -6,6 +6,7 @@ function Out = SalientRegionF(I,b,R1,typeflag)
 %              choose NxN pixles. Default: R1 = 1;
 %            - typeflag: Struct of logicals to permit extracting features 
 %              based on desired characteristics:
+%                   + typeflag.local: all features
 %                   + typeflag.texture: all features
 %                   + typeflag.moments: only features based on moments
 %              default: all features are being extracted
@@ -37,6 +38,7 @@ function Out = SalientRegionF(I,b,R1,typeflag)
 
 
 if ~exist('typeflag','var')
+   typeflag.local = true; 
    typeflag.texture = true;
    typeflag.moments = true;
 end    

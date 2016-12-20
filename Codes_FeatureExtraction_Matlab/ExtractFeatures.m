@@ -173,7 +173,7 @@ iMargin = 10;
 doGrayscaling = 0;
 
 %% Debugging
-% set whether visualizations included in some feature extraction algorithms
+% set whether visualizations included in I = scaleImg(I,iRange)some feature extraction algorithms
 % should be plotted or not (note: increases computation time)
 plotflag = false;
 
