@@ -470,12 +470,7 @@ for iI = 1:length(images)
             feat_Gradient(iCounter,:) = GradientF(I,typeflag,gradtype);
         end    
         
-        % Gabor Filter
-        if (typeflag.global || typeflag.transform || typeflag.gradient ||...
-                typeflag.entropy || typeflag.texture)
-            feat_Gabor(iCounter,:) = GaborFilterF(I,typeflag,gradtype,scale,orientation,plotflag);
-        end  
-        
+
         % -----------------------------------------------------------------
         % Geometrical features
         % -----------------------------------------------------------------
@@ -545,6 +540,13 @@ for iI = 1:length(images)
                 (typeflag.moments && ~strcmp(houghtype,'circular')))
             feat_Hough(iCounter,:) = HoughTrafoF(I,houghtype,arc_min,plotflag,typeflag);
         end
+        
+        % Gabor Filter
+        if (typeflag.global || typeflag.transform || typeflag.gradient ||...
+                typeflag.entropy || typeflag.texture)
+            feat_Gabor(iCounter,:) = GaborFilterF(I,typeflag,gradtype,scale,orientation,plotflag);
+        end  
+        
         
         % -----------------------------------------------------------------
         % Moment features
