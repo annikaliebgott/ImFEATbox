@@ -149,6 +149,17 @@ transformation.H = false;
 transformation.R = false;
 transformation.C = true;
 
+% GradientF.m: specify which gradient (first and/or second order gradients)
+% you wish to apply
+gradtype.first = true;
+gradtype.second = true;
+
+% GaborFilterF.m: set parameters for Gabor filters
+scale = 5;
+orientation = 8;
+
+
+
 %% Preprocessing steps
 % segmentation
 % perform segmentation and subsequently process:
@@ -281,6 +292,8 @@ if typeflag.all
     feat_LOSIB = zeros(N_slices_total,34);
     feat_RCovD = zeros(N_slices_total,15);
     feat_Sector = zeros(N_slices_total,5);
+    feat_Gradient = zeros(N_slices_total,81);
+    feat_Gabor = zeros(N_slices_total,3600);
 elseif typeflag.global
     % if only all global features should be extracted
     feat_Intensity = zeros(N_slices_total,7);
@@ -367,6 +380,8 @@ elseif typeflag.global
     feat_Zernike = zeros(N_slices_total,92);
     feat_Hu = zeros(N_slices_total,8);
     feat_Affine = zeros(N_slices_total,6);
+    feat_Gradient = zeros(N_slices_total,81);
+    feat_Gabor = zeros(N_slices_total,3600);
 elseif typeflag.local
     % if only all local features should be extracted
     feat_LBP = zeros(N_slices_total,1024);
@@ -450,6 +465,16 @@ for iI = 1:length(images)
             feat_SVD(iCounter,:) = SVDF(I);
         end
         
+        % Gradient-based features
+        if (typeflag.global || typeflag.texture || typeflag.gradient || typeflag.entropy)
+            feat_Gradient(iCounter,:) = GradientF(I,typeflag,gradtype);
+        end    
+        
+        % Gabor Filter
+        if (typeflag.global || typeflag.transform || typeflag.gradient ||...
+                typeflag.entropy || typeflag.texture)
+            feat_Gabor(iCounter,:) = GaborFilterF(I,typeflag,gradtype,scale,orientation,plotflag);
+        end  
         
         % -----------------------------------------------------------------
         % Geometrical features
