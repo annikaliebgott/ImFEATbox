@@ -51,7 +51,7 @@ typeflag = struct;
 
 % If you wish to extract all features provided by ImFEATbox, set
 % typeflag.all = true
-typeflag.all = false;
+typeflag.all = true;
 
 % If you don't wish to extract all features, you can chose the desired
 % feature categories here
@@ -633,7 +633,7 @@ for iI = 1:length(images)
         
         % Laplacian of Gaussian
         if (typeflag.local || typeflag.texture || typeflag.moments)
-            feat_LoG(iCounter,:) = LoGF(I,N_blobs,sigma,typeflag);
+            feat_LoG(iCounter,:) = LoGF(I,sigma,N_blobs,typeflag);
         end
         
         % Gilles Points
