@@ -303,7 +303,7 @@ if typeflag.all
     feat_Sector = zeros(N_slices_total,5);
     feat_Gradient = zeros(N_slices_total,81);
     feat_Gabor = zeros(N_slices_total,3600);
-    feat_Lacunarity = zeros(N_slices_total,floor((l_max-l_min)/stepsize)+5);
+    feat_Lacunarity = zeros(N_slices_total,6);
 elseif typeflag.global
     % if only all global features should be extracted
     feat_Intensity = zeros(N_slices_total,7);
@@ -406,7 +406,7 @@ elseif typeflag.local
     feat_LoG = zeros(N_slices_total,261);
     feat_Gilles = zeros(N_slices_total,6);
     feat_Sector = zeros(N_slices_total,5);
-    feat_Lacunarity = zeros(N_slices_total,floor((l_max-l_min)/stepsize)+5);
+    feat_Lacunarity = zeros(N_slices_total,6);
 end
 
 

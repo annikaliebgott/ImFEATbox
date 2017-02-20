@@ -15,7 +15,7 @@ function Out = LacunarityF(I,typeflag,l_min,l_max, stepsize)
 %              different box sizes. Default: stepsize = 1
 %
 %
-% Output:    - Out: A (1 x (floor((l_max - l_min)/stepsize) + 5) ) vector
+% Output:    - Out: A 1x6 vector
 %              containing metrics calculated from the image lacunarity
 %
 % ************************************************************************
@@ -99,6 +99,8 @@ end
     
     if typeflag.local || typeflag.texture
         % the more uniform the texture is, the smaller the mean
+        lacunarity_max = max(lacunarity);
+        lacunarity_min = min(lacunarity);
         lacunarity_mean = mean(lacunarity);
         lacunarity_std = std(lacunarity);
     end
@@ -111,7 +113,7 @@ end
     %% return feature vector
     
     if typeflag.local || typeflag.texture
-        Out = [lacunarity lacunarity_std lacunarity_mean lacunarity_xcov_std lacunarity_xcov_mean];
+        Out = [lacunarity_min lacunarity_max lacunarity_std lacunarity_mean lacunarity_xcov_std lacunarity_xcov_mean];
     else
         Out = [lacunarity_xcov_std lacunarity_xcov_mean];
     end
