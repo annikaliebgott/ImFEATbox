@@ -158,6 +158,15 @@ gradtype.second = true;
 scale = 5;
 orientation = 8;
 
+% LacunarityF.m: set parameters for box counting alogorithm of lacunarity
+l_min = 10;
+l_max = 30;
+stepsize = 1;
+
+% WaveletTrafoF.m: specify which type of wavelet you wish to employ
+wavelettype.haar = true;
+wavelettype.coif = true;
+wavelettype.dmey = true;
 
 
 %% Preprocessing steps
@@ -294,6 +303,7 @@ if typeflag.all
     feat_Sector = zeros(N_slices_total,5);
     feat_Gradient = zeros(N_slices_total,81);
     feat_Gabor = zeros(N_slices_total,3600);
+    feat_Lacunarity = zeros(N_slices_total,floor((l_max-l_min)/stepsize)+5);
 elseif typeflag.global
     % if only all global features should be extracted
     feat_Intensity = zeros(N_slices_total,7);
@@ -396,6 +406,7 @@ elseif typeflag.local
     feat_LoG = zeros(N_slices_total,261);
     feat_Gilles = zeros(N_slices_total,6);
     feat_Sector = zeros(N_slices_total,5);
+    feat_Lacunarity = zeros(N_slices_total,floor((l_max-l_min)/stepsize)+5);
 end
 
 
@@ -475,7 +486,7 @@ for iI = 1:length(images)
         % Geometrical features
         % -----------------------------------------------------------------
         
-        % Gray Level Co-occurance Matrix
+        % Gray Level Co-occurence Matrix
         if (typeflag.global || typeflag.texture || typeflag.form || typeflag.corr || typeflag.entropy)
             feat_GLCM(iCounter,:) = GLCMF(I, GLCMParameters, typeflag);
         end
@@ -499,7 +510,7 @@ for iI = 1:length(images)
         % Transformation features
         % -----------------------------------------------------------------
         
-        % feat_Fouier
+        % Fourier transform
         if (typeflag.global || typeflag.transform || typeflag.corr || typeflag.moments)
             feat_Fourier(iCounter,:) = FourierTrafoF(I,typeflag);
         end
@@ -509,18 +520,18 @@ for iI = 1:length(images)
             feat_DCT(iCounter,:) = DCTF(I,typeflag);
         end
         
-        % Hankel
+        % Hankel transform
         if (typeflag.global || typeflag.transform || typeflag.corr)
             feat_Hankel(iCounter,:) = DHankelF(I,typeflag);
         end
         
-        % Distance Transform
+        % Distance transform
         if (typeflag.global || typeflag.transform || typeflag.corr)
             feat_DistTrafo(iCounter,:) = DistanceTrafoF(I,typeflag);
         end
         
         
-        % Top-hat Transform
+        % Top-hat transform
         if (typeflag.global || typeflag.transform || typeflag.form || typeflag.moments)
             feat_TopHat(iCounter,:) = TopHatTrafoF(I,SE,typeflag);
         end
@@ -535,7 +546,7 @@ for iI = 1:length(images)
             feat_Unitary(iCounter,:) = UnitaryTrafoF(I,transformation);
         end
         
-        % Hough Transform
+        % Hough transform
         if (typeflag.global || typeflag.transform || typeflag.form ||...
                 (typeflag.moments && ~strcmp(houghtype,'circular')))
             feat_Hough(iCounter,:) = HoughTrafoF(I,houghtype,arc_min,plotflag,typeflag);
@@ -547,6 +558,11 @@ for iI = 1:length(images)
             feat_Gabor(iCounter,:) = GaborFilterF(I,typeflag,gradtype,scale,orientation,plotflag);
         end  
         
+        % Wavelet transform
+        if (typeflag.global || typeflag.transform || typeflag. corr || ...
+                typeflag.entropy || typeflag.moments)
+            feat_Wavelet(iCounter,:) = WaveletTrafoF(I,typeflag,wavelettype);
+        end    
         
         % -----------------------------------------------------------------
         % Moment features
@@ -608,6 +624,11 @@ for iI = 1:length(images)
             feat_Sector(iCounter,:) = SectorF(I);
         end
         
+        % Lacunarity
+        if typeflag.local || typeflag. texture || typeflag.corr
+            feat_Lacunarity(iCounter,:) = LacunarityF(I,typeflag,l_min,l_max,stepsize);
+        end    
+        
         % -----------------------------------------------------------------
         % Line features
         % -----------------------------------------------------------------
@@ -646,7 +667,7 @@ for iI = 1:length(images)
         % #################################################################
         
         % SURF
-        if typeflag.texture;
+        if typeflag.texture
             feat_SURF(iCounter,:) = SURF(I,N_s_SURF);
         end
         
@@ -767,14 +788,26 @@ end
 if ~exist('feat_Sector','var')
     feat_Sector = [];
 end
-
+if ~exist('feat_Gabor','var')
+    feat_Gabor = [];
+end
+if ~exist('feat_Gradient','var')
+    feat_Gradient = [];
+end
+if ~exist('feat_Lacunarity','var')
+    feat_Lacunarity = [];
+end
+if ~exist('feat_Wavelet','var')
+    feat_Wavelet = [];
+end
 
 feat_vector = [feat_Affine feat_RCovD feat_Connectivity feat_DCT...
     feat_DistTrafo feat_EBR_IBR feat_FormFactor feat_Fourier...
     feat_Gilles feat_Hankel feat_Harris feat_Hu feat_Law feat_LOSIB...
     feat_LineProfile feat_LoG feat_MSER feat_Quadtree feat_SURF feat_SVD...
     feat_SalientRegion feat_TopHat feat_Unitary feat_Zernike feat_GLCM...
-    feat_Fractal feat_Hist feat_Intensity feat_LBP...
-    feat_RunLength feat_Skeleton feat_Sector feat_Hough];
+    feat_Fractal feat_Hist feat_Intensity feat_LBP feat_RunLength...
+    feat_Skeleton feat_Sector feat_Hough feat_Gabor feat_Gradient...
+    feat_Lacunarity feat_Wavelet];
 
 
