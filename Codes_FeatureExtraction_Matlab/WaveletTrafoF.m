@@ -17,8 +17,8 @@ function Out = WaveletTrafoF(I,typeflag,wavelettype)
 %              default: all types of wavelets are being used
 %
 %
-% Output:    - Out: A (1x75) vector containing 75 metrics calculated from
-%                   the discrete Hankel transform
+% Output:    - Out: A (1x4759) vector containing 4759 metrics calculated 
+%                   from the wavelet transform
 %
 % Implemented wavelets: Daubechies 1 (aka Haar), Coiflets 1, Discrete Meyer
 %

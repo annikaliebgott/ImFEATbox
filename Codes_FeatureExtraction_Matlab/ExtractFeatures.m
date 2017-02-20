@@ -15,7 +15,8 @@
 %       quality assessment, you might need to change them according to your
 %       application
 % 4.)   Choose wheather or not you wish to use additional tools
-%       (preprocessing, visualization)
+%       (preprocessing, visualization). Attention: some feature extraction
+%       algorithms expect segmented or gray scale images.
 %
 % ************************************************************************
 % Implemented for MRI feature extraction by the Department of Diagnostic
@@ -175,7 +176,7 @@ wavelettype.dmey = true;
 % 0: no segmentation -> process whole image
 % 1: segmentation -> process foreground image
 % 2: segmentation -> process background image
-doSegmentation = 0;
+doSegmentation = 1;
 
 % Chan-Vese parameters
 % lambda1, lambda2, mu, smoothness, iterations
@@ -190,10 +191,10 @@ iMargin = 10;
 % doGrayscaling=0: no scaling
 % scalar doGraysacling > 0: scaling into range [0 doGraysacling]
 % vector doGraysacling: scaling into range [doGraysacling(1) doGraysacling(2)]
-doGrayscaling = 0;
+doGrayscaling = 255;
 
 %% Debugging
-% set whether visualizations included in I = scaleImg(I,iRange)some feature extraction algorithms
+% set whether visualizations included in some feature extraction algorithms
 % should be plotted or not (note: increases computation time)
 plotflag = false;
 
