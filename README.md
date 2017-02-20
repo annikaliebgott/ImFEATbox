@@ -6,3 +6,8 @@ This work is part of a research project of the Department of Interventional and 
 
 This toolbox is regularly being extended, for an up-to-date list of all implemented feature extraction algorithms please view features.pdf
 
+We are happy if you can benefit from our work. You are free to use and modify the codes provided in ImFEATbox, but please cite the following publication:
+
+<b>ImFEATbox: An MR Image Processing Toolbox for Extracting and Analyzing Features.</b><br>
+Annika Liebgott, Sergios Gatidis, Petros Martirosian, Fritz Schick, Bin Yang and Thomas Küstner.<br>
+In: <i>Proceedings of the International Society for Magnetic Resonance in Medicine (ISMRM)</i>. Honolulu, Hawaii, USA, 2017.
