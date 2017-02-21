@@ -24,9 +24,6 @@ function Out = SURF(I,N_s)
 %                           Features (SURF). Comput. Vis. Image Underst. 
 %                           110, 3 (June 2008), 346-359
 
-if ~exist('N_s','var')
-    N_s = 25; 
-end    
 
 %% calculation of SURF key points
 
@@ -41,6 +38,11 @@ L = points.Location;
 
 %Number of detected points
 N_points = points.length;
+
+if ~exist('N_s','var') || N_s > 0.5*N_points
+    N_s = 0.1*N_points; 
+end    
+
 
 % Location of the N_s strongest key points
 L_s = points.selectStrongest(N_s).Location;

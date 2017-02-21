@@ -15,8 +15,7 @@
 %       quality assessment, you might need to change them according to your
 %       application
 % 4.)   Choose wheather or not you wish to use additional tools
-%       (preprocessing, visualization). Attention: some feature extraction
-%       algorithms expect segmented or gray scale images.
+%       (preprocessing, visualization). 
 %
 % ************************************************************************
 % Implemented for MRI feature extraction by the Department of Diagnostic
@@ -112,7 +111,7 @@ arc_min = pi/2;
 N_s_Harris = 25;
 
 % FractalDimensionF.m: choose largest box size
-width = 256;
+width = 512;
 
 % GillesF.m: define mask radius and threshold factor
 radius_Gilles = 10;
@@ -129,7 +128,7 @@ N_s_SURF = 25;
 % SalientRegionF.m: set border of rectangles for Haar feature calculation
 % and inner Region
 border_Salient = 14;
-R1 = 1;
+R1 = 1; 
 
 % TopHatTrafoF.m: create morphological structruning element (STREL)
 SE = cell(zeros);
@@ -168,6 +167,10 @@ stepsize = 1;
 wavelettype.haar = true;
 wavelettype.coif = true;
 wavelettype.dmey = true;
+
+% LOSIBF.m: specify desired radius and number of neighbors
+radius = 5;
+neighbors = 16;
 
 
 %% Preprocessing steps
@@ -674,7 +677,7 @@ for iI = 1:length(images)
         
         % LOSIB
         if typeflag.texture
-            feat_LOSIB(iCounter,:) = LOSIBF(I);
+            feat_LOSIB(iCounter,:) = LOSIBF(I,radius,neighbors);
         end
         
         % Region of Covariance Descriptor

@@ -25,6 +25,7 @@ function Out = HarrisF(I,plotflag, N_s)
 if~exist('plotflag','var')
     plotflag = false;
 end    
+
 % convert image
 I = double(I);
 
@@ -36,7 +37,7 @@ corners = detectHarrisFeatures(I);
 c = corners.Location;  
 N = corners.Count;
 
-if ~exist('N_s','var')
+if ~exist('N_s','var') || N_s > 0.5*N
     N_s = ceil(0.1*N);
 end
 
