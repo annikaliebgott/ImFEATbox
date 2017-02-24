@@ -50,6 +50,9 @@ elseif(mod(N2,2)>0)
     I = I(:,1:N2-1);
 end
 
+if any(~real(I))
+   I = real(I); 
+end    
 
 %% Detect Corners and Edges
 % select Harris corners

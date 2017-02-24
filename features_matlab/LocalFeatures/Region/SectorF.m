@@ -18,6 +18,10 @@ function Out = SectorF(I)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 
+if any(~real(I))
+   I = real(I); 
+end   
+
 %% break image into sectors
 
 % convert image to binary image

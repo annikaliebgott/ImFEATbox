@@ -19,6 +19,10 @@ function Out = ConnectivityF(I)
 % ************************************************************************
 
 
+if any(~real(I))
+   I = real(I); 
+end   
+
 %% find connected components
 
 % convert image to binary
