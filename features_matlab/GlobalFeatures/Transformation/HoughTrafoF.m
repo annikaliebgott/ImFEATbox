@@ -52,6 +52,10 @@ if ~exist('plotflag','var')
    plotflag = false;
 end    
 
+if any(~isreal(I))
+    I = real(I);
+end
+
 if strcmp(houghtype,'linear') || strcmp(houghtype,'both')
     
     %% Linear Hough transform
