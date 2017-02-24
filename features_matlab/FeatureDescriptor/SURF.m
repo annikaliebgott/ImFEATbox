@@ -30,6 +30,10 @@ function Out = SURF(I,N_s)
 % convert image
 I = double(I);
 
+if any(~real(I))
+   I = real(I); 
+end   
+
 % calculation of the key points
 points = detectSURFFeatures(I);
 
@@ -40,7 +44,7 @@ L = points.Location;
 N_points = points.length;
 
 if ~exist('N_s','var') || N_s > 0.5*N_points
-    N_s = 0.1*N_points; 
+    N_s = ceil(0.1*N_points); 
 end    
 
 
