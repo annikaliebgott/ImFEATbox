@@ -23,6 +23,10 @@ if ~exist('th','var')
     th = 0.95;
 end    
 
+if any(~real(I))
+   I = real(I); 
+end   
+
 %% extract Gilles points
 
 % convert image to binary
@@ -46,11 +50,19 @@ points_gilles = [row col]/numel(I);
 
 %% feature extraction
 points_gilles_num = size(points_gilles,1);
-points_gilles_mean = mean(points_gilles);
-points_gilles_std = std(points_gilles);
-points_gilles_std2 = std2(points_gilles);
-
-
+if points_gilles_num > 1
+    points_gilles_mean = mean(points_gilles);
+    points_gilles_std = std(points_gilles);
+    points_gilles_std2 = std2(points_gilles);
+else
+    if points_gilles_num == 0
+        points_gilles_mean = [0 0];
+    else    
+        points_gilles_mean = points_gilles;
+    end
+    points_gilles_std = [0 0];
+    points_gilles_std2 = 0;
+end
 
 %% return features
 Out = [points_gilles_num points_gilles_mean points_gilles_std points_gilles_std2];
