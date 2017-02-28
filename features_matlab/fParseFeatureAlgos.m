@@ -41,7 +41,7 @@ cMapFeatureGroup = { % GLOBAL FEATURES                                          
                      % -----------------------------------------------------------------    
                      'glcm',             'GLCMF',            {'GLCMParameters', 'typeflag'}, 672, 0, 1,        bin2dec('01 01 00 11 10'); 
                      'runlength',        'RunLengthF',       {},                     44,     0,      1,        bin2dec('01 00 00 10 00');
-                     'fractaldimension', 'FractalDimensionF',{'plotflag','width'},   27,     0,      1,        bin2dec('01 00 00 01 00');
+                     'fractaldimension', 'FractalDimensionF',{'plotflag','width'},   (log(width)/log(2))*3+3,     0,      1,        bin2dec('01 00 00 01 00');
                      'formfactor',       'FormFactorF',      {'typeflag'},           32,     0,      1,        bin2dec('01 01 00 01 00');
                      % -----------------------------------------------------------------
                      % Transformation features                                              2
