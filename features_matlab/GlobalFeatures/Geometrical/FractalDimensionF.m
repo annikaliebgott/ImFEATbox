@@ -4,8 +4,8 @@ function Out = FractalDimensionF(I,plotflag,width)
 %              Default: false
 %            - width: largest size of the box. Default: width = 256
 %
-% Output:    - Out: A (1x27) vector containing 27 metrics based on
-%                   self-similarity of image structures
+% Output:    - Out: A (1 x (log(width)/log(2))*3 + 3) vector containing
+%                   metrics based on self-similarity of image structures
 %
 %
 % Implemented algorithms:   1. Box-Counting(Haus) (BC)
@@ -106,7 +106,6 @@ for n = 1:length(step)
             if (size(find(testim~=0),1)~=0)
                 counter = counter+1;
             end	
-            % Basic Box Counting
             
         end
     end
@@ -118,7 +117,7 @@ for n = 1:length(step)
     counter_tpsa = 0;
 end
 
-% Resolusion
+% Resolution
 r0 = 2.^(p:-1:1);
 
 % Dimension of BC
@@ -135,7 +134,7 @@ FDMat_MBC = y1./x1;
 D1 = polyfit(x1, y1, 1);
 FD_MBC = D1(1);
 
-% Dimension of MBC
+% Dimension of TPSA
 x2 = log(r0);
 y2 = log(N_tpsa);
 FDMat_TPSA = y2./x2;
