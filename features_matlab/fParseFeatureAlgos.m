@@ -167,6 +167,7 @@ end
 
 %% parse inputs
 cGroups = cMapFeatureGroup(:,end);
+cFeatureAlgoGroups = [];
 cFeatureAlgos = cell(size(cFeatureAlgosIn));
 for iI = 1:length(cFeatureAlgosIn)
     switch lower(cFeatureAlgosIn{iI})
@@ -175,40 +176,31 @@ for iI = 1:length(cFeatureAlgosIn)
             break;
         case 'global' 
             lMask = cellfun(@(x) bitand(x,2^8) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'local' 
             lMask = cellfun(@(x) bitand(x,2^7) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break; 
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'corr' 
             lMask = cellfun(@(x) bitand(x,2^6) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'gradient'
             lMask = cellfun(@(x) bitand(x,2^5) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'moments' 
             lMask = cellfun(@(x) bitand(x,2^4) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'texture' 
             lMask = cellfun(@(x) bitand(x,2^3) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break; 
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'form' 
             lMask = cellfun(@(x) bitand(x,2^2) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'entropy' 
             lMask = cellfun(@(x) bitand(x,2^1) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'transform'
             lMask = cellfun(@(x) bitand(x,2^0) > 0, cGroups);
-            cFeatureAlgos = cMapFeatureGroup(lMask,1);
-            break;
+            cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case '-getfeatures'
             hFeatures = []; typeflag = [];
             cUsedFeatures = cMapFeatureGroup(:,[1 4]);
@@ -220,7 +212,11 @@ for iI = 1:length(cFeatureAlgosIn)
             cFeatureAlgos{iI} = cFeatureAlgosIn{iI};
     end
 end
-
+if(~isempty(cFeatureAlgos{1}))
+	cFeatureAlgos = cat(1,cFeatureAlgos,cFeatureAlgoGroups);
+else
+	cFeatureAlgos = cFeatureAlgoGroups;
+end
     
 %% set typeflags
 bGroups = 0;
