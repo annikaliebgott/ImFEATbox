@@ -52,7 +52,7 @@ end
     
     
 %% extract transformation features with feature parameters (specified in file)
-sFeatureParameter = [pwd, filesep, 'features_matlab', filesep, 'parameters_ImFEATBox_def.m'];
+sFeatureParameter = [pwd, filesep, 'parameters_ImFEATBox_def.m'];
 feat_vector = [];
 for iI=1:length(images)
     feat_vector = cat(1,fExtractFeatures(images{iI},[],'transform', sFeatureParameter));
@@ -60,7 +60,7 @@ end
 
 
 %% extract specific features with feature parameters (specified in file)
-sFeatureParameter = [pwd, filesep, 'features_matlab', filesep, 'parameters_ImFEATBox_def.m'];
+sFeatureParameter = [pwd, filesep, 'parameters_ImFEATBox_def.m'];
 feat_vector = [];
 for iI=1:length(images)
     feat_vector = cat(1,fExtractFeatures(images{iI},[],{'intensity', 'mser'}, sFeatureParameter));
