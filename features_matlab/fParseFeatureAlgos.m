@@ -183,7 +183,7 @@ for iI = 1:length(cFeatureAlgosIn)
         case 'corr' 
             lMask = cellfun(@(x) bitand(x,2^6) > 0, cGroups);
             cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
-        case 'gradient'
+        case 'gradients'
             lMask = cellfun(@(x) bitand(x,2^5) > 0, cGroups);
             cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'moments' 
