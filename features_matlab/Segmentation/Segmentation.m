@@ -25,7 +25,7 @@ function [SegmentedImage, SegmentedBackground, BinaryImage] = Segmentation(I, Ma
 % Implemented for MRI feature extraction by the Department of Diagnostic
 % and Interventional Radiology, University Hospital of Tuebingen, Germany
 % and the Institute of Signal Processing and System Theory University of
-% Stuttgart, Germany. Last modified: Dezember 2016
+% Stuttgart, Germany. Last modified: June 2017
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
 % extraction and analysis. Available online at:
@@ -79,24 +79,25 @@ else % keep image size
     SegmentedBackground(~BinaryImage) = I(~BinaryImage);
 end
 
+% plotflag = false;
 if plotflag > 0
     % display results
     figure; subplot(2,2,1)
     imagesc(I(:,:,plotflag)); axis image; colormap gray;
-    title('The Main Image');
+    title('The original image');
     
     subplot(2,2,2)
     imagesc(MaskImage(:,:,plotflag)); axis image; colormap gray;
-    title('The Initialization');
+    title('The initialization mask');
     
     subplot(2,2,3)
     imagesc(BinaryImage(:,:,plotflag)); axis image; colormap gray;
-    title('The Final Segmenatation Output');
+    title({'The final', 'segmenatation output'});
     
     subplot(2,2,4)
     imagesc(I(:,:,plotflag)); axis image; colormap gray;
     hold on;
-    contour(BinaryImage(:,:,plotflag),[0 0],'b','linewidth',3);
+    contour(BinaryImage(:,:,plotflag),'b','linewidth',3);
     hold off;
-    title('The Image With the Segmentation Shown in Blue');
+    title({'The image with the', 'segmentation (blue)'});
 end
