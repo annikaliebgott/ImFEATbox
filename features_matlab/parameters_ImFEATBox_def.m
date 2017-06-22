@@ -10,9 +10,15 @@ doSegmentation = 1;
 
 % Chan-Vese parameters
 % lambda1, lambda2, mu, smoothness, iterations
-cSegParam = {1, 1, 0.2, 4, 100};
+cSegParam = {1, 1, 0.2, 1, 1000};
 % margin from edges
 iMargin = 10;
+
+%% mask handling
+% use either zero padding or image content to fill matrix around ROI/VOI
+% 0: zero padding 
+% 1: image content
+cropMode = 0;
 
 %% scaling
 % scale image into gray scale value range 

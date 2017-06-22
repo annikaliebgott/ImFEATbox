@@ -8,11 +8,15 @@ function [feat_vector, feat_names] = fExtractFeatures(image, lMask, cFeatures, s
 %           lMask: predefined masking
 %           cFeatures: cell containing 
 %               a) the wanted features (with names provided by '-getFeatures')
-%               b) complete feature groups: 'all' | 'global' | 'local' | 'corr' | 'gradient' | 'moments' | 'texture' | 'form' | 'entropy' | 'transform'
+%               b) complete feature groups: 'all' | 'global' | 'local' | 
+%                   'corr' | 'gradient' | 'moments' | 'texture' | 'form' | 
+%                   'entropy' | 'transform'
 %               c) '-getFeatures': to retrieve implemented features
-%           sFeatureParas: string with path to parameter file script; if not specified using default parameters
+%           sFeatureParas: string with path to parameter file script;  
+%                          if not specified using default parameters
 % Output:   feat_vec: an [NxM] array of M features extracted from N images.
-%           feat_names: [2xM] cell array of M feature names and their column index
+%           feat_names: [2xM] cell array of M feature names and their 
+%                       column index
 %
 % The basic steps to successfully carry out the feature extraction:
 % 1.)   Import the images of which you want to extract the features.
@@ -30,13 +34,14 @@ function [feat_vector, feat_names] = fExtractFeatures(image, lMask, cFeatures, s
 % Implemented for MRI feature extraction by the Department of Diagnostic
 % and Interventional Radiology, University Hospital of Tuebingen, Germany
 % and the Institute of Signal Processing and System Theory University of
-% Stuttgart, Germany. Last modified: February 2017
+% Stuttgart, Germany. Last modified: June 2017
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
 % extraction and analysis. Available online at:
 % https://github.com/annikaliebgott/ImFEATbox
 %
-% Contact: annika.liebgott@iss.uni-stuttgart.de, thomas.kuestner@iss.uni-stuttgart.de
+% Contact: annika.liebgott@iss.uni-stuttgart.de
+%          thomas.kuestner@iss.uni-stuttgart.de
 % ************************************************************************
 
 
@@ -103,7 +108,7 @@ if(isempty(lMask))
     end
 else
     % precrop image according to mask
-    image3D = fSegmentCrop ( image3D, lMask );
+    image3D = fSegmentCrop ( image3D, lMask, cropMode);
 end
 
 % scaling
@@ -136,21 +141,26 @@ if any(imag(image3D(:))~=0)
 end 
 feat_vector = [];
 feat_names = cell(2,length(hFeatures));
+feat_num = zeros(length(hFeatures),2);
 % 2D feature extraction
 if(lDisplay), multiWaitbar( 'Slice', 0 ); end;
 for iSlice = 1:size(image3D,3)
     I = image3D(:,:,iSlice);
-    
+        
     feat_sli = [];
     for iI = 1:length(hFeatures)
         if(lDisplay && iSlice == 1), multiWaitbar(  cUsedFeatures{iI,1}, 0 ); end;
         hFeat = hFeatures{iI};
         feat_curr = hFeat(I);
+
         if(iSlice == 1)
             feat_names{1,iI} = cUsedFeatures{iI,1};
             feat_names{2,iI} = [length(feat_sli)+1,length(feat_sli)+length(feat_curr)];
         end
-        feat_sli = cat(2,feat_sli, feat_curr);
+        feat_num(iI,iSlice) = length(feat_curr);
+        % double(feat_curr) makes sure that no int or single features 
+        % accidentally change whole feat_sli to a type other than double
+        feat_sli = cat(2,feat_sli, double(feat_curr)); 
 %         eval(sprintf('feat_%s(iSlice,:) = hFeat(I);', cUsedFeatures{iI,2}));
         if(lDisplay), multiWaitbar( cUsedFeatures{iI,1}, 'Value', iSlice/size(image3D,3) ); end;
     end
