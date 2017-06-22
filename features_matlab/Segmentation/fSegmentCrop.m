@@ -1,4 +1,4 @@
-function [ SegmentedImage, SegmentedBackground ] = fSegmentCrop ( I, BinaryImage )
+function [ SegmentedImage, SegmentedBackground ] = fSegmentCrop ( I, BinaryImage, cropMode )
 % segment and crop the image
 
 if(ismatrix(BinaryImage))
@@ -8,12 +8,16 @@ if(ismatrix(BinaryImage))
 elseif(ndims(BinaryImage) == 3)
     iLin = find(BinaryImage==1);
     [iRow, iCol, iSli] = ind2sub(size(BinaryImage),iLin);
-end    
+end
 
-% segmented and cropped
-SegmentedImage = zeros(size(I));
-SegmentedImage(iLin) = I(iLin);
-SegmentedImage = SegmentedImage(min(iRow):max(iRow), min(iCol):max(iCol), min(iSli):max(iSli));
+if cropMode == 0
+    % segmented and cropped
+    SegmentedImage = zeros(size(I));
+    SegmentedImage(iLin) = I(iLin);
+    SegmentedImage = SegmentedImage(min(iRow):max(iRow), min(iCol):max(iCol), min(iSli):max(iSli));
+else
+    SegmentedImage = I(min(iRow):max(iRow), min(iCol):max(iCol), min(iSli):max(iSli));
+end
 
 % Replace the background with zero pixels
 % SegmentedImage = zeros([abs(max(iRow)-min(iRow))+1, abs(max(iCol)-min(iCol))+1, abs(max(iSli)-min(iSli))+1]);
