@@ -41,7 +41,7 @@ c = double(corners.Location);
 N = double(corners.Count);
 
 if ~exist('N_s','var') || N_s > 0.5*N
-    N_s = ceil(0.1*N);
+    N_s = ceil(0.2*N);
 end
 
 c_s = double(corners.selectStrongest(N_s).Location);
