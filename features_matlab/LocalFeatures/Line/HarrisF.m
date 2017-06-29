@@ -21,7 +21,6 @@ function Out = HarrisF(I,plotflag, N_s)
 %
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
-
 if~exist('plotflag','var')
     plotflag = false;
 end    
@@ -29,31 +28,38 @@ end
 % convert image
 I = double(I);
 
+if any(~real(I))
+   I = real(I); 
+end   
+
 % calculation of corner points using Harris-Stephens algorithm
 corners = detectHarrisFeatures(I);
 
 
 %% extract features
-c = corners.Location;  
-N = corners.Count;
+c = double(corners.Location);  
+N = double(corners.Count);
 
 if ~exist('N_s','var') || N_s > 0.5*N
     N_s = ceil(0.1*N);
 end
 
-c_s = corners.selectStrongest(N_s).Location;
+c_s = double(corners.selectStrongest(N_s).Location);
 
 % determine center  of gravity for all points
 x_gravity = sum(c(:,1)./N);
 y_gravity = sum(c(:,2)./N);
 
-% deterime center of gravity for the strongest points
+% determine center of gravity for the strongest points
 x_gravity_s = sum(c_s(:,1)./N_s);
 y_gravity_s = sum(c_s(:,2)./N_s);
 
 % display the results
 if plotflag
-    imshow(I); hold on;
+%     imshow(I); 
+    imagesc(I);
+    colormap(gray);
+    hold on;
     scatter(c(:,1),c(:,2),'+');
     scatter(c_s(:,1),c_s(:,2),'g+');
     plot(x_gravity_s, y_gravity_s,'r*','MarkerSize',10);
