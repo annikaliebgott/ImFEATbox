@@ -6,9 +6,9 @@ function Out = MSERF(I,plotflag)
 %              maximally stable extremal regions in the image
 %
 % ************************************************************************
-% Implemented for MRI feature extraction by the Department of Diagnostic 
-% and Interventional Radiology, University Hospital of Tuebingen, Germany 
-% and the Institute of Signal Processing and System Theory University of 
+% Implemented for MRI feature extraction by the Department of Diagnostic
+% and Interventional Radiology, University Hospital of Tuebingen, Germany
+% and the Institute of Signal Processing and System Theory University of
 % Stuttgart, Germany. Last modified: November 2016
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
@@ -18,21 +18,21 @@ function Out = MSERF(I,plotflag)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 %
-% Reference:   	J. Matas, O. Chum, M. Urban and T. Pajdla. Robust Wide 
-%               Baseline Stereo from Maximally Stable Extremal Regions. 
-%               In David Marshall and Paul L. Rosin, editors, Proceedings 
-%               of the British Machine Conference, pages 36.1-36.10. 
-%               BMVA Press, September 2002. 
+% Reference:   	J. Matas, O. Chum, M. Urban and T. Pajdla. Robust Wide
+%               Baseline Stereo from Maximally Stable Extremal Regions.
+%               In David Marshall and Paul L. Rosin, editors, Proceedings
+%               of the British Machine Conference, pages 36.1-36.10.
+%               BMVA Press, September 2002.
 
 
 %% Detection of MSERs
 
 if ~exist('plotflag','var')
-   plotflag = false; 
-end    
+    plotflag = false;
+end
 
 % convert image
-I = uint8(I); 
+I = uint8(I);
 
 % detect and store regions
 regions = detectMSERFeatures(I);
@@ -40,16 +40,16 @@ regions = detectMSERFeatures(I);
 %% Feature extraction
 
 % total number of regions
-num = regions.Count;
+num = double(regions.Count);
 
 if regions.length > 0
     
     % determine center of gravity for all points on x- and y-axis, mean
-    % orientation and mean area covered for all regions, mean coordinates 
+    % orientation and mean area covered for all regions, mean coordinates
     % of MSERs, std of coordinates of MSERs, sum of x- and y-coordinates
-    a = regions.Location;
-    o = regions.Orientation;
-    axes = regions.Axes;
+    a = double(regions.Location);
+    o = double(regions.Orientation);
+    axes = double(regions.Axes);
     total_area = size(I,1)*size(I,2);
     
     % center of gravity for both axes
@@ -72,10 +72,15 @@ if regions.length > 0
     axes_sum_x = sum(axes(:,1));
     axes_sum_y = sum(axes(:,2));
     
-    % features from pixel list: length, mean of x- and 
+    % features from pixel list: length, mean of x- and
     % y-coordinates, std of x- and y-coordinates, difference of std of y-
     % and y-coordinates
-    pixlist = cell2mat(regions.PixelList);  
+    if num > 1
+        pixlist = cell2mat(regions.PixelList);
+    else
+        pixlist = regions.PixelList;
+    end
+    
     pixlist = double(pixlist);
     pixlist_length = length(pixlist);
     pixlist_mean_x = mean(pixlist(:,1));
@@ -100,8 +105,8 @@ else
     pixlist_std_x = 0;
     pixlist_std_y = 0;
     pixlist_std_diff =0;
- 
-end    
+    
+end
 
 % display the centroids and axes of detected regions
 if plotflag
@@ -109,7 +114,7 @@ if plotflag
     plot(regions); hold all;
     plot(x_gravity_allpoints, y_gravity_allpoints,'*r');
     %mark selectred regions colored
-    plot(regions, 'showPixelList', true);     
+    plot(regions, 'showPixelList', true);
 end
 
 %% return feature vector
@@ -118,6 +123,6 @@ Out = [num x_gravity_allpoints y_gravity_allpoints area_covered...
     pixlist_length pixlist_mean_x pixlist_mean_y...
     pixlist_std_x pixlist_std_y pixlist_std_diff];
 
-end      
+end
 
 
