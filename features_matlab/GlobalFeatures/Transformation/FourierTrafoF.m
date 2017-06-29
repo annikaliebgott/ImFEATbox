@@ -91,7 +91,7 @@ for z=1 : 3
     % break the image into sectors
     
     % get the center of the image
-    half = length(I)/2;
+    half = floor(length(I)/2);
     
     I1 = I(1:half, 1:half);
     I2 = I(1:half,half+1:length(I));
