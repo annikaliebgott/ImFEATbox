@@ -90,7 +90,7 @@ cMapFeatureGroup = { % GLOBAL FEATURES                                          
                      
                     % FEATURE DESCRIPTORS                                             2
                     % #################################################################
-                     'surf',             'SURF',            {'N_s_SURF'},             11,    2,     0,         bin2dec('00 00 00 10 00');
+                     'surf',             'SURF',            {'N_s_SURF','plotflag'},  11,    2,     0,         bin2dec('00 00 00 10 00');
                      'losib',            'LOSIBF',          {'radius','neighbors'},   34,    2,     0,         bin2dec('00 00 00 10 00');
                      'rcovd',            'RCovDsF',         {'typeflag'},             15,    2,     0,         bin2dec('00 01 01 00 00')};
                     
@@ -183,7 +183,7 @@ for iI = 1:length(cFeatureAlgosIn)
         case 'corr' 
             lMask = cellfun(@(x) bitand(x,2^6) > 0, cGroups);
             cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
-        case 'gradients'
+        case 'gradient'
             lMask = cellfun(@(x) bitand(x,2^5) > 0, cGroups);
             cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'moments' 
