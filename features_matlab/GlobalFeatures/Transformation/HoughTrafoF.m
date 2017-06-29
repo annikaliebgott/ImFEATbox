@@ -96,8 +96,11 @@ if strcmp(houghtype,'linear') || strcmp(houghtype,'both')
     end
     
     % determine length of longest line
-    max_length = max(length_lines);
-    
+    if ~isempty(length_lines)
+        max_length = max(length_lines);
+    else
+        max_length = 0;
+    end    
     % calculate line with mean direction of all lines
     line_mean = [sum(line_start)./N_lines; sum(line_end)./N_lines];
     line_mean_slope = (line_mean(2,2)-line_mean(1,2))/(line_mean(2,1)-line_mean(1,1));
@@ -106,7 +109,11 @@ if strcmp(houghtype,'linear') || strcmp(houghtype,'both')
     line_mean_length = norm(line_mean(1,:) - line_mean(2,:));
     
     % calculat mean point of line with mean direction of all lines
-    line_mean_point = mean(line_mean);
+    if N_lines > 1
+        line_mean_point = mean(line_mean);
+    else 
+        line_mean_point = [0 0];
+    end    
     
     % investigation of (normalized) parallelism of all detected lines by
     % counting the occurence of pairwise parallel lines (para_sum) and the
@@ -136,7 +143,11 @@ if strcmp(houghtype,'linear') || strcmp(houghtype,'both')
     for i = 1:length(grad)
         para_num(para_num(:,1) == grad(i),2) = para_num(para_num(:,1) == grad(i),2) + 1;
     end
-    para_max = max(para_num(:,2));
+    if ~isempty(para_num)
+        para_max = max(para_num(:,2));
+    else
+        para_max = 0;
+    end    
     
     % standard deviation of gradient
     line_grad_std = std(grad);
@@ -273,8 +284,13 @@ if strcmp(houghtype,'circular') || strcmp(houghtype,'both')
     maxval_std = std(maxval_norm);
     
     % mean and std of location of relevant circles
-    location_mean = mean(mean_loc);
-    location_std = std(std_loc);
+    if N_c_sum_relevant > 1
+        location_mean = mean(mean_loc);
+        location_std = std(std_loc);
+    else
+        location_mean = [0 0];
+        location_std = [0 0];
+    end    
     
     %% visualization
     if plotflag
@@ -290,8 +306,7 @@ if strcmp(houghtype,'circular') || strcmp(houghtype,'both')
         
         % chose only circles with circular arcs on detected edges that are
         % at least min_arc long
-        min_arc = pi/2;
-        centertable = centertable(centertable(:,5) >= min_arc,:);
+        centertable = centertable(centertable(:,5) >= arc_min,:);
         maxNrCircles = size(centertable,1);
         
         
@@ -299,10 +314,10 @@ if strcmp(houghtype,'circular') || strcmp(houghtype,'both')
         yc = centertable(:,3);
         r = centertable(:,4);
         
-        figure; imshow(BWc);
+%         figure; imshow(BWc);
         figure;
         I=mat2gray(I);
-        imshow(I)
+        imagesc(I)
         colormap(gray)
         hold on;
         plot(xc,yc,'x','LineWidth',2,'Color', 'yellow');

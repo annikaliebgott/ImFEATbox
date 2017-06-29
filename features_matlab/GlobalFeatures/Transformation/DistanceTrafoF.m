@@ -44,6 +44,16 @@ BW = im2bw(I, graythresh(I));
 [D3, IDX3] = bwdist(BW, 'euclidean');
 [D4, IDX4] = bwdist(BW, 'quasi-euclidean');
 
+% transform Di and IDXi to double
+D1 = double(D1);
+D2 = double(D2);
+D3 = double(D3);
+D4 = double(D4);
+IDX1 = double(IDX1);
+IDX2 = double(IDX2);
+IDX3 = double(IDX3);
+IDX4 = double(IDX4);
+
 
 %% feature extraction
 
