@@ -149,7 +149,7 @@ for z=1 : 3
         
         r_F(z) = rank(F);
         r_F1(z) = rank(F1);
-        r_F2(z) = rank(2);
+        r_F2(z) = rank(F2);
         r_F3(z) = rank(F3);
         r_F4(z) = rank(F4);
         
