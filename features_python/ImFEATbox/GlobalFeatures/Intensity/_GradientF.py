@@ -1,5 +1,6 @@
 import numpy as np
-from ImFEATbox.__helperCommands import rgb2grayscale
+from ImFEATbox.__helperCommands import rgb2grayscale, isColorImage, conv2float
+from scipy.signal import convolve2d
 
 def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
     """
@@ -79,9 +80,11 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
 
     # Check for color image and convert to grayscale
-    if len(Image.shape) == 4 and Image.shape[3] == 3: #image is 3D and color
-        if(size(Image,3)==3): # TODO FIX correct detection
-            Image = rgb2grayscale(Image)
+    if isColorImage(I):
+        I = rgb2grayscale(I)
+
+    # make float
+    I = conv2float(I)
 
     Height, Width = np.shape(I)
     n = Height * Width
@@ -90,41 +93,59 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
     if gradtype['first']:
         # gradient 1
         # gradient direction: x
-        g1_x = [1, -1]
+        g1_x = np.array([   [1, -1],
+                            [0, 0]])
         # gradient direction: y
-        g1_y = [1, -1]
+        g1_y = np.array([   [1, 0],
+                            [-1, 0]])
 
         # gradient 2
-        g2_x = [1, 0, -1]
-        g2_y = [1, 0, -1]
+        g2_x = np.array([   [0, 0, 0],
+                            [1, 0, -1],
+                            [0, 0, 0]])
+
+        g2_y = np.array([   [0, 1, 0],
+                            [0, 0, 0],
+                            [0, -1, 0]])
 
     if gradtype['second']:
         # laplacian 1
-        l1_x = [-1, 2, -1]
-        l1_y = [-1, 2, -1]
+        l1_x = np.array([   [0, 0, 0],
+                            [-1, 2, -1],
+                            [0, 0, 0]])
+
+        l1_y = np.array([   [0, -1, 0],
+                            [0, 2, 0],
+                            [0, -1, 0]])
 
         # laplacian 2
-        l2 = [[-1, -2, -1],[-2, 12, -2],[-1, -2, -1]]
+        l2 = np.array([ [-1, -2, -1],
+                        [-2, 12, -2],
+                        [-1, -2, -1]])
 
         # laplacian 3
-        l3 = [[0, -1, 0],[-1, 4, -1],[0, -1, 0]]
+        l3 = np.array([ [0, -1, 0],
+                        [-1, 4, -1],
+                        [0, -1, 0]])
 
         # laplacian 4
-        l4 = [[-1, -1, -1],[-1, 8, -1],[-1, -1, -1]]
+        l4 = np.array([ [-1, -1, -1],
+                        [-1, 8, -1],
+                        [-1, -1, -1]])
 
     ## convolve image
     if gradtype['first']:
-        G1_x = conv2[g1_x,I]
-        G1_y = conv2[g1_y,I]
-        G2_x = conv2[g2_x,I]
-        G2_y = conv2[g2_y,I]
+        G1_x = convolve2d(I,g1_x, boundary='symm', mode='full')
+        G1_y = convolve2d(I,g1_y, boundary='symm', mode='full')
+        G2_x = convolve2d(I,g2_x, boundary='symm', mode='full')
+        G2_y = convolve2d(I,g2_y, boundary='symm', mode='full')
 
     if gradtype['second']:
-        L1_x = conv2[l1_x,I]
-        L1_y = conv2[l1_y,I]
-        L2 = conv2[l2,I]
-        L3 = conv2[l3,I]
-        L4 = conv2[l4,I]
+        L1_x = convolve2d(I,l1_x, boundary='symm', mode='full')
+        L1_y = convolve2d(I,l1_y, boundary='symm', mode='full')
+        L2 = convolve2d(I,l2, boundary='symm', mode='full')
+        L3 = convolve2d(I,l3, boundary='symm', mode='full')
+        L4 = convolve2d(I,l4, boundary='symm', mode='full')
 
     ## extract features
 
@@ -200,10 +221,10 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
         # standard deviation of normalized gradients
         if gradtype['first']:
-            G1_x_norm_std = std2(G1_x_norm)
-            G1_y_norm_std = std2(G1_y_norm)
-            G2_x_norm_std = std2(G2_x_norm)
-            G2_y_norm_std = std2(G2_y_norm)
+            G1_x_norm_std = np.std(G1_x_norm)
+            G1_y_norm_std = np.std(G1_y_norm)
+            G2_x_norm_std = np.std(G2_x_norm)
+            G2_y_norm_std = np.std(G2_y_norm)
 
         if gradtype['second']:
             L1_x_norm_std = np.std(L1_x_norm)
@@ -256,7 +277,7 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     # marginal entropies of normalized gradients
     if gradtype['first']:
-        G1_x_E = -np.sum(G1_x_norm[G1_x_norm != 0] * np.log2(G1_x_norm[G1_x_norm != 0]))
+        G1_x_E = -np.sum(G1_x_norm[np.nonzero(G1_x_norm)] * np.log2(G1_x_norm[np.nonzero(G1_x_norm)]))
         G1_y_E = -np.sum(G1_y_norm[G1_y_norm != 0] * np.log2(G1_y_norm[G1_y_norm != 0]))
         G2_x_E = -np.sum(G2_x_norm[G2_x_norm != 0] * np.log2(G2_x_norm[G2_x_norm != 0]))
         G2_y_E = -np.sum(G2_y_norm[G2_y_norm != 0] * np.log2(G2_y_norm[G2_y_norm != 0]))
@@ -271,7 +292,7 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
     ## Build output vector Out
     if typeflag['global'] or typeflag['texture'] or typeflag['gradient']:
         if gradtype['first'] and gradtype['second']:
-            Out = [G1_x_sum,G1_y_sum,G2_x_sum,G2_y_sum,L1_x_sum,L1_y_sum,L2_sum,L3_sum,L4_sum,
+            Out = np.array([G1_x_sum,G1_y_sum,G2_x_sum,G2_y_sum,L1_x_sum,L1_y_sum,L2_sum,L3_sum,L4_sum,
                 G1_x_2,G1_y_2,G2_x_2,G2_y_2,L1_x_2,L1_y_2,L2_2,L3_2,L4_2,
                 G1_x_4,G1_y_4,G2_x_4,G2_y_4,L1_x_4,L1_y_4,L2_4,L3_4,L4_4,
                 G1_x_norm_max,G1_y_norm_max,G2_x_norm_max,G2_y_norm_max,
@@ -284,7 +305,7 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
                 L1_x_norm_2,L1_y_norm_2,L2_norm_2,L3_norm_2,L4_norm_2,
                 G1_x_norm_4,G1_y_norm_4,G2_x_norm_4,G2_y_norm_4,
                 L1_x_norm_4,L1_y_norm_4,L2_norm_4,L3_norm_4,L4_norm_4,
-                G1_x_E,G1_y_E,G2_x_E,G2_y_E,L1_x_E,L1_y_E,L2_E,L3_E,L4_E]
+                G1_x_E,G1_y_E,G2_x_E,G2_y_E,L1_x_E,L1_y_E,L2_E,L3_E,L4_E])
         elif gradtype['first']:
             Out = [G1_x_sum,G1_y_sum,G2_x_sum,G2_y_sum,
                 G1_x_2,G1_y_2,G2_x_2,G2_y_2,
