@@ -1,5 +1,10 @@
 Work in progress
 
+Source Matlab files are from 9.04.2017
+Matlab files still remain in the folder until
+updated to current version and properly tested
+
+
 ************************************************************************
 This file is part of ImFEATbox, a toolbox for image feature extraction and 
 analysis. Implemented by the Department of Diagnostic and Interventional 
