@@ -136,16 +136,16 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
     ## convolve image
     if gradtype['first']:
         G1_x = convolve2d(I,g1_x, boundary='fill', mode='full')
-        G1_y = convolve2d(I,g1_y, boundary='symm', mode='full')
-        G2_x = convolve2d(I,g2_x, boundary='symm', mode='full')
-        G2_y = convolve2d(I,g2_y, boundary='symm', mode='full')
+        G1_y = convolve2d(I,g1_y, boundary='fill', mode='full')
+        G2_x = convolve2d(I,g2_x, boundary='fill', mode='full')
+        G2_y = convolve2d(I,g2_y, boundary='fill', mode='full')
 
     if gradtype['second']:
-        L1_x = convolve2d(I,l1_x, boundary='symm', mode='full')
-        L1_y = convolve2d(I,l1_y, boundary='symm', mode='full')
-        L2 = convolve2d(I,l2, boundary='symm', mode='full')
-        L3 = convolve2d(I,l3, boundary='symm', mode='full')
-        L4 = convolve2d(I,l4, boundary='symm', mode='full')
+        L1_x = convolve2d(I,l1_x, boundary='fill', mode='full')
+        L1_y = convolve2d(I,l1_y, boundary='fill', mode='full')
+        L2 = convolve2d(I,l2, boundary='fill', mode='full')
+        L3 = convolve2d(I,l3, boundary='fill', mode='full')
+        L4 = convolve2d(I,l4, boundary='fill', mode='full')
 
     ## extract features
 

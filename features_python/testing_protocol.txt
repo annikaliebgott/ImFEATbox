@@ -1,0 +1,8 @@
+default parameters, further testing required!
+
+GlobalFeatures.Intensity.gradient:
+	* 75 values match < 0.1 percent
+	* maximum difference: 2.897750625 percent
+	* 6 values differ > 1 percent
+	* 0 values differ > 5 percent
+	* 0 values differ > 10 percent

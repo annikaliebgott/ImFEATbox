@@ -7,50 +7,81 @@ import Image
 import numpy as np
 import ImFEATbox
 from ImFEATbox.__helperCommands import rgb2grayscale
-
+import csv
 import matplotlib.pyplot as plt
 
 #print(ImFEATbox.getFeatureNames())
 
+# load test image
+with open('testimg.csv', 'r') as csvfile:
+    I = np.array(list(csv.reader(csvfile, delimiter=','))).astype(np.float)
 
-#img = Image.open("n.jpg")
-I = Image.open("lena.tiff")
+#I = rgb2grayscale(I)
 
-I = rgb2grayscale(I)
-
-f=ImFEATbox.GlobalFeatures.Intensity.gradient.cFeatures(I)
-
-# make matlab comparable subtracting
-
-s = "["
-
-for i in f:
-    s = s + str(i) + ","
-
-s=s[:-1] + "]"
-
-#print(s)
+out_python = ImFEATbox.GlobalFeatures.Intensity.gradient.cFeatures(I)
 
 
-mo=[1400304,1805386,2166462,2878338,1890862,2312130,12834618,3831856,9079422,136.497299194336,187.989212036133,321.739898681641,459.684165954590,224.249298095703,292.272682189941,8487.80313873291,645.562019348145,4510.02095031738,1604470.49134827,1815801.89355469,3735841.66929626,4947898.59452057,3123341.48216248,3516489.95609283,1812542227.15003,7942325.49309540,558910207.119553,0.000157108742101715,0.000117980310027883,0.000101548053923863,7.53907289553902e-05,0.000116349051385030,9.47178575599123e-05,8.83547917047473e-05,8.45543256322785e-05,8.92127274181110e-05,7.41488514476447e-06,6.56263561478454e-06,7.33783650632934e-06,6.38986826298134e-06,6.93094639579054e-06,6.32616588196148e-06,6.06626279334637e-06,5.41277661559522e-06,5.41277661559522e-06,3.80726120857766e-06,3.80726120857883e-06,3.79985408560565e-06,3.79985408560174e-06,3.79985408560403e-06,3.79985408560188e-06,3.78506866114651e-06,3.78506866114519e-06,3.78506866114519e-06,6.96112447294027e-11,5.76756883934094e-11,6.85492597037378e-11,5.54850474668398e-11,6.27207761885460e-11,5.46718446795405e-11,5.15263529268457e-11,4.39662688552169e-11,5.47094256199381e-11,4.17294265492836e-19,1.70918149909034e-19,1.69583720270424e-19,7.20864477589505e-20,2.44331877929188e-19,1.23043984512101e-19,6.67969056677650e-20,3.68392653726253e-20,8.22449484852085e-20,16.9076503174135,16.9569263224721,16.7640974811824,16.8818699979200,17.0201217432834,17.0277171568234,17.0339049723443,17.1457551296089,16.9879277372564]
+###############################################################################
+# * Matlab Code for CSV feature extract:
+# csvwrite('matlab-out.csv', Out)
+###############################################################################
 
-dif = mo-f
+# .. now read matlab csv:
+with open('matlab-out.csv', 'r') as csvfile:
+    out_matlab = np.array(list(csv.reader(csvfile, delimiter=','))).astype(np.float).ravel()
 
-#print(np.shape(f))
+# now compare matlab and python output:
 
-diffindex=np.where(np.abs(dif) > 100)
-
-print(diffindex)
-
-for i in diffindex[0]:
-    print("i=" + str(i) + " : " + str(dif[i]))
-
-
-#shape = np.shape(I)
-#print(shape)
+if len(out_python) != len(out_matlab):
+    print("Problem: not same # of features: python: " + str(len(out_python)) + ", matlab: " + str(len(out_matlab)))
+    print("quit")
+    quit()
 
 
+print("shape matlab: " + str(np.shape(out_matlab)) + ", shape python: " + str(np.shape(out_python)))
+
+# we see matlab as reference code
+diff = out_matlab - out_python
+maxval_matlab = np.max(out_matlab)
+maxval_python = np.max(out_python)
+minval_matlab = np.min(out_matlab)
+minval_python = np.min(out_python)
+valrange_matlab = maxval_matlab - minval_matlab
+valrange_python = maxval_python - minval_python
+
+#print(np.abs(diff))
+
+
+
+
+# max value differs 5% of value range
+if abs(maxval_matlab - maxval_python) > 0.05 * valrange_matlab:
+    print("Problem: maximum differs > 5 percent of value range")
+
+# corresponding indices
+diffindex01 = np.where(np.abs(diff) < 0.001*valrange_matlab)[0]
+diffindex1 = np.where(np.abs(diff) > 0.01*valrange_matlab)[0]
+diffindex5 = np.where(np.abs(diff) > 0.05*valrange_matlab)[0]
+diffindex10 = np.where(np.abs(diff) > 0.1*valrange_matlab)[0]
+diffindex = np.where(np.abs(diff) > 0)[0]
+
+diffpercentage = (diff/valrange_matlab)*100
+
+maxdiffpercentage = np.max(np.abs(diffpercentage))
+
+print("Result:")
+print("\t* " + str(len(diffindex01)) + " values match < 0.1 percent")
+print("\t* maximum difference: " + str(maxdiffpercentage) + " percent")
+print("\t* " + str(len(diffindex1)) + " values differ > 1 percent")
+print("\t* " + str(len(diffindex5)) + " values differ > 5 percent")
+print("\t* " + str(len(diffindex10)) + " values differ > 10 percent")
+
+#print(diffindex)
+#for i in diffindex[0]:
+#    print("i=" + str(i) + " : " + str(dif[i]))
 
 
 #plt.imshow(I, cmap='gray')
-#plt.show()
+
+plt.bar(range(1,len(diff)+1), diffpercentage)
+plt.show()
