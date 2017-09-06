@@ -135,7 +135,7 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     ## convolve image
     if gradtype['first']:
-        G1_x = convolve2d(I,g1_x, boundary='symm', mode='full')
+        G1_x = convolve2d(I,g1_x, boundary='fill', mode='full')
         G1_y = convolve2d(I,g1_y, boundary='symm', mode='full')
         G2_x = convolve2d(I,g2_x, boundary='symm', mode='full')
         G2_y = convolve2d(I,g2_y, boundary='symm', mode='full')

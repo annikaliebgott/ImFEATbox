@@ -25,9 +25,9 @@ def isColorImage(Image):
 
     checking by the shape
     """
-    if len(np.shape(Image)) == 4 and np.shape(I)[3] == 3: #image is 3D and color
+    if len(np.shape(Image)) == 4 and np.shape(Image)[3] == 3: #image is 3D and color
         return True
-    elif len(np.shape(Image)) == 3 and np.shape(I)[2] == 3: #image is 2D and color
+    elif len(np.shape(Image)) == 3 and np.shape(Image)[2] == 3: #image is 2D and color
         return True
     else:
         return False

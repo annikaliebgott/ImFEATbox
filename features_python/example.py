@@ -1,6 +1,11 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 
+# Packages:
+# sudo apt-get install python-scipy
+
+
+
 #import ImFEATbox
 #from PIL import Image
 import Image
