@@ -26,6 +26,18 @@ out_python = ImFEATbox.GlobalFeatures.Intensity.gradient.cFeatures(I)
 # csvwrite('matlab-out.csv', Out)
 ###############################################################################
 
+
+
+matlabBin = "/usr/local/MATLAB/R2016b/bin/matlab"
+gitPath = "/home/heiko/git"
+mFile =  gitPath + "/ImFEATbox/features_python/ImFEATbox/GlobalFeatures/Intensity/GradientF.m"
+matlabParameter = "-nojvm -nodisplay -nosplash -r \"try, run('" + mFile + "'), , catch, exit, end, exit\""
+
+
+
+
+
+
 # .. now read matlab csv:
 with open('matlab-out.csv', 'r') as csvfile:
     out_matlab = np.array(list(csv.reader(csvfile, delimiter=','))).astype(np.float).ravel()
