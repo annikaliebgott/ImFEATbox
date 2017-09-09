@@ -26,18 +26,20 @@ mFileList = []
 #for r in pyFileList:
 r = pyFileList[0]
 
-pyFileName = r.split(os.sep)[-1]
-imFeature = pyFileName[1:-4].lower()
-print(imFeature)
 folder = r[:r.rfind(os.sep)+1]
+pyFileName = r.split(os.sep)[-1]
+imFeature = folder.replace(os.sep, ".") + pyFileName[1:-4].lower()
+print(imFeature)
 mFileName = folder + pyFileName[1:-2] + "m"
 if not os.path.isfile(mFileName):
     print("Error! File " + mFileName + " does not exist!")
 
-getPyParameters = "pyParameters = " + folder.replace(os.sep, ".") + imFeature + ".getInputParameters()"
-pyMethod =  folder.replace(os.sep, ".") + imFeature + ".cFeatures"
+getPyParameters = "pyParameters = " + imFeature + ".getInputParameters()"
+pyMethod =  imFeature + ".cFeatures"
+cmdPyShape = "pyShape = " + imFeature + ".getFeatureShape()"
+exec(cmdPyShape)
 exec(getPyParameters)
-print(pyParameters)
+#print(pyParameters)
 #for par in pyParameters:
 
 mFullFileName = os.path.abspath(mFileName)
@@ -72,11 +74,18 @@ with open (mFileName, 'r') as f:
 
 
 # looking for unknown parameters:
+gradTypeParameter = False
 for par in mParameterList:
     if par.lower() == "i" or par.lower() == "image":
         pass
     elif par == "typeflag":
         pass
+    elif par == "gradtype":
+        # ok keep it and since it's also boolean, add it to typeFlagList
+        # gradtype.first, gradtype.second
+        typeFlagList.add("gradtype.first")
+        typeFlagList.add("gradtype.second")
+        gradTypeParameter = True
     else:
         print("unknown parameter: " + par)
 #print(typeFlagList)
@@ -85,13 +94,16 @@ for par in mParameterList:
 
 if "returnShape" in pyParameters:
     pyParameters.remove("returnShape")
+else:
+    print("error! forget returnShape? " + imFeature)
+    quit()
 if "I" in pyParameters:
     pyParameters.remove("I")
 if "I" in mParameterList:
     mParameterList.remove("I")
 
 if len(mParameterList) > len(pyParameters):
-    print("error: missing paramters!")
+    print("error: missing paramters! " + imFeature)
     print("python: " + str(pyParameters))
     print("matlab: " + str(mParameterList))
     quit()
@@ -122,6 +134,10 @@ for j in range(0, len(typeFlagBools)):
     pythonScript += "\tI = np.array(list(csv.reader(csvfile, delimiter=','))).astype(np.float)\n"
 
     matlabScript = "I = csvread('testimg.csv');\n"
+    if gradTypeParameter:
+        pythonScript += "gradtype = dict()\n"
+    if len(typeFlagList) > 0:
+        pythonScript += "typeflag = dict()\n"
     for i in range(0, len(typeFlagList)):
         matlabScript += typeFlagList[i] + " = " + str(typeFlagBools[j][i]).lower() + ";\n"
         pythonScript += typeFlagList[i].replace(".", "['") + "'] = " + str(typeFlagBools[j][i]) + "\n"
@@ -135,9 +151,18 @@ for j in range(0, len(typeFlagBools)):
         pythonScript += par + ", "
     pythonScript = pythonScript[:-2] + ");\n"
     matlabScript += "csvwrite('matlab-out.csv', Out);"
+    pythonScript += "with open('python-out.csv', 'wb') as csvfile:\n"
+    pythonScript += "\twriter = csv.writer(csvfile, delimiter=',')\n"
+    pythonScript += "\twriter.writerow(out)"
     with open ("tmp.m", 'w+') as f:
         f.write(matlabScript)
     with open ("tmp.py", 'w+') as f:
         f.write(pythonScript)
 
+    # now execute both scripts:
+    execfile("tmp.py")
+
     # check if returnShape is correct:
+
+    if len(pyShape) == 1 == 1:
+        pass

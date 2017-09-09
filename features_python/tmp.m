@@ -1,8 +1,9 @@
 I = csvread('testimg.csv');
-typeflag.corr = false;
+gradtype.first = false;
+gradtype.second = false;
 typeflag.texture = false;
 typeflag.global = false;
-typeflag.entropy = false;
+typeflag.gradient = false;
 addpath('ImFEATbox/GlobalFeatures/Intensity/');
-Out = ImFEATbox/GlobalFeatures/Intensity/IntensityF(I, typeflag);
+Out = ImFEATbox/GlobalFeatures/Intensity/GradientF(I, typeflag, gradtype);
 csvwrite('matlab-out.csv', Out);
