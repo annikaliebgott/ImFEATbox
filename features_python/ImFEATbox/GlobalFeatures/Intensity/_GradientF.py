@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 from ImFEATbox.__helperCommands import rgb2grayscale, isColorImage, conv2float
 from scipy.signal import convolve2d
 
@@ -45,22 +46,23 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     ##
 
-
-
-
     if typeflag == None:
         typeflag = dict()
         typeflag['global'] = True
         typeflag['texture'] = True
         typeflag['entropy'] = True
 
-
     if gradtype == None:
         gradtype = dict()
         gradtype['first'] = True
         gradtype['second'] = True
 
-
+    if gradtype['first']  == gradtype['second'] == False:
+        # catching this case. gradient like this does not make sense.
+        # so we throw a warrning and set both to True
+        gradtype['first'] = True
+        gradtype['second'] = True
+        warnings.warn("gradtype first and second are false. Using default settings.")
 
     if returnShape:
         ## returns only the shape of feature vectors depending on parameters
@@ -77,7 +79,6 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
             return (4,1)
         else:
             return (5,1)
-
 
     # Check for color image and convert to grayscale
     if isColorImage(I):

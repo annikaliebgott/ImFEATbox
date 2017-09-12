@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import warnings
 from ImFEATbox.__helperCommands import rgb2grayscale
 
 def IntensityF(I, typeflag=None, returnShape=False):
@@ -46,10 +47,25 @@ def IntensityF(I, typeflag=None, returnShape=False):
         typeflag['corr'] = True
         typeflag['entropy'] = True
 
+    if typeflag['global']  == typeflag['texture'] == typeflag['corr'] == typeflag['entropy'] == False:
+        # catching this case. gradient like this does not make sense.
+        # so we throw a warrning and set both to True
+        typeflag['global'] = True
+        typeflag['texture'] = True
+        typeflag['corr'] = True
+        typeflag['entropy'] = True
+        warnings.warn("typeflag global, texture, corr and entropy are false. Using default settings.")
+
+    if returnShape:
+        # returns only the shape of feature vectors depending on parameters
+        return (7,1)
+
     # Check for color image and convert to grayscale
     if len(np.shape(I)) == 3:
         if np.shape(I)[2] == 3:
             I = rgb2grayscale(I)
+
+
 
     Height, Width = np.shape(I)
     n = Height * Width
@@ -58,18 +74,18 @@ def IntensityF(I, typeflag=None, returnShape=False):
 
     if typeflag['global'] or typeflag['texture'] or typeflag['corr']:
         # AutoCorrelation 1
-        p2 = np.zeros(Height,Width-1)
+        p2 = np.zeros((Height,Width-1))
         p1 = np.sum(np.power(I,2))
-        k = range(0, Width)
+        k = range(0, Width) # TODO check if indexing of p2 is correct
         for i in range(0, Height):
-            p2[i,k] = I[i,k]*I[i,k+1]
+            p2[i,0:Width-1] = I[i,0:Width-1]*I[i,0:Width-1]
         ACORR = p1 - np.sum(p2[:])
 
         # AutoCorrelation 2
-        p3 = np.zeros(Height,Width-1)
-        l = range(0, Width-1)
+        p3 = np.zeros((Height,Width-1))
+        l = range(0, Width-1) # TODO check p3
         for i in range(0, Height):
-            p3[i,l] = I[i,l]*I[i,l+1]
+            p3[i,0:Width-1] = I[i,0:Width-1]*I[i,0:Width-1]
         ACORR2 = np.sum(p2) - np.sum(p3)
 
     if typeflag['global'] or typeflag['texture'] or typeflag['entropy']:

@@ -48,6 +48,15 @@ if ~exist('gradtype','var')
     gradtype.second = true;
 end
 
+
+if (gradtype.first  == false & gradtype.second == false)
+    % catching this case. gradient like this does not make sense.
+    % so we throw a warrning and set both to true
+    gradtype.first = true;
+    gradtype.second = true;
+    warning('Warrning: gradtype first and second are false. Using default settings.');
+end
+
 % Check for color image and convert to grayscale
 if(numel(size(I))==3)
     if(size(I,3)==3)
@@ -67,7 +76,7 @@ if gradtype.first
     g1_x = [1; -1];
     % gradient direction: y
     g1_y = [1 -1];
-    
+
     % gradient 2
     g2_x = [1; 0; -1];
     g2_y = [1 0 -1];
@@ -77,13 +86,13 @@ if gradtype.second
     % laplacian 1
     l1_x = [-1; 2; -1];
     l1_y = [-1 2 -1];
-    
+
     % laplacian 2
     l2 = [-1 -2 -1; -2 12 -2; -1 -2 -1];
-    
+
     % laplacian 3
     l3 = [0 -1 0; -1 4 -1; 0 -1 0];
-    
+
     % laplacian 4
     l4 = [-1 -1 -1; -1 8 -1; -1 -1 -1];
 end
@@ -151,7 +160,7 @@ if typeflag.global || typeflag.texture || typeflag.gradient
         L3_2 = sum(sum((L3.^2)))/n;
         L4_2 = sum(sum((L4.^2)))/n;
     end
-    
+
     % sum of 4th power of gradients
     if gradtype.first
         G1_x_4 = sum(sum((G1_x.^4)))/n;
@@ -166,7 +175,7 @@ if typeflag.global || typeflag.texture || typeflag.gradient
         L3_4 = sum(sum((L3.^4)))/n;
         L4_4 = sum(sum((L4.^4)))/n;
     end
-    
+
     % maximum of normalized gradients
     if gradtype.first
         G1_x_norm_max = max(G1_x_norm(:));
@@ -181,7 +190,7 @@ if typeflag.global || typeflag.texture || typeflag.gradient
         L3_norm_max = max(L3_norm(:));
         L4_norm_max = max(L4_norm(:));
     end
-    
+
     % standard deviation of normalized gradients
     if gradtype.first
         G1_x_norm_std = std2(G1_x_norm);
@@ -196,7 +205,7 @@ if typeflag.global || typeflag.texture || typeflag.gradient
         L3_norm_std = std2(L3_norm);
         L4_norm_std = std2(L3_norm);
     end
-    
+
     % mean of normalized gradients
     if gradtype.first
         G1_x_norm_mean = mean2(G1_x_norm);
@@ -211,7 +220,7 @@ if typeflag.global || typeflag.texture || typeflag.gradient
         L3_norm_mean = mean2(L3_norm);
         L4_norm_mean = mean2(L3_norm);
     end
-    
+
     % sum of normalized gradients squared
     if gradtype.first
         G1_x_norm_2 = sum(sum((G1_x_norm.^2)))/n;
@@ -226,7 +235,7 @@ if typeflag.global || typeflag.texture || typeflag.gradient
         L3_norm_2 = sum(sum((L3_norm.^2)))/n;
         L4_norm_2 = sum(sum((L4_norm.^2)))/n;
     end
-    
+
     % sum of normalized gradients to 4th power
     if gradtype.first
         G1_x_norm_4 = sum(sum((G1_x_norm.^4)))/n;
@@ -305,5 +314,5 @@ else if gradtype.first && gradtype.second
         else
             Out = [L1_x_E L1_y_E L2_E L3_E L4_E];
         end
-    end    
+    end
 end

@@ -1,21 +1,21 @@
 function Out = IntensityF(I,typeflag)
 % Input:     - I: A 2D image
-%            - typeflag: Struct of logicals to permit extracting features 
+%            - typeflag: Struct of logicals to permit extracting features
 %              based on desired characteristics:
-%                   + typeflag.global: all features 
-%                   + typeflag.texture: all features 
+%                   + typeflag.global: all features
+%                   + typeflag.texture: all features
 %                   + typeflag.corr: only features based on correlation
 %                   + typeflag.entropy: only features based on entropy
 %              default: all features are being extracted
 %              For more information see README.txt
 %
 %
-% Output:    - Out: A (1x7) vector containing 7 metrics based on intensity 
+% Output:    - Out: A (1x7) vector containing 7 metrics based on intensity
 %
 % ************************************************************************
-% Implemented for MRI feature extraction by the Department of Diagnostic 
-% and Interventional Radiology, University Hospital of Tuebingen, Germany 
-% and the Institute of Signal Processing and System Theory University of 
+% Implemented for MRI feature extraction by the Department of Diagnostic
+% and Interventional Radiology, University Hospital of Tuebingen, Germany
+% and the Institute of Signal Processing and System Theory University of
 % Stuttgart, Germany. Last modified: November 2016
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
@@ -25,8 +25,8 @@ function Out = IntensityF(I,typeflag)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 %
-% Implementation based on the intensity-based features of the paper by 
-% McGee et al.: "Image metric-based correction (Autocorrection) of motion 
+% Implementation based on the intensity-based features of the paper by
+% McGee et al.: "Image metric-based correction (Autocorrection) of motion
 % effects: Analysis of image metrics" (Journal of Magnetic Resonance
 % Imaging, vol. 11, no. 2, pp. 174–181, 2000.)
 
@@ -35,12 +35,24 @@ if ~exist('typeflag','var')
     typeflag.texture = true;
     typeflag.corr = true;
     typeflag.entropy = true;
-end    
+end
 
 if typeflag.global || typeflag.texture
     typeflag.corr = true;
     typeflag.entropy = true;
-end    
+end
+
+if (typeflag.global  == false & typeflag.texture == false & typeflag.corr == false & typeflag.entropy == false)
+    % catching this case. typeflag like this does not make sense.
+    % so we throw a warrning and set all to true
+    typeflag.global = true;
+    typeflag.texture = true;
+    typeflag.corr = true;
+    typeflag.entropy = true;
+    warning('typeflag global, texture, corr and entropy are false. Using default settings.');
+end
+
+
 
 % Check for color image and convert to grayscale image
 if(numel(size(I))==3)
@@ -64,7 +76,7 @@ if (typeflag.global || typeflag.texture || typeflag.corr)
         p2(i,k) = I(i,k).*I(i,k+1);
     end
     ACORR = p1 - sum(p2(:));
-    
+
     % AutoCorrelation 2
     p3 = zeros(Height,Width-2);
     l = (1:Width-2);
@@ -82,16 +94,16 @@ if (typeflag.global || typeflag.texture || typeflag.entropy)
 end
 
 if (typeflag.global || typeflag.texture)
-    
+
     %Standard Deviation
     STD = std(I(:));
-    
+
     % Cube of Normalized Intensities
     NI3 = sum((I(:)./sum(I(:))).^3);
-    
+
     % 4th power of Normalized Intensities
     NI4 = sum((I(:)./sum(I(:))).^4);
-    
+
     % Squared Intensities
     I2 = sum((I(:)./n).^2);
 end
