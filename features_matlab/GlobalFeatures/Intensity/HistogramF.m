@@ -27,7 +27,7 @@ function Out = HistogramF(I,typeflag)
 % ************************************************************************
 
 if ~exist('typeflag','var')
-   typeflag.local = true; 
+   typeflag.global = true; 
    typeflag.texture = true;
    typeflag.entropy = true;
 end    
