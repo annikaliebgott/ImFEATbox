@@ -1,8 +1,8 @@
 function Out = LineProfileF(I,plotflag,typeflag)
 % Input:     - I: A 2D image
-%            - typeflag: Struct of logicals to permit extracting features 
+%            - typeflag: Struct of logicals to permit extracting features
 %              based on desired characteristics:
-%                   + typeflag.local: all features 
+%                   + typeflag.local: all features
 %                   + typeflag.texture: all features
 %                   + typeflag.corr: only features based on correlation
 %                   + typeflag.moments: only features based on moments
@@ -16,9 +16,9 @@ function Out = LineProfileF(I,plotflag,typeflag)
 %                   an intensity profile of the image
 %
 % ************************************************************************
-% Implemented for MRI feature extraction by the Department of Diagnostic 
-% and Interventional Radiology, University Hospital of Tuebingen, Germany 
-% and the Institute of Signal Processing and System Theory University of 
+% Implemented for MRI feature extraction by the Department of Diagnostic
+% and Interventional Radiology, University Hospital of Tuebingen, Germany
+% and the Institute of Signal Processing and System Theory University of
 % Stuttgart, Germany. Last modified: November 2016
 %
 % This implementation is part of ImFEATbox, a toolbox for image feature
@@ -31,13 +31,23 @@ function Out = LineProfileF(I,plotflag,typeflag)
 
 
 if ~exist('typeflag','var')
-   typeflag.local = true; 
+   typeflag.local = true;
    typeflag.texture = true;
    typeflag.corr = true;
    typeflag.moments = true;
-end    
+end
 if~exist('plotflag','var')
     plotflag = false;
+end
+
+if (typeflag.local  == false & typeflag.texture == false & typeflag.corr == false & typeflag.moments == false)
+    % catching this case. typeflag like this does not make sense.
+    % so we throw a warning and set all to true
+    typeflag.local = true;
+    typeflag.texture = true;
+    typeflag.corr = true;
+    typeflag.moments = true;
+    warning('typeflag local, texture, corr and moments are false. Using default settings.');
 end
 
 %% Extract the intensity profile along different line segments
@@ -105,7 +115,7 @@ if (typeflag.moments || typeflag.local || typeflag.texture)
     m2 = moment(c2,2);
     m3 = moment(c3,2);
     m4 = moment(c4,2);
-    
+
     m1_5 = moment(c1,5);
     m2_5 = moment(c2,5);
     m3_5 = moment(c3,5);
@@ -118,61 +128,61 @@ if (typeflag.local || typeflag.texture)
     mean2 = mean(c2);
     mean3 = mean(c3);
     mean4 = mean(c4);
-    
+
     % standard deviation
     sd1 = std(c1);
     sd2 = std(c2);
     sd3 = std(c3);
     sd4 = std(c4);
-    
+
     % Percentiles of a data set
-    pr1 = prctile(c1,48);   
+    pr1 = prctile(c1,48);
     pr2 = prctile(c2,48);
     pr3 = prctile(c3,48);
     pr4 = prctile(c4,48);
-    
+
     % fast fourier transform
     fft1 = fft(c1);
     fft2 = fft(c2);
     fft3 = fft(c3);
     fft4 = fft(c4);
-    
+
     % power of spectrum
     p1 = abs(sum(power(fft1,2)) / length(fft1));
     p2 = abs(sum(power(fft2,2)) / length(fft2));
     p3 = abs(sum(power(fft3,2)) / length(fft3));
     p4 = abs(sum(power(fft4,2)) / length(fft4));
-    
+
     % derivates
     dc1 = diff(c1);
     dc2 = diff(c2);
     dc3 = diff(c3);
     dc4 = diff(c4);
-    
+
     % average value of array of the derivates
     mean_dc1 = mean(dc1);
     mean_dc2 = mean(dc2);
     mean_dc3 = mean(dc3);
     mean_dc4 = mean(dc4);
-    
+
     % standard deviation of the derivates
     sd_dc1 = std(dc1);
     sd_dc2 = std(dc2);
     sd_dc3 = std(dc3);
     sd_dc4 = std(dc4);
-    
+
     % fast fourier transform of the derivates
     fft_dc1 = fft(dc1);
     fft_dc2 = fft(dc2);
     fft_dc3 = fft(dc3);
     fft_dc4 = fft(dc4);
-    
+
     % power of spectrum of the derivates
     p_dc1 = abs(sum(power(fft_dc1,2)) / length(fft_dc1));
     p_dc2 = abs(sum(power(fft_dc2,2)) / length(fft_dc2));
     p_dc3 = abs(sum(power(fft_dc3,2)) / length(fft_dc3));
     p_dc4 = abs(sum(power(fft_dc4,2)) / length(fft_dc4));
-    
+
 end
 
 

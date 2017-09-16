@@ -54,7 +54,7 @@ if (gradtype.first  == false & gradtype.second == false)
     % so we throw a warrning and set both to true
     gradtype.first = true;
     gradtype.second = true;
-    warning('Warrning: gradtype first and second are false. Using default settings.');
+    warning('Warning: gradtype first and second are false. Using default settings.');
 end
 
 % Check for color image and convert to grayscale

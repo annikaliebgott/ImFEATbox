@@ -84,17 +84,17 @@ def LawF(I, returnShape=False):
     ## feature extraction
 
     # determine the 2nd and 4th moment of the filtered images
-    m2 = np.array([moment(ee,2), moment(se,2), moment(re,2), moment(we,2), moment(le,2),
-        moment(es,2), moment(ss,2), moment(rs,2), moment(ws,2), moment(ls,2),
-        moment(er,2), moment(sr,2), moment(rr,2), moment(wr,2), moment(lr,2),
-        moment(ew,2), moment(sw,2), moment(rw,2), moment(ww,2), moment(lw,2),
-        moment(el,2), moment(sl,2), moment(rl,2), moment(wl,2), moment(ll,2)])
+    m2 = np.hstack([moment(ee.ravel(),2), moment(se.ravel(),2), moment(re.ravel(),2), moment(we.ravel(),2), moment(le.ravel(),2),
+        moment(es.ravel(),2), moment(ss.ravel(),2), moment(rs.ravel(),2), moment(ws.ravel(),2), moment(ls.ravel(),2),
+        moment(er.ravel(),2), moment(sr.ravel(),2), moment(rr.ravel(),2), moment(wr.ravel(),2), moment(lr.ravel(),2),
+        moment(ew.ravel(),2), moment(sw.ravel(),2), moment(rw.ravel(),2), moment(ww.ravel(),2), moment(lw.ravel(),2),
+        moment(el.ravel(),2), moment(sl.ravel(),2), moment(rl.ravel(),2), moment(wl.ravel(),2), moment(ll.ravel(),2)])
 
-    m4 = np.array([moment(ee,4), moment(se,4), moment(re,4), moment(we,4), moment(le,4),
-        moment(es,4), moment(ss,4), moment(rs,4), moment(ws,4), moment(ls,4),
-        moment(er,4), moment(sr,4), moment(rr,4), moment(wr,4), moment(lr,4),
-        moment(ew,4), moment(sw,4), moment(rw,4), moment(ww,4), moment(lw,4),
-        moment(el,4), moment(sl,4), moment(rl,4), moment(wl,4), moment(ll,4)])
+    m4 = np.hstack([moment(ee.ravel(),4), moment(se.ravel(),4), moment(re.ravel(),4), moment(we.ravel(),4), moment(le.ravel(),4),
+        moment(es.ravel(),4), moment(ss.ravel(),4), moment(rs.ravel(),4), moment(ws.ravel(),4), moment(ls.ravel(),4),
+        moment(er.ravel(),4), moment(sr.ravel(),4), moment(rr.ravel(),4), moment(wr.ravel(),4), moment(lr.ravel(),4),
+        moment(ew.ravel(),4), moment(sw.ravel(),4), moment(rw.ravel(),4), moment(ww.ravel(),4), moment(lw.ravel(),4),
+        moment(el.ravel(),4), moment(sl.ravel(),4), moment(rl.ravel(),4), moment(wl.ravel(),4), moment(ll.ravel(),4)])
 
     # mean of the moments
     mean_m2 = np.mean(m2)
@@ -111,7 +111,7 @@ def LawF(I, returnShape=False):
     min_m4 = np.min(m4)
 
     ## return feature vector
-    Out = np.array([m2, m4, mean_m2, mean_m4, std_m2, std_m4, max_m2, max_m4, min_m2, min_m4])
+    Out = np.hstack([m2, m4, mean_m2, mean_m4, std_m2, std_m4, max_m2, max_m4, min_m2, min_m4])
     return Out
 
 def convolve2d_image(h1, h2, I):

@@ -44,7 +44,7 @@ end
 
 if (typeflag.global  == false & typeflag.texture == false & typeflag.corr == false & typeflag.entropy == false)
     % catching this case. typeflag like this does not make sense.
-    % so we throw a warrning and set all to true
+    % so we throw a warning and set all to true
     typeflag.global = true;
     typeflag.texture = true;
     typeflag.corr = true;

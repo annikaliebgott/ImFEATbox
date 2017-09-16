@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 from scipy.stats import moment
 from skimage.measure import profile_line
 
@@ -33,8 +34,6 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
 # Contact: annika.liebgott@iss.uni-stuttgart.de
 # ************************************************************************
 
-    if returnShape:
-        return (122,1)
 
     if typeflag == None:
         typeflag = dict()
@@ -43,12 +42,32 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
         typeflag['corr'] = True
         typeflag['moments'] = True
 
+    if typeflag['local']  == typeflag['texture'] == typeflag['corr'] == typeflag['moments'] == False:
+        # catching this case. lineprofile like this does not make sense.
+        # so we throw a warning and set all to True
+        typeflag['local'] = True
+        typeflag['texture'] = True
+        typeflag['corr'] = True
+        typeflag['moments'] = True
+        warnings.warn("typeflag local, texture, corr and moments are false. Using default settings.")
+
+    if returnShape:
+        if not (typeflag['local'] or typeflag['texture']):
+            if not typeflag['moments']:
+                return (6,1)
+            elif not typeflag['corr']:
+                return (8,1)
+            else:
+                return (14,1)
+        else:
+            return (122,1)
+
     if plotflag == None:
         plotflag = False
 
     ## Extract the intensity profile along different line segments
 
-    x_max, y_max = np.shape(I)
+    y_max, x_max = np.shape(I)
     x_half = x_max / 2.0
     y_half = y_max / 2.0
 
@@ -70,15 +89,15 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
     if plotflag:
         x = [x1, x2]
         y = [y1, y2]
-        profile_line(I, src=(0,0), dst=(x1[1],y2[1]))
+        profile_line(I, src=(0,0), dst=(y1[1],x2[1]))
         # TODO draw with matplotlib
 
 
     # extract intensity profiles along the defined lines
-    c1 = profile_line(I, src=(x1[0],y1[0]), dst=(x1[1],y1[1]))
-    c2 = profile_line(I, src=(x2[0],y2[0]), dst=(x2[1],y2[1]))
-    c3 = profile_line(I, src=(x3[0],y3[0]), dst=(x3[1],y3[1]))
-    c4 = profile_line(I, src=(x4[0],y4[0]), dst=(x4[1],y4[1]))
+    c1 = profile_line(I, src=(y1[0],x1[0]), dst=(y1[1],x1[1]))
+    c2 = profile_line(I, src=(y2[0],x2[0]), dst=(y2[1],x2[1]))
+    c3 = profile_line(I, src=(y3[0],x3[0]), dst=(y3[1],x3[1]))
+    c4 = profile_line(I, src=(y4[0],x4[0]), dst=(y4[1],x4[1]))
 
     l1 = np.shape(c1)[0]
     l2 = np.shape(c2)[0]
@@ -87,23 +106,21 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
 
     # Use zero-padding to get the same size for all arrays
     m = np.max([l1, l2, l3, l4])
-    c1 = np.pad(c1, (0,max(0,(m-l1)-len(c1))) ,mode='constant')
-    c1 = np.pad(c2, (0,max(0,(m-l2)-len(c2))) ,mode='constant')
-    c1 = np.pad(c3, (0,max(0,(m-l3)-len(c3))) ,mode='constant')
-    c1 = np.pad(c4, (0,max(0,(m-l4)-len(c4))) ,mode='constant')
+    c1 = np.pad(c1, (0,m-l1) ,mode='constant')
+    c2 = np.pad(c2, (0,m-l2) ,mode='constant')
+    c3 = np.pad(c3, (0,m-l3) ,mode='constant')
+    c4 = np.pad(c4, (0,m-l4) ,mode='constant')
 
     ## Feature extraction
 
     # linear correlation
     if (typeflag['corr'] or typeflag['local'] or typeflag['texture']):
-        print(np.shape(c1))
-        print(np.shape(c2))
-        roh12 = np.corrcoef(c1,c2)
-        roh13 = np.corrcoef(c1,c3)
-        roh14 = np.corrcoef(c1,c4)
-        roh23 = np.corrcoef(c2,c3)
-        roh24 = np.corrcoef(c4,c2)
-        roh34 = np.corrcoef(c3,c4)
+        roh12 = np.correlate(c1,c2)
+        roh13 = np.correlate(c1,c3)
+        roh14 = np.correlate(c1,c4)
+        roh23 = np.correlate(c2,c3)
+        roh24 = np.correlate(c4,c2)
+        roh34 = np.correlate(c3,c4)
 
     # central moments
     if (typeflag['moments'] or typeflag['local'] or typeflag['texture']):
@@ -181,24 +198,25 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
 
     ## Return feature vector
 
-    if not typeflag['local'] or typeflag['texture']:
+    if not (typeflag['local'] or typeflag['texture']):
         if not typeflag['moments']:
-            Out = np.array([roh12, roh14, roh24, roh13, roh23, roh34])
+            Out = np.hstack([roh12, roh14, roh24, roh13, roh23, roh34])
         elif not typeflag['corr']:
-            Out = np.array([m1, m2, m3, m4, m1_5, m2_5, m3_5, m4_5])
+            Out = np.hstack([m1, m2, m3, m4, m1_5, m2_5, m3_5, m4_5])
         else:
-            Out = np.array([roh12, roh14, roh24, roh13, roh23, roh34,
+            Out = np.hstack([roh12, roh14, roh24, roh13, roh23, roh34,
                 m1, m2, m3, m4, m1_5, m2_5, m3_5, m4_5])
     else:
-        Out = np.array([roh12, roh14, roh24, roh13, roh23, roh34,
+        Out = np.hstack([roh12, roh14, roh24, roh13, roh23, roh34,
             mean1, mean2, mean3, mean4,
             sd1, sd2, sd3, sd4,
             pr1, pr2, pr3, pr4,
             m1, m2, m3, m4, m1_5, m2_5, m3_5, m4_5,
             p1, p2, p3, p4,
-            fft1[:10,1], fft2[:10,1], fft3[:10,1], fft4[:10,1],
+            fft1[:10], fft2[:10], fft3[:10], fft4[:10],
             mean_dc1, mean_dc2, mean_dc3, mean_dc4,
             sd_dc1, sd_dc2, sd_dc3, sd_dc4,
             p_dc2, p_dc1, p_dc3, p_dc4,
-            fft_dc1[:10,1], fft_dc2[:10,1], fft_dc3[:10,1], fft_dc4[:10,1]])
+            fft_dc1[:10], fft_dc2[:10], fft_dc3[:10], fft_dc4[:10]])
+
     return Out

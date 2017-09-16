@@ -49,7 +49,7 @@ def IntensityF(I, typeflag=None, returnShape=False):
 
     if typeflag['global']  == typeflag['texture'] == typeflag['corr'] == typeflag['entropy'] == False:
         # catching this case. gradient like this does not make sense.
-        # so we throw a warrning and set both to True
+        # so we throw a warning and set both to True
         typeflag['global'] = True
         typeflag['texture'] = True
         typeflag['corr'] = True
@@ -111,12 +111,12 @@ def IntensityF(I, typeflag=None, returnShape=False):
     ## return feature vector
     if not (typeflag['texture'] or typeflag['global']):
         if not typeflag['corr']:
-            Out = E
+            Out = np.array([E])
         elif not typeflag['entropy']:
-            Out = [ACORR, ACORR2]
+            Out = np.array([ACORR, ACORR2])
         else:
-            Out = [ACORR, ACORR2, E]
+            Out = np.array([ACORR, ACORR2, E])
     else:
-        Out = [STD, ACORR, ACORR2, E, NI3, NI4, I2]
+        Out = np.array([STD, ACORR, ACORR2, E, NI3, NI4, I2])
 
     return Out

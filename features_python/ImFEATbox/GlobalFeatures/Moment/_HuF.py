@@ -73,7 +73,7 @@ def central_moments(I,xnorm,ynorm,p,q):
 
     image = conv2float(I)
     cm = np.sum(np.sum(np.power(xnorm, p)*np.power(ynorm, q)*image))
-    cm_00 = sum(image[:]) #this is same as mu(0,0)
+    cm_00 = np.sum(image) #this is same as mu(0,0)
     # normalise moments for scale invariance
     cm = cm / np.power(cm_00, (1+(p+q)/2))
 

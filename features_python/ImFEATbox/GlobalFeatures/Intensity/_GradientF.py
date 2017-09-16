@@ -59,7 +59,7 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     if gradtype['first']  == gradtype['second'] == False:
         # catching this case. gradient like this does not make sense.
-        # so we throw a warrning and set both to True
+        # so we throw a warning and set both to True
         gradtype['first'] = True
         gradtype['second'] = True
         warnings.warn("gradtype first and second are false. Using default settings.")

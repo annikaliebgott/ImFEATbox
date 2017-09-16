@@ -123,7 +123,7 @@ def SVDF(I, returnShape=False):
 
     np.prod(np.shape(eig_U[:100,:]))
 
-    Out = np.array([np.reshape(dia_elements[:40,:],np.prod(np.shape(dia_elements[:40,:]))),
+    Out = np.hstack([np.reshape(dia_elements[:40,:],np.prod(np.shape(dia_elements[:40,:]))),
         np.reshape(eig_U[:100,:],np.prod(np.shape(eig_U[:100,:]))),
         np.reshape(eig_V[:100,:],np.prod(np.shape(eig_V[:100,:]))),
         det_U, det_V, trace_U, trace_V, rank_U, rank_V, skewness_U, skewness_V,

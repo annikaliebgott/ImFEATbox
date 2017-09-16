@@ -21,11 +21,19 @@ class __Feature(object):
     def getInputParameters(self):
         return inspect.getargspec(self.cFeatures)[0]
 
-    def getFeatureShape(self):
+    def getFeatureShape(self, *args):
         """
         returns a tuple (x,y) with the shape of the feature vector.
         """
-        return self.cFeatures(None, returnShape=True)
+        #if "typeflag" in self.getInputParameters():
+        return self.cFeatures(*args, returnShape=True)
+        #else:
+        #    return self.cFeatures(None, returnShape=True)
+
+    def getFeatureSize(self, typeflag=None):
+        """
+        returns the number of elements in the feature vector.
+        """
 
     def __repr__(self):
         """ what the IDE prints """

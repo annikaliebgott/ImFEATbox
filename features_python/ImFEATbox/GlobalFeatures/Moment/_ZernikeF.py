@@ -105,7 +105,7 @@ def ZernikeF(I, returnShape=False):
 
     ## return feature vector
 
-    Out = np.array([np.real(Z), np.imag(Z), A, Phi, np.real(mean_Z), np.imag(mean_Z), mean_A, mean_Phi,
+    Out = np.hstack([np.real(Z), np.imag(Z), A, Phi, np.real(mean_Z), np.imag(mean_Z), mean_A, mean_Phi,
         np.real(std_Z), np.imag(std_Z), std_A, std_Phi, np.real(max_Z), np.imag(max_Z), max_A, max_Phi])
 
     return Out
