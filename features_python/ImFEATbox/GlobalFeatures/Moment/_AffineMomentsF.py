@@ -1,6 +1,6 @@
 import numpy as np
 
-def AffineMomentsF(I):
+def AffineMomentsF(I, returnShape=False):
     """
      Input:    - I: A 2D image
 
@@ -27,7 +27,11 @@ def AffineMomentsF(I):
     #
     # Implemented by:   Asad Ali. Email: m.aliasad@yahoo.com
 
-    x,y = np.nonzero(I[:,:,1])
+    if returnShape:
+        return (6,1)
+
+    # x,y = np.nonzero(I[:,:,1]) TODO: how to handle color image?
+    x,y = np.nonzero(I)
     pixelValues = I[x,y]
 
     m00 = np.sum(pixelValues)
@@ -104,19 +108,18 @@ def AffineMomentsF(I):
 
     I3 = (m30**2*m12*m05 - m30**2*m03*m14 - m30*m21**2*m05 - 2*m30*m21*m12*m14 + 4*m30*m21*m03*m23 + 2*m30*m12**2*m23 - 4*m30*m12*m03*m32 + m30*m03**2*m41 + 3*m21**3*m14 - 6*m21**2*m12*m23 - 2*m21**2*m03*m32 + 6*m21*m12**2*m32 + 2*m21*m12*m03*m41 - m21*m03**2*m50 - 3*m12**3*m41 + m12**2*m03*m50) / m00**11
 
-    I4 = (2*m30*m12*m41*m05 - 8*m30*m12*m32*m14 + 6*m30*m12*m23**2 -   m30*m03*m50*m05 + 3*m30*m03*m41*m14 - 2*m30*m03*m32*m23 -   2*m21**2*m41*m05 + 8*m21**2*m32*m14 - 6*m21**2*m23**2 + m21*m12*m50*m05 - 3*m21*m12*m41*m14 + 2*m21*m12*m32*m23 + 2*m21*m03*m50*m14 - 8*m21*m03*m41*m23 + 6*m21*m03*m32**2 -   2*m12**2*m50*m14 + 8*m12**2*m41*m23 - 6*m12**2*m32**2)/m00**12
+    I4 = (2*m30*m12*m41*m05 - 8*m30*m12*m32*m14 + 6*m30*m12*m23**2 - m30*m03*m50*m05 + 3*m30*m03*m41*m14 - 2*m30*m03*m32*m23 - 2*m21**2*m41*m05 + 8*m21**2*m32*m14 - 6*m21**2*m23**2 + m21*m12*m50*m05 - 3*m21*m12*m41*m14 + 2*m21*m12*m32*m23 + 2*m21*m03*m50*m14 - 8*m21*m03*m41*m23 + 6*m21*m03*m32**2 - 2*m12**2*m50*m14 + 8*m12**2*m41*m23 - 6*m12**2*m32**2)/m00**12
 
-    I5 = (m30*m41*m23*m05 - m30*m41*m14**2 - m30*m32**2*m05 + 2*m30*m32*m23*m14 -   m30*m23**3 - m21*m50*m23*m05 + m21*m50*m14**2 + m21*m41*m32*m05 -   m21*m41*m23*m14 - m21*m32**2*m14 + m21*m32*m23**2 + m12*m50*m32*m05 -   m12*m50*m23*m14 - m12*m41**2*m05 + m12*m41*m32*m14 + m12*m41*m23**2 -   m12*m32**2*m23 - m03*m50*m32*m14 + m03*m50*m23**2 + m03*m41**2*m14 - 2*m03*m41*m32*m23 + m03*m32**3)/m00**13
+    I5 = (m30*m41*m23*m05 - m30*m41*m14**2 - m30*m32**2*m05 + 2*m30*m32*m23*m14 - m30*m23**3 - m21*m50*m23*m05 + m21*m50*m14**2 + m21*m41*m32*m05 - m21*m41*m23*m14 - m21*m32**2*m14 + m21*m32*m23**2 + m12*m50*m32*m05 - m12*m50*m23*m14 - m12*m41**2*m05 + m12*m41*m32*m14 + m12*m41*m23**2 - m12*m32**2*m23 - m03*m50*m32*m14 + m03*m50*m23**2 + m03*m41**2*m14 - 2*m03*m41*m32*m23 + m03*m32**3)/m00**13
 
-    I6 = (m70**2*m07**2 - 14*m70*m61*m16*m07 + 18*m70*m52*m25*m07 + 24*m70*m52*m16**2 -   10*m70*m43*m34*m07 - 60*m70*m43*m25*m16 + 40*m70*m34**2*m16 + 24*m61**2*m25*m07 + 25*m61**2*m16**2 - 60*m61*m52*m34*m07 - 234*m61*m52*m25*m16 + 40*m61*m43**2*m07 + 50*m61*m43*m34*m16 + 360*m61*m43*m25**2 - 240*m61*m34**2*m25 + 360*m52**2*m34*m16 + 81*m52**2*m25**2 - 240*m52*m43**2*m16 - 990*m52*m43*m34*m25 + 600*m52*m34**3 + 600*m43**3*m25 - 375*m43**2*m34**2)/m00**18
+    I6 = (m70**2*m07**2 - 14*m70*m61*m16*m07 + 18*m70*m52*m25*m07 + 24*m70*m52*m16**2 - 10*m70*m43*m34*m07 - 60*m70*m43*m25*m16 + 40*m70*m34**2*m16 + 24*m61**2*m25*m07 + 25*m61**2*m16**2 - 60*m61*m52*m34*m07 - 234*m61*m52*m25*m16 + 40*m61*m43**2*m07 + 50*m61*m43*m34*m16 + 360*m61*m43*m25**2 - 240*m61*m34**2*m25 + 360*m52**2*m34*m16 + 81*m52**2*m25**2 - 240*m52*m43**2*m16 - 990*m52*m43*m34*m25 + 600*m52*m34**3 + 600*m43**3*m25 - 375*m43**2*m34**2)/m00**18
 
 
     ## return feature vector
-    Out = np.concatenate(I1, I2, I3, I4, I5, I6)
+    Out = np.array([I1, I2, I3, I4, I5, I6])
     return Out
 
 
     # Calculate Central Moments
 def CentralMoments(x,y,p,q,pixelValues):
-    cenMoment = np.sum(np.power(x,p) * np.power(y,q) * pixelValues)
-    return cenMoment
+    return np.sum(np.power(x,p) * np.power(y,q) * pixelValues)

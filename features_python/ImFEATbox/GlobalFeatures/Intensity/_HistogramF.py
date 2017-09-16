@@ -32,7 +32,7 @@ def HistogramF(I, typeflag=None, returnShape=False):
 
     if typeflag == None:
         typeflag = dict()
-        typeflag['local'] = True
+        typeflag['global'] = True
         typeflag['texture'] = True
         typeflag['entropy'] = True
 
@@ -52,25 +52,25 @@ def HistogramF(I, typeflag=None, returnShape=False):
             I = rgb2grayscale(I)
 
     # 256 gray scale Image
-    graylevels = range(0, 255)
+    graylevels = range(0, 256)
 
     # Probability of occurence of gray values
-    Prob = np.histogram(I[:], bins=graylevels) / np.prod(np.shape(I))
+    Prob = np.histogram(I, bins=len(graylevels))[0] * 1.0 / np.prod(np.shape(I))
 
     ## extract features
 
     if typeflag['texture'] or typeflag['global']:
         # Histogram Mean _ Identifier code
-        Mean = graylevels*Prob
+        Mean = np.dot(graylevels,Prob)
 
         # Histogram Standard Deviation
-        Std = np.sqrt(np.power((graylevels-Mean),2)*Prob)
+        Std = np.sqrt(np.dot(np.power((graylevels-Mean),2),Prob))
 
         # Histogram Skewness
-        Skewness = 1/np.power(Std,3)*np.power((graylevels-Mean),3)*Prob
+        Skewness = 1/np.power(Std,3)*np.dot(np.power((graylevels-Mean),3),Prob)
 
         # Histogram Kurtosis
-        Kurtosis = 1/np.power(Std,4)*(np.power((graylevels-Mean),4)*Prob-3)
+        Kurtosis = 1/np.power(Std,4)*np.dot(np.power((graylevels-Mean),4),Prob-3)
 
         # Histogram Energy
         Energy = np.sum(np.power(Prob,2))
@@ -83,9 +83,8 @@ def HistogramF(I, typeflag=None, returnShape=False):
     ## Return feature vector
 
     if typeflag['texture'] or typeflag['global']:
-        Out = [Mean, Std, Skewness, Kurtosis, Energy, Entropy]
+        Out = np.array([Mean, Std, Skewness, Kurtosis, Energy, Entropy])
     else:
-        Out =  Entropy
-
+        Out =  np.array([Entropy])
 
     return Out

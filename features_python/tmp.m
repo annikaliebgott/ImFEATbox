@@ -1,8 +1,8 @@
 I = csvread('testimg.csv');
-typeflag.corr = false;
-typeflag.texture = false;
-typeflag.global = false;
-typeflag.entropy = false;
-addpath('ImFEATbox/GlobalFeatures/Intensity/');
-Out = ImFEATbox/GlobalFeatures/Intensity/IntensityF(I, typeflag);
+typeflag.local = true;
+typeflag.moments = true;
+typeflag.corr = true;
+typeflag.texture = true;
+addpath('ImFEATbox/LocalFeatures/Line/');
+Out = ImFEATbox/LocalFeatures/Line/LineProfileF(I, plotflag, typeflag);
 csvwrite('matlab-out.csv', Out);

@@ -1,6 +1,5 @@
 from skimage import measure
 import numpy as np
-import math.pi as pi
 
 def FormFactorF(I, typeflag, test=False):
 """
@@ -73,8 +72,8 @@ def FormFactorF(I, typeflag, test=False):
         for i in range(N):
             area_obj[i] = s[i].area
             perimeter_obj[i] = s[i].perimeter
-            form[i] = 4*pi*area_obj[i]/(perimeter_obj[i]^2)
-            roundness[i] = (4*s[i].area )/(s[i].EquivDiameter*pi)
+            form[i] = 4*np.pi*area_obj[i]/(perimeter_obj[i]^2)
+            roundness[i] = (4*s[i].area )/(s[i].EquivDiameter*np.pi)
 
 
         # avoid Inf values which cause problems in further calculations

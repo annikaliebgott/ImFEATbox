@@ -7,7 +7,7 @@ import ImFEATbox
 import itertools
 
 featureFolderList = ["GlobalFeatures", "LocalFeatures"]
-PATH = "ImFEATbox/GlobalFeatures"
+PATH = "ImFEATbox/LocalFeatures"
 #result = [y for x in os.walk(PATH) for y in glob(os.path.join(x[0], '*.py'))]
 
 pyFileList = [os.path.join(r, fn) for r, ds, fs in os.walk(PATH) for fn in fs if fn.endswith('.py')]
@@ -75,6 +75,7 @@ for r in pyFileList:
 
     # looking for unknown parameters:
     gradTypeParameter = False
+    plotParameter = False
     for par in mParameterList:
         if par.lower() == "i" or par.lower() == "image":
             pass
@@ -86,6 +87,8 @@ for r in pyFileList:
             typeFlagList.add("gradtype.first")
             typeFlagList.add("gradtype.second")
             gradTypeParameter = True
+        elif par == "plotflag":
+            plotParameter = True
         else:
             print("unknown parameter: " + par)
     #print(typeFlagList)
@@ -134,6 +137,8 @@ for r in pyFileList:
         pythonScript += "\tI = np.array(list(csv.reader(csvfile, delimiter=','))).astype(np.float)\n"
 
         matlabScript = "I = csvread('testimg.csv');\n"
+        if plotParameter:
+            pythonScript += "plotflag = False\n"
         if gradTypeParameter:
             pythonScript += "gradtype = dict()\n"
         if len(typeFlagList) > 0:

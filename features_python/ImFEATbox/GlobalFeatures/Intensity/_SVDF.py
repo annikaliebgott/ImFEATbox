@@ -34,8 +34,8 @@ def SVDF(I, returnShape=False):
 
     # initialize feature variables
     dia_elements = np.zeros((np.shape(I)[0],3))
-    eig_U = np.zeros((np.shape(I)[1],3))
-    eig_V = np.zeros((np.shape(I)[2],3))
+    eig_U = np.zeros((np.shape(I)[0],3))
+    eig_V = np.zeros((np.shape(I)[1],3))
     det_U = np.zeros(3)
     det_V = np.zeros(3)
     trace_U = np.zeros(3)
@@ -75,11 +75,11 @@ def SVDF(I, returnShape=False):
 
         # calculate diagonal elements of matrix S
         for i in range(0, np.count_nonzero(S)):
-            dia_elements[i,z] = S[i,i]
+            dia_elements[i,z] = S[i]
 
         # eigen values of U and V
-        eig_U[:,z] = np.linalg.eig(U)
-        eig_V[:,z] = np.linalg.eig(V)
+        eig_U[:,z] = np.linalg.eig(U)[0]
+        eig_V[:,z] = np.linalg.eig(V)[0]
 
         # determinant of U and V
         det_U[z] = np.linalg.det(U)
@@ -123,11 +123,11 @@ def SVDF(I, returnShape=False):
 
     np.prod(np.shape(eig_U[:100,:]))
 
-    Out = np.concatenate(np.reshape(dia_elements[:40,:],np.prod(np.shape(dia_elements[:40,:]))),
+    Out = np.array([np.reshape(dia_elements[:40,:],np.prod(np.shape(dia_elements[:40,:]))),
         np.reshape(eig_U[:100,:],np.prod(np.shape(eig_U[:100,:]))),
         np.reshape(eig_V[:100,:],np.prod(np.shape(eig_V[:100,:]))),
         det_U, det_V, trace_U, trace_V, rank_U, rank_V, skewness_U, skewness_V,
         kurtosis_U, kurtosis_V, mean_U, mean_V, mean_S, std_U, std_V, std_S,
-        median_eig_U, median_eig_V, max_eig_U, max_eig_V)
+        median_eig_U, median_eig_V, max_eig_U, max_eig_V])
 
     return Out

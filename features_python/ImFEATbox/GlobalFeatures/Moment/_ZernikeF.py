@@ -43,31 +43,31 @@ def ZernikeF(I, returnShape=False):
         return (92,1)
 
     # reserve space for the variables
-    Z = np.zeros(1,20)
-    A = np.zeros(1,20)
-    Phi = np.zeros(1,20)
+    Z = np.zeros(20)
+    A = np.zeros(20)
+    Phi = np.zeros(20)
 
     ## determine the moments for different orders
-    # TODO ???????????? wat
+    # TODO ???????????? order always = number of repetition ?
     for m in range(2,42,2): #m=2:2:40
         n = m
 
-        # converte image to square size image
+        # convert image to square size image
         s = np.shape(I)
-        if s[0,0] < s[0,1]:
-            p = conv2float(I[:,0:s[0,0]])
-        elif s[0,0] > s[0,1]:
-            p = conv2float(I[0 : s[0,1],:])
-        elif s[0,0] == s[0,1]:
+        if s[0] < s[1]:
+            p = conv2float(I[:,0:s[0]])
+        elif s[0] > s[1]:
+            p = conv2float(I[0 : s[1],:])
+        elif s[0] == s[1]:
             p = conv2float(I)
 
         # determine Zernike moments
         N = np.shape(p)[0]
-        x = range(1, N+1) #1:N
+        x = range(0, N) #1:N
         y = x
         [X,Y] = np.meshgrid(x,y)
-        R = np.array(np.sqrt((np.power(np.power(2,X)-N-1),2)+(np.power(np.power(2,Y)-N-1),2))/N)
-        Theta = np.atan2((N-1-np.power(2,Y)+2),(np.power(2,X)-N+1-2))
+        R = np.array(np.sqrt(np.power(np.power(2,X)-N-1,2)+(np.power(np.power(2,Y)-N-1,2)))/N)
+        Theta = np.arctan2((N-1-np.power(2,Y)+2),(np.power(2,X)-N+1-2))
         R[R<=1] = np.power(R[R<=1], R[R<=1])
         R[R>1] = 0
 
@@ -79,7 +79,7 @@ def ZernikeF(I, returnShape=False):
         Rad = conv2float(Rad)
 
         # calculate moments
-        Product = np.power(np.power(p[x,y],Rad),exp(-1j*m*Theta))
+        Product = np.power(np.power(p[x,y],Rad),np.exp(-1j*m*Theta))
         Zernike = np.sum(Product)
 
         # count number of pixels inside the unit circle and normalize moments
@@ -88,7 +88,7 @@ def ZernikeF(I, returnShape=False):
 
         # calculate amplitude and phase (in degrees) of the moments
         A[m/2-1] = np.real(conv2float(np.abs(Zernike)))
-        Phi[m/2-1] = np.real(conv2float(np.angle(Zernike)*180/pi))
+        Phi[m/2-1] = np.real(conv2float(np.angle(Zernike)*180/np.pi))
 
         # calculate mean, std and max values for Z, A and Phi
         mean_Z = np.mean(Z)
@@ -105,7 +105,7 @@ def ZernikeF(I, returnShape=False):
 
     ## return feature vector
 
-    Out = np.concatenate([real(Z), imag(Z), A, Phi, real(mean_Z), imag(mean_Z), mean_A, mean_Phi,
-        real(std_Z), imag(std_Z), std_A, std_Phi, real(max_Z), imag(max_Z), max_A, max_Phi])
+    Out = np.array([np.real(Z), np.imag(Z), A, Phi, np.real(mean_Z), np.imag(mean_Z), mean_A, mean_Phi,
+        np.real(std_Z), np.imag(std_Z), std_A, std_Phi, np.real(max_Z), np.imag(max_Z), max_A, max_Phi])
 
     return Out

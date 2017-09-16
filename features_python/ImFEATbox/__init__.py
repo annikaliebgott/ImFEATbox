@@ -1,4 +1,5 @@
 import GlobalFeatures
+import LocalFeatures
 
 import FeatureGroup
 

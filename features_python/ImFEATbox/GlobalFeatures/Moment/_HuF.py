@@ -2,7 +2,7 @@ import numpy as np
 import math
 from ImFEATbox.__helperCommands import conv2float
 
-def HuF(I):
+def HuF(I, returnShape=False):
     """
      Input:     - I: A 2D image
 
@@ -26,12 +26,17 @@ def HuF(I):
     # Implementation by:    Ishrat Badami, Computer Graphics Department,
     #                       University of Bonn
 
+    if returnShape:
+        return (8,1)
+
     I = np.array(I, dtype='float')
     height, width = np.shape(I)
 
     # define a coordinate system for the image
-    xgrid = np.repeat(np.array(range(-np.floor(height/2),np.ceil(height/2))-1).T, [1, width])
-    ygrid = np.repeat(np.array(range(-np.floor(width/2),np.ceil(width/2))-1),[height,1])
+    xgrid = np.repeat(np.array(range(int(-np.floor(height/2.0)),int(np.ceil(height/2.0)))), width)
+    xgrid = np.reshape(xgrid, (height, width))
+    ygrid = np.repeat(np.array(range(int(-np.floor(width/2.0)),int(np.ceil(width/2.0)))), height)
+    ygrid = np.reshape(ygrid, (height, width))
 
     x_bar, y_bar = centerOfMass(I,xgrid,ygrid)
 
@@ -51,15 +56,15 @@ def HuF(I):
 
     #calculate first 8 hu moments of order 3
     I_1 = mu_20 + mu_02
-    I_2 = (mu_20 - mu_02)^2 + 4*mu_11
-    I_3 = (mu_30 - 3*mu_12)^2 + (mu_03 - 3*mu_21)^2
-    I_4 = (mu_30 + mu_12)^2 + (mu_03 + mu_21)^2
-    I_5 = (mu_30 - 3*mu_12)*(mu_30 + mu_12)*((mu_30 + mu_12)^2 -3*(mu_21 + mu_03)^2) + (3*mu_21 - mu_03)*(mu_21 + mu_03)*(3*(mu_30 + mu_12)^2 - (mu_03 + mu_21)^2)
-    I_6 = (mu_20 - mu_02)*((mu_30 + mu_12)^2 - (mu_21 + mu_03)^2) + 4*(mu_30 + mu_12)*(mu_21 + mu_03)
-    I_7 = (3*mu_21 - mu_03)*(mu_30 + mu_12)*((mu_30 + mu_12)^2 - 3*(mu_21 + mu_03)^2) + (mu_30 - 3*mu_12)*(mu_21 + mu_03)*(3*(mu_30 + mu_12)^2 - (mu_03 + mu_21)^2)
-    I_8 = mu_11*(mu_30 + mu_12)^2 - (mu_03 + mu_21)^2 - (mu_20 - mu_02)*(mu_30 + mu_12)*(mu_21 + mu_03)
+    I_2 = (mu_20 - mu_02)**2 + 4*mu_11
+    I_3 = (mu_30 - 3*mu_12)**2 + (mu_03 - 3*mu_21)**2
+    I_4 = (mu_30 + mu_12)**2 + (mu_03 + mu_21)**2
+    I_5 = (mu_30 - 3*mu_12)*(mu_30 + mu_12)*((mu_30 + mu_12)**2 -3*(mu_21 + mu_03)**2) + (3*mu_21 - mu_03)*(mu_21 + mu_03)*(3*(mu_30 + mu_12)**2 - (mu_03 + mu_21)**2)
+    I_6 = (mu_20 - mu_02)*((mu_30 + mu_12)**2 - (mu_21 + mu_03)**2) + 4*(mu_30 + mu_12)*(mu_21 + mu_03)
+    I_7 = (3*mu_21 - mu_03)*(mu_30 + mu_12)*((mu_30 + mu_12)**2 - 3*(mu_21 + mu_03)**2) + (mu_30 - 3*mu_12)*(mu_21 + mu_03)*(3*(mu_30 + mu_12)**2 - (mu_03 + mu_21)**2)
+    I_8 = mu_11*(mu_30 + mu_12)**2 - (mu_03 + mu_21)**2 - (mu_20 - mu_02)*(mu_30 + mu_12)*(mu_21 + mu_03)
 
-    Out = np.concatenate(I_1, I_2, I_3, I_4, I_5, I_6, I_7, I_8)
+    Out = np.array([I_1, I_2, I_3, I_4, I_5, I_6, I_7, I_8])
 
     return Out
 
@@ -79,7 +84,7 @@ def centerOfMass(I,xgrid,ygrid):
     # very small constant to prevent dividing by zero
     eps = math.pow(10,-6)
 
-    x_bar = np.sum(np.sum((xgrid*I)))/(np.sum(I[:]+eps))
-    y_bar = np.sum(np.sum((ygrid*I)))/(np.sum(I[:]+eps))
+    x_bar = np.sum(xgrid*I)/(np.sum(I)+eps)
+    y_bar = np.sum(ygrid*I)/(np.sum(I)+eps)
 
     return x_bar, y_bar
