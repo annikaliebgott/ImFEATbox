@@ -57,8 +57,16 @@ def IntensityF(I, typeflag=None, returnShape=False):
         warnings.warn("typeflag global, texture, corr and entropy are false. Using default settings.")
 
     if returnShape:
-        # returns only the shape of feature vectors depending on parameters
-        return (7,1)
+    # returns only the shape of feature vectors depending on parameters
+        if not (typeflag['texture'] or typeflag['global']):
+            if not typeflag['corr']:
+                return (1,1)
+            elif not typeflag['entropy']:
+                return (2,1)
+            else:
+                return (3,1)
+        else:
+            return (7,1)
 
     # Check for color image and convert to grayscale
     if len(np.shape(I)) == 3:

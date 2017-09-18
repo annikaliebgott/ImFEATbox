@@ -47,7 +47,7 @@ end
 graylevels = (0:255);
 
 % Probability of occurence of gray values
-Prob = histc(I(:),graylevels) ./ numel(I);
+Prob = (histcounts(I(:),length(graylevels)) ./ numel(I))';
 
 %% extract features
 

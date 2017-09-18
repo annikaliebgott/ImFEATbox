@@ -8,6 +8,9 @@ import itertools
 from subprocess import Popen, PIPE, STDOUT
 
 
+featureWhiteList = []
+featureWhiteList.append("Gradient")
+
 
 featureFolderList = ["GlobalFeatures", "LocalFeatures"]
 
@@ -21,20 +24,50 @@ for folder in featureFolderList:
     pl = [os.path.join(r, fn) for r, ds, fs in os.walk(PATH) for fn in fs if fn.endswith('.py')]
     pyFileList += pl
 
+#
+# if len(featureWhiteList) > 0:
+#     # while testing few features we can use a whitelist
+#
+#     for keyword in featureWhiteList:
+#         for pyFile in pyFileList:
+#             pyFileName = pyFile.split(os.sep)[-1]
+#             print(keyword)
+#             print(pyFileName)
+#             if keyword.lower() in pyFileName.lower():
+#                 print(keyword.lower() + " in " + pyFile.split(os.sep)[-1].lower())
+#                 pass
+#             else:
+#                 pyFileList.remove(pyFile)
+#                 print("remove" + str(pyFile))
+#
+#
+#     print("Using Whitelist: " + str(len(pyFileList)) + " features selected.")
+#     print(pyFileList)
+
 report = ""
 reportx = ""
 report += "######################################################" + os.linesep
 report += "############ python ImFEATbox test report ############" + os.linesep
 report += "######################################################" + os.linesep + os.linesep
 stdout = ""
-rmList = []
+rmList = set()
 for r in pyFileList:
     pyFileName = r.split(os.sep)[-1]
     if pyFileName == "__init__.py" or pyFileName[0] != "_":
-        rmList.append(r)
+        rmList.add(r)
+
+    if len(featureWhiteList) > 0:
+        found = False
+        for k in featureWhiteList:
+            if k.lower() in pyFileName.lower():
+                found = True
+        if not found:
+            rmList.add(r)
+
+#rmList = list(rmList)
 for r in rmList:
     pyFileList.remove(r)
-
+print(pyFileList)
 print("")
 # find corresponding matlab files:
 mFileList = []

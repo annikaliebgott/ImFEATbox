@@ -1,4 +1,9 @@
 I = csvread('testimg.csv');
-addpath('ImFEATbox/LocalFeatures/Point/');
-Out = LawF(I);
+gradtype.first = true;
+gradtype.second = true;
+typeflag.texture = true;
+typeflag.global = true;
+typeflag.gradient = true;
+addpath('ImFEATbox/GlobalFeatures/Intensity/');
+Out = GradientF(I, typeflag, gradtype);
 csvwrite('matlab-out.csv', Out);
