@@ -17,7 +17,7 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 9
 	* value test FAILED !!!
-maximum deviation: 1.48319520144 %
+maximum deviation: 1.59296582557 %
 
 feature indices with > 1% Error:
 [0 1 2 3]
@@ -34,14 +34,15 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -54,14 +55,15 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -74,14 +76,15 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -94,14 +97,15 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -114,14 +118,15 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -134,14 +139,15 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -154,14 +160,15 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -173,7 +180,7 @@ typeflag['texture'] = False
 typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 5
-	* value test passed: all value deviations < 0.582838167648 %
+	* value test passed: all value deviations < 0.444588844041 %
 
 test case #10/32:
 gradtype['first'] = False
@@ -183,12 +190,13 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -200,12 +208,13 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -217,12 +226,13 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -234,12 +244,13 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -251,12 +262,13 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -268,12 +280,13 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -285,12 +298,13 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 45
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  5  6  7  8  9 10 11 15 16 20 21 30 31 35 36]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 14 16 17 18 19 20 21 22 23 24 25 26 27
+ 28 29 30 31 32 33 34 35 36 37 38 39]
 feature indices with > 5% Error:
-[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36]
+[ 0  1  5  6  7  8  9 10 11 20 21 30 31 35 36 39]
 feature indices with > 10% Error:
 [ 5  6  7  8  9 10 11 20 21 30 31 35 36]
 
@@ -302,7 +316,7 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 4
 	* value test FAILED !!!
-maximum deviation: 1.48319520144 %
+maximum deviation: 1.59296582557 %
 
 feature indices with > 1% Error:
 [0 1 2 3]
@@ -319,11 +333,11 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -339,11 +353,11 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -359,11 +373,11 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -379,11 +393,11 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -399,11 +413,11 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -419,11 +433,11 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -439,11 +453,11 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 36
 	* value test FAILED !!!
-maximum deviation: 841.769163297 %
+maximum deviation: 841.27258936 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
- 29 30 31 32 33 34 35]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27
+ 28 29 30 31 32 33 34 35]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 24 25 26 27 28
  29 30 31]
@@ -459,7 +473,7 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 9
 	* value test FAILED !!!
-maximum deviation: 1.48319520144 %
+maximum deviation: 1.59296582557 %
 
 feature indices with > 1% Error:
 [0 1 2 3]
@@ -476,14 +490,15 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -496,14 +511,15 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -516,14 +532,15 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -536,14 +553,15 @@ typeflag['global'] = False
 typeflag['gradient'] = False
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -556,14 +574,15 @@ typeflag['global'] = False
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -576,14 +595,15 @@ typeflag['global'] = True
 typeflag['gradient'] = False
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
@@ -596,14 +616,15 @@ typeflag['global'] = True
 typeflag['gradient'] = True
 	* shape test passed: 81
 	* value test FAILED !!!
-maximum deviation: 1802469.9261 %
+maximum deviation: 1754305.26371 %
 
 feature indices with > 1% Error:
-[ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 31 32 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 72 73 74 75]
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 26
+ 27 28 29 30 32 33 34 35 36 37 38 39 40 41 42 43 44 48 49 50 51 52 53 54 55
+ 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75]
 feature indices with > 5% Error:
 [ 0  1  2  3  4  5  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30
- 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
+ 36 37 38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68 71]
 feature indices with > 10% Error:
 [ 0  1  2  3  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 27 28 29 30 36 37
  38 39 40 41 54 55 56 57 58 59 63 64 65 66 67 68]
