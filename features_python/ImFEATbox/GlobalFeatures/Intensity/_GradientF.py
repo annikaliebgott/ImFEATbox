@@ -87,8 +87,9 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
     # make float
     I = conv2float(I)
 
-    Height, Width = np.shape(I)
-    n = Height * Width
+    n = I.size
+
+    I = I.T # to match matlab code
 
     ## define gradients
     if gradtype['first']:
@@ -136,33 +137,33 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     ## convolve image
     if gradtype['first']:
-        G1_x = convolve2d(I,g1_x, boundary='fill', mode='full')
-        G1_y = convolve2d(I,g1_y, boundary='wrap', mode='full')
-        G2_x = convolve2d(I,g2_x, boundary='symm', mode='full')
-        G2_y = convolve2d(I,g2_y, boundary='fill', mode='valid')
+        G1_x = convolve2d(I,g1_x, boundary='fill', mode='same')
+        G1_y = convolve2d(I,g1_y, boundary='fill', mode='same')
+        G2_x = convolve2d(I,g2_x, boundary='fill', mode='same')
+        G2_y = convolve2d(I,g2_y, boundary='fill', mode='same')
 
     if gradtype['second']:
-        L1_x = convolve2d(I,l1_x, boundary='wrap', mode='valid')
-        L1_y = convolve2d(I,l1_y, boundary='symm', mode='valid')
+        L1_x = convolve2d(I,l1_x, boundary='fill', mode='same')
+        L1_y = convolve2d(I,l1_y, boundary='fill', mode='same')
         L2 = convolve2d(I,l2, boundary='fill', mode='same')
-        L3 = convolve2d(I,l3, boundary='wrap', mode='same')
-        L4 = convolve2d(I,l4, boundary='symm', mode='same')
+        L3 = convolve2d(I,l3, boundary='fill', mode='same')
+        L4 = convolve2d(I,l4, boundary='fill', mode='same')
 
     ## extract features
 
     # summed gradients
     if gradtype['first']:
-        G1_y_sum = np.sum(np.sum(np.abs(G1_y)))
-        G1_x_sum = np.sum(np.sum(np.abs(G1_x)))
-        G2_x_sum = np.sum(np.sum(np.abs(G2_x)))
-        G2_y_sum = np.sum(np.sum(np.abs(G2_y)))
+        G1_y_sum = np.sum(np.abs(G1_y))
+        G1_x_sum = np.sum(np.abs(G1_x))
+        G2_x_sum = np.sum(np.abs(G2_x))
+        G2_y_sum = np.sum(np.abs(G2_y))
 
     if gradtype['second']:
-        L1_x_sum = np.sum(np.sum(np.abs(L1_x)))
-        L1_y_sum = np.sum(np.sum(np.abs(L1_y)))
-        L2_sum = np.sum(np.sum(np.abs(L2)))
-        L3_sum = np.sum(np.sum(np.abs(L3)))
-        L4_sum = np.sum(np.sum(np.abs(L4)))
+        L1_x_sum = np.sum(np.abs(L1_x))
+        L1_y_sum = np.sum(np.abs(L1_y))
+        L2_sum = np.sum(np.abs(L2))
+        L3_sum = np.sum(np.abs(L3))
+        L4_sum = np.sum(np.abs(L4))
 
     # normalized gradients
     if gradtype['first']:
@@ -181,30 +182,30 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
     if typeflag['global'] or typeflag['texture'] or typeflag['gradient']:
         # sum of squared gradients
         if gradtype['first']:
-            G1_x_2 = np.sum(np.sum(np.power(G1_x,2)))/n
-            G1_y_2 = np.sum(np.sum(np.power(G1_y,2)))/n
-            G2_x_2 = np.sum(np.sum(np.power(G2_x,2)))/n
-            G2_y_2 = np.sum(np.sum(np.power(G2_y,2)))/n
+            G1_x_2 = np.sum(np.power(G1_x,2))/n
+            G1_y_2 = np.sum(np.power(G1_y,2))/n
+            G2_x_2 = np.sum(np.power(G2_x,2))/n
+            G2_y_2 = np.sum(np.power(G2_y,2))/n
         if gradtype['second']:
-            L1_x_2 = np.sum(np.sum(np.power(L1_x,2)))/n
-            L1_y_2 = np.sum(np.sum((L1_y,2)))/n
-            L2_2 = np.sum(np.sum((L2,2)))/n
-            L3_2 = np.sum(np.sum((L3,2)))/n
-            L4_2 = np.sum(np.sum((L4,2)))/n
+            L1_x_2 = np.sum(np.power(L1_x,2))/n
+            L1_y_2 = np.sum(np.power(L1_y,2))/n
+            L2_2 = np.sum(np.power(L2,2))/n
+            L3_2 = np.sum(np.power(L3,2))/n
+            L4_2 = np.sum(np.power(L4,2))/n
 
         # sum of 4th power of gradients
         if gradtype['first']:
-            G1_x_4 = np.sum(np.sum(np.power(G1_x,4)))/n
-            G1_y_4 = np.sum(np.sum(np.power(G1_y,4)))/n
-            G2_x_4 = np.sum(np.sum(np.power(G2_x,4)))/n
-            G2_y_4 = np.sum(np.sum(np.power(G2_y,4)))/n
+            G1_x_4 = np.sum(np.power(G1_x,4))/n
+            G1_y_4 = np.sum(np.power(G1_y,4))/n
+            G2_x_4 = np.sum(np.power(G2_x,4))/n
+            G2_y_4 = np.sum(np.power(G2_y,4))/n
 
         if gradtype['second']:
-            L1_x_4 = np.sum(np.sum(np.power(L1_x,4)))/n
-            L1_y_4 = np.sum(np.sum(np.power(L1_y,4)))/n
-            L2_4 = np.sum(np.sum(np.power(L2,4)))/n
-            L3_4 = np.sum(np.sum(np.power(L3,4)))/n
-            L4_4 = np.sum(np.sum(np.power(L4,4)))/n
+            L1_x_4 = np.sum(np.power(L1_x,4))/n
+            L1_y_4 = np.sum(np.power(L1_y,4))/n
+            L2_4 = np.sum(np.power(L2,4))/n
+            L3_4 = np.sum(np.power(L3,4))/n
+            L4_4 = np.sum(np.power(L4,4))/n
 
         # maximum of normalized gradients
         if gradtype['first']:
@@ -250,31 +251,31 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
         # sum of normalized gradients squared
         if gradtype['first']:
-            G1_x_norm_2 = np.sum(np.sum(np.power(G1_x_norm,2)))/n
-            G1_y_norm_2 = np.sum(np.sum(np.power(G1_y_norm,2)))/n
-            G2_x_norm_2 = np.sum(np.sum(np.power(G2_x_norm,2)))/n
-            G2_y_norm_2 = np.sum(np.sum(np.power(G2_y_norm,2)))/n
+            G1_x_norm_2 = np.sum(np.power(G1_x_norm,2))/n
+            G1_y_norm_2 = np.sum(np.power(G1_y_norm,2))/n
+            G2_x_norm_2 = np.sum(np.power(G2_x_norm,2))/n
+            G2_y_norm_2 = np.sum(np.power(G2_y_norm,2))/n
 
         if gradtype['second']:
-            L1_x_norm_2 = np.sum(np.sum(np.power(L1_x_norm,2)))/n
-            L1_y_norm_2 = np.sum(np.sum(np.power(L1_y_norm,2)))/n
-            L2_norm_2 = np.sum(np.sum(np.power(L2_norm,2)))/n
-            L3_norm_2 = np.sum(np.sum(np.power(L3_norm,2)))/n
-            L4_norm_2 = np.sum(np.sum(np.power(L4_norm,2)))/n
+            L1_x_norm_2 = np.sum(np.power(L1_x_norm,2))/n
+            L1_y_norm_2 = np.sum(np.power(L1_y_norm,2))/n
+            L2_norm_2 = np.sum(np.power(L2_norm,2))/n
+            L3_norm_2 = np.sum(np.power(L3_norm,2))/n
+            L4_norm_2 = np.sum(np.power(L4_norm,2))/n
 
         # sum of normalized gradients to 4th power
         if gradtype['first']:
-            G1_x_norm_4 = np.sum(np.sum(np.power(G1_x_norm,4)))/n
-            G1_y_norm_4 = np.sum(np.sum(np.power(G1_y_norm,4)))/n
-            G2_x_norm_4 = np.sum(np.sum(np.power(G2_x_norm,4)))/n
-            G2_y_norm_4 = np.sum(np.sum(np.power(G2_y_norm,4)))/n
+            G1_x_norm_4 = np.sum(np.power(G1_x_norm,4))/n
+            G1_y_norm_4 = np.sum(np.power(G1_y_norm,4))/n
+            G2_x_norm_4 = np.sum(np.power(G2_x_norm,4))/n
+            G2_y_norm_4 = np.sum(np.power(G2_y_norm,4))/n
 
         if gradtype['second']:
-            L1_x_norm_4 = np.sum(np.sum(np.power(L1_x_norm,4)))/n
-            L1_y_norm_4 = np.sum(np.sum(np.power(L1_y_norm,4)))/n
-            L2_norm_4 = np.sum(np.sum(np.power(L2_norm,4)))/n
-            L3_norm_4 = np.sum(np.sum(np.power(L3_norm,4)))/n
-            L4_norm_4 = np.sum(np.sum(np.power(L4_norm,4)))/n
+            L1_x_norm_4 = np.sum(np.power(L1_x_norm,4))/n
+            L1_y_norm_4 = np.sum(np.power(L1_y_norm,4))/n
+            L2_norm_4 = np.sum(np.power(L2_norm,4))/n
+            L3_norm_4 = np.sum(np.power(L3_norm,4))/n
+            L4_norm_4 = np.sum(np.power(L4_norm,4))/n
 
     # marginal entropies of normalized gradients
     if gradtype['first']:

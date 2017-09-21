@@ -307,16 +307,16 @@ for r in pyFileList:
         else:
             featurePassed = False
             reportx += "\t* value test FAILED !!!" + os.linesep
-            #reportx += "Matlab:" + os.linesep
-            #reportx += str(mOut) + os.linesep
-            #reportx += "Python:" + os.linesep
-            #reportx += str(pOut) + os.linesep
-
-            #reportx += "(Python-Matlab):" + os.linesep
-            #reportx += str(diff) + os.linesep
-            #reportx += "(Python-Matlab)/Matlab:" + os.linesep
+            reportx += "Matlab:" + os.linesep
+            reportx += str(mOut) + os.linesep
+            reportx += "Python:" + os.linesep
+            reportx += str(pOut) + os.linesep
             reportx += "maximum deviation: " + str(max_diff_norm) + " %" + os.linesep
             reportx += os.linesep
+            reportx += "(Python-Matlab):" + os.linesep
+            reportx += str(diff) + os.linesep
+            reportx += "(Python-Matlab)/Matlab:" + os.linesep
+            reportx += str(diff_norm) + os.linesep
             diffindex1 = np.where(np.abs(diff_norm) > 0.01)[0]
             diffindex5 = np.where(np.abs(diff_norm) > 0.05)[0]
             diffindex10 = np.where(np.abs(diff_norm) > 0.1)[0]
