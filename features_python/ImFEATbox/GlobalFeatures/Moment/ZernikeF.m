@@ -79,26 +79,27 @@ for m=2:2:40
     Zernike = sum(Product(:));        
      
     % count number of pixels inside the unit circle and normalize moments
-    cnt = nnz(R)+1; 
+    cnt = nnz(R)+1;
     Z(m/2) = (n+1)*Zernike/cnt;  
     
     % calculate amplitude and phase (in degrees) of the moments          
     A(m/2) = real(double(abs(Zernike))); 
     Phi(m/2) = real(double(angle(Zernike)*180/pi));      
-   
-    % calculate mean, std and max values for Z, A and Phi
-    mean_Z = mean(Z);
-    mean_A = mean(A);
-    mean_Phi = mean(Phi);
-    
-    std_Z = std(Z);
-    std_A = std(A);
-    std_Phi = std(Phi);
-    
-    max_Z = max(Z);
-    max_A = max(A);
-    max_Phi = max(Phi);
 end
+
+% calculate mean, std and max values for Z, A and Phi
+mean_Z = mean(Z);
+mean_A = mean(A);
+mean_Phi = mean(Phi);
+
+std_Z = std(Z);
+std_A = std(A);
+std_Phi = std(Phi);
+
+max_Z = max(Z);
+max_A = max(A);
+max_Phi = max(Phi);
+
 
 
 %% return feature vector 

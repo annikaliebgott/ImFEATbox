@@ -9,8 +9,9 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-featureWhiteList.append("svd")
-
+featureWhiteList.append("lineprofile")
+# TODO:
+# SVD: not solvable?
 
 featureFolderList = ["GlobalFeatures", "LocalFeatures"]
 
@@ -299,7 +300,11 @@ for r in pyFileList:
             print(parameterSetup)
 
         diff = pOut - mOut
-        diff_norm = np.abs(diff/mOut)
+        try:
+            diff_norm = np.abs(diff/mOut)
+        except ValueError:
+            pass
+        diff_norm[diff==0] = 0
         max_diff_norm = np.max(np.abs(diff_norm))*100
 
         if max_diff_norm < 1:

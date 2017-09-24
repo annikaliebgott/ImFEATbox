@@ -87,25 +87,25 @@ def DistanceTrafoF(I,typeflag):
         B44 = np.mean(D4)
 
         # standard deviation of matrix elements
-        S1 = np.std(IDX1)
-        S2 = np.std(IDX2)
-        S3 = np.std(IDX3)
-        S4 = np.std(IDX4)
+        S1 = np.std(IDX1, ddof=1)
+        S2 = np.std(IDX2, ddof=1)
+        S3 = np.std(IDX3, ddof=1)
+        S4 = np.std(IDX4, ddof=1)
 
-        S11 = np.std(D1)
-        S22 = np.std(D2)
-        S33 = np.std(D3)
-        S44 = np.std(D4)
+        S11 = np.std(D1, ddof=1)
+        S22 = np.std(D2, ddof=1)
+        S33 = np.std(D3, ddof=1)
+        S44 = np.std(D4, ddof=1)
 
-        s1 = np.std(np.std(IDX1))
-        s2 = np.std(np.std(IDX2))
-        s3 = np.std(np.std(IDX3))
-        s4 = np.std(np.std(IDX4))
+        s1 = np.std(np.std(IDX1, ddof=1), ddof=1)
+        s2 = np.std(np.std(IDX2, ddof=1), ddof=1)
+        s3 = np.std(np.std(IDX3, ddof=1), ddof=1)
+        s4 = np.std(np.std(IDX4, ddof=1), ddof=1)
 
-        s11 = np.std(np.std(D1))
-        s22 = np.std(np.std(D2))
-        s33 = np.std(np.std(D3))
-        s44 = np.std(np.std(D4))
+        s11 = np.std(np.std(D1, ddof=1), ddof=1)
+        s22 = np.std(np.std(D2, ddof=1), ddof=1)
+        s33 = np.std(np.std(D3, ddof=1), ddof=1)
+        s44 = np.std(np.std(D4, ddof=1), ddof=1)
 
         # number of non zero elements
         nn_D11 = np.count_nonzero(IDX1)

@@ -142,10 +142,10 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
         mean4 = np.mean(c4)
 
         # standard deviation
-        sd1 = np.std(c1)
-        sd2 = np.std(c2)
-        sd3 = np.std(c3)
-        sd4 = np.std(c4)
+        sd1 = np.std(c1, ddof=1)
+        sd2 = np.std(c2, ddof=1)
+        sd3 = np.std(c3, ddof=1)
+        sd4 = np.std(c4, ddof=1)
 
         # Percentiles of a data set
         pr1 = np.percentile(c1,48)
@@ -178,10 +178,10 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
         mean_dc4 = np.mean(dc4)
 
         # standard deviation of the derivates
-        sd_dc1 = np.std(dc1)
-        sd_dc2 = np.std(dc2)
-        sd_dc3 = np.std(dc3)
-        sd_dc4 = np.std(dc4)
+        sd_dc1 = np.std(dc1, ddof=1)
+        sd_dc2 = np.std(dc2, ddof=1)
+        sd_dc3 = np.std(dc3, ddof=1)
+        sd_dc4 = np.std(dc4, ddof=1)
 
         # fast fourier transform of the derivates
         fft_dc1 = np.fft.fft(dc1)

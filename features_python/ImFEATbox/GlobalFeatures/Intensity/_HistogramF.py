@@ -55,13 +55,13 @@ def HistogramF(I, typeflag=None, returnShape=False):
     graylevels = range(0, 256)
 
     # Probability of occurence of gray values
-    Prob = np.histogram(I, bins=len(graylevels))[0] * 1.0 / np.prod(np.shape(I))
+    Prob = np.histogram(I, bins=len(graylevels), range=(np.min(0),np.max(I)))[0] / float(I.size)
 
     ## extract features
 
     if typeflag['texture'] or typeflag['global']:
         # Histogram Mean _ Identifier code
-        Mean = np.dot(graylevels,Prob)
+        Mean = np.dot(graylevels, Prob)
 
         # Histogram Standard Deviation
         Std = np.sqrt(np.dot(np.power((graylevels-Mean),2),Prob))
@@ -70,7 +70,7 @@ def HistogramF(I, typeflag=None, returnShape=False):
         Skewness = 1/np.power(Std,3)*np.dot(np.power((graylevels-Mean),3),Prob)
 
         # Histogram Kurtosis
-        Kurtosis = 1/np.power(Std,4)*np.dot(np.power((graylevels-Mean),4),Prob-3)
+        Kurtosis = 1/np.power(Std,4)*(np.dot(np.power((graylevels-Mean),4),Prob)-3)
 
         # Histogram Energy
         Energy = np.sum(np.power(Prob,2))

@@ -2,7 +2,7 @@
 
 import numpy as np
 import warnings
-from ImFEATbox.__helperCommands import rgb2grayscale
+from ImFEATbox.__helperCommands import rgb2grayscale, conv2float
 
 def IntensityF(I, typeflag=None, returnShape=False):
     """
@@ -84,28 +84,28 @@ def IntensityF(I, typeflag=None, returnShape=False):
         # AutoCorrelation 1
         p2 = np.zeros((Height,Width-1))
         p1 = np.sum(np.power(I,2))
-        k = range(0, Width) # TODO check if indexing of p2 is correct
+        #k = range(0, Width)
         for i in range(0, Height):
-            p2[i,0:Width-1] = I[i,0:Width-1]*I[i,0:Width-1]
-        ACORR = p1 - np.sum(p2[:])
+            p2[i,0:Width-1] = I[i,0:Width-1]*I[i,1:Width]
+        ACORR = p1 - np.sum(p2)
 
         # AutoCorrelation 2
-        p3 = np.zeros((Height,Width-1))
-        l = range(0, Width-1) # TODO check p3
+        p3 = np.zeros((Height,Width-2))
+        #l = range(0, Width-1)
         for i in range(0, Height):
-            p3[i,0:Width-1] = I[i,0:Width-1]*I[i,0:Width-1]
+            p3[i,0:Width-2] = I[i,0:Width-2]*I[i,2:Width]
         ACORR2 = np.sum(p2) - np.sum(p3)
 
     if typeflag['global'] or typeflag['texture'] or typeflag['entropy']:
         # Entropy
-        H1 = 1.0*I / (np.sum(np.power(I, 2)))
+        H1 = conv2float(I) / (np.sum(np.power(I, 2)))
         # marginal entropies
         E = -np.sum(H1[H1 != 0] * np.log(H1[H1 != 0]))
 
     if typeflag['global'] or typeflag['texture']:
 
         #Standard Deviation
-        STD = np.std(I)
+        STD = np.std(I, ddof=1)
 
         # Cube of Normalized Intensities
         NI3 = np.sum(np.power((1.0*I)/np.sum(I),3))

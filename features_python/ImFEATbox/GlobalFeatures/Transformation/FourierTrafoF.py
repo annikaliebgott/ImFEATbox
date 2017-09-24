@@ -179,17 +179,17 @@ def FourierTrafoF(I, typeflag):
 
         if (typeflag['global'] || typeflag['transform']):
             # standard derivation
-            sd_M[z] = np.std(M)
-            sd_M1[z] = np.std(M1)
-            sd_M2[z] = np.std(M2)
-            sd_M3[z] = np.std(M3)
-            sd_M4[z] = np.std(M4)
+            sd_M[z] = np.std(M, ddof=1)
+            sd_M1[z] = np.std(M1, ddof=1)
+            sd_M2[z] = np.std(M2, ddof=1)
+            sd_M3[z] = np.std(M3, ddof=1)
+            sd_M4[z] = np.std(M4, ddof=1)
 
-            sd_F[z] = np.std(F)
-            sd_F1[z] = np.std(F1)
-            sd_F2[z] = np.std(F2)
-            sd_F3[z] = np.std(F3)
-            sd_F4[z] = np.std(F4)
+            sd_F[z] = np.std(F, ddof=1)
+            sd_F1[z] = np.std(F1, ddof=1)
+            sd_F2[z] = np.std(F2, ddof=1)
+            sd_F3[z] = np.std(F3, ddof=1)
+            sd_F4[z] = np.std(F4, ddof=1)
 
             # rank
             r_M[z] = np.linalg.matrix_rank(M)
@@ -263,13 +263,13 @@ def FourierTrafoF(I, typeflag):
             corr32 = np.corrcoef(M3,M2)
             corr42 = np.corrcoef(M4,M2)
             corr34 = np.corrcoef(M4,M3)
-            feat_corr((z-1)*30+1:(z-1)*30+30) = [np.std(corr12), np.mean(corr12),
+            feat_corr((z-1)*30+1:(z-1)*30+30) = [np.std(corr12, ddof=1), np.mean(corr12),
                 np.max(corr12(:)), np.min(corr12(:)), np.count_nonzero(corr12),
-                np.std(corr13), np.mean(corr13), np.max(corr13(:)), np.min(corr13(:)), np.count_nonzero(corr13),
-                np.std(corr14), np.mean(corr14), np.max(corr14(:)), np.min(corr14(:)), np.count_nonzero(corr14),
-                np.std(corr32), np.mean(corr32), np.max(corr32(:)), np.min(corr32(:)), np.count_nonzero(corr32),
-                np.std(corr42), np.mean(corr42), np.max(corr42(:)), np.min(corr42(:)), np.count_nonzero(corr42),
-                np.std(corr34), np.mean(corr34), np.max(corr34(:)), np.min(corr34(:)), np.count_nonzero(corr34)]
+                np.std(corr13, ddof=1), np.mean(corr13), np.max(corr13(:)), np.min(corr13(:)), np.count_nonzero(corr13),
+                np.std(corr14, ddof=1), np.mean(corr14), np.max(corr14(:)), np.min(corr14(:)), np.count_nonzero(corr14),
+                np.std(corr32, ddof=1), np.mean(corr32), np.max(corr32(:)), np.min(corr32(:)), np.count_nonzero(corr32),
+                np.std(corr42, ddof=1), np.mean(corr42), np.max(corr42(:)), np.min(corr42(:)), np.count_nonzero(corr42),
+                np.std(corr34, ddof=1), np.mean(corr34), np.max(corr34(:)), np.min(corr34(:)), np.count_nonzero(corr34)]
 
         if (typeflag['global'] or typeflag['transform']):
             # count zero points

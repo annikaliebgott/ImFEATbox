@@ -29,14 +29,15 @@ def HuF(I, returnShape=False):
     if returnShape:
         return (8,1)
 
-    I = np.array(I, dtype='float')
+    I = conv2float(I)
     height, width = np.shape(I)
 
     # define a coordinate system for the image
     xgrid = np.repeat(np.array(range(int(-np.floor(height/2.0)),int(np.ceil(height/2.0)))), width)
     xgrid = np.reshape(xgrid, (height, width))
+
     ygrid = np.repeat(np.array(range(int(-np.floor(width/2.0)),int(np.ceil(width/2.0)))), height)
-    ygrid = np.reshape(ygrid, (height, width))
+    ygrid = np.reshape(ygrid, (height,width), order='F')
 
     x_bar, y_bar = centerOfMass(I,xgrid,ygrid)
 
@@ -65,26 +66,20 @@ def HuF(I, returnShape=False):
     I_8 = mu_11*(mu_30 + mu_12)**2 - (mu_03 + mu_21)**2 - (mu_20 - mu_02)*(mu_30 + mu_12)*(mu_21 + mu_03)
 
     Out = np.array([I_1, I_2, I_3, I_4, I_5, I_6, I_7, I_8])
-
     return Out
 
     # calculate scale invariant central moments
 def central_moments(I,xnorm,ynorm,p,q):
-
-    image = conv2float(I)
-    cm = np.sum(np.sum(np.power(xnorm, p)*np.power(ynorm, q)*image))
-    cm_00 = np.sum(image) #this is same as mu(0,0)
+    cm = np.sum(np.sum(np.power(xnorm, p)*np.power(ynorm, q)*I))
+    cm_00 = np.sum(I) #this is same as mu(0,0)
     # normalise moments for scale invariance
-    cm = cm / np.power(cm_00, (1+(p+q)/2))
-
+    cm = cm / np.power(cm_00, (1+(p+q)/2.0))
     return cm
 
     # calculate center of mass
 def centerOfMass(I,xgrid,ygrid):
     # very small constant to prevent dividing by zero
     eps = math.pow(10,-6)
-
     x_bar = np.sum(xgrid*I)/(np.sum(I)+eps)
     y_bar = np.sum(ygrid*I)/(np.sum(I)+eps)
-
     return x_bar, y_bar

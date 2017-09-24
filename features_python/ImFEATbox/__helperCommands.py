@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
-
 import numpy as np
+
+__float_dtype = np.float64
+__complex_dtype = np.complex128
+
+
+def _complex_dtype():
+    return __complex_dtype
+
+def _float_dtype():
+    return __float_dtype
 
 def rgb2grayscale(Image):
     """

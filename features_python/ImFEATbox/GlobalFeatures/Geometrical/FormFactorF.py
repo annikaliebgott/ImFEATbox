@@ -99,13 +99,13 @@ def FormFactorF(I, typeflag, test=False):
             mean_form = np.mean(form)
 
             # standard deviation
-            std_roundness = np.std(roundness);
-            std_area = np.std(area_obj)
-            std_perimeter = np.std(perimeter_obj)
-            std_eccentricity = np.std (eccentricity)
-            std_orientation = np.std(orientation)
-            std_solidity = np.std(solidity)
-            std_form = np.std(form)
+            std_roundness = np.std(roundness, ddof=1)
+            std_area = np.std(area_obj, ddof=1)
+            std_perimeter = np.std(perimeter_obj, ddof=1)
+            std_eccentricity = np.std (eccentricity, ddof=1)
+            std_orientation = np.std(orientation, ddof=1)
+            std_solidity = np.std(solidity, ddof=1)
+            std_form = np.std(form, ddof=1)
 
             # maximum/minimum values (orientation is neglected for this measure)
             max_roundness = np.max(roundness)
@@ -126,12 +126,12 @@ def FormFactorF(I, typeflag, test=False):
         if N > 1:
             #corr_FR = xcorr(form, roundness, 'coeff')
 
-            form_normalized = (form - np.mean(form)) / (np.std(form) * len(form))
+            form_normalized = (form - np.mean(form)) / (np.std(form, ddof=1) * len(form))
             roundness_normalized = (roundness - np.mean(roundness)) / (np.std(roundness) * len(roundness))
             corr_FR = np.correlate(form_normalized,roundness_normalized, "full")
 
             mean_corr = np.mean(corr_FR)
-            std_corr = np.std(corr_FR)
+            std_corr = np.std(corr_FR, ddof=1)
             max_corr = np.max(corr_FR)
             min_corr = np.min(corr_FR)
 

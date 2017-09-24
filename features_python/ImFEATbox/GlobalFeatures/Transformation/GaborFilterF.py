@@ -57,7 +57,7 @@ def GaborFilterF(I,typeflag,gradtype,scale,orientation,plotflag):
 
             # extract some features directly from filtered image
             if (typeflag['transform'] or typeflag['global']):
-                std_fI = np.std(np.abs(FilteredImage(:)))
+                std_fI = np.std(np.abs(FilteredImage), ddof=1)
                 mean_fI = np.mean(np.abs(FilteredImage(:)))
                 energy_fI = np.sum(np.sum(np.power(FilteredImage, 2)))
 

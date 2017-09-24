@@ -35,7 +35,7 @@ def SVDF(I, returnShape=False):
     I = I.T
 
     # initialize feature variables
-    dia_elements = np.zeros((np.shape(I)[0],3))
+    dia_elements = np.zeros((np.min(np.shape(I)),3))
     eig_U = np.zeros((np.shape(I)[0],3))
     eig_V = np.zeros((np.shape(I)[1],3))
     det_U = np.zeros(3)
@@ -111,9 +111,9 @@ def SVDF(I, returnShape=False):
         mean_S[z] = np.mean(S)
 
         # standard deviation of U, V and S
-        std_U[z] = np.std(U)
-        std_V[z] = np.std(V)
-        std_S[z] = np.std(S)
+        std_U[z] = np.std(U, ddof=1)
+        std_V[z] = np.std(V, ddof=1)
+        std_S[z] = np.std(S, ddof=1)
 
         # median of eigen values of U and V
         median_eig_U[z] = np.median(eig_U[:,z])

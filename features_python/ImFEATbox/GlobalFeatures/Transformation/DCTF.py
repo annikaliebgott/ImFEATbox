@@ -95,7 +95,7 @@ def DCTF(I, typeflag):
 
             # extract spatio-temporal features
             # decompose blocks of images into independent tiles
-            fun = @(block_struct) np.std(block_struct.data) * np.ones(np.shape(block_struct.data))
+            fun = @(block_struct) np.std(block_struct.data, ddof=1) * np.ones(np.shape(block_struct.data))
             I2 = blockproc(I,[i i],fun)
 
 
@@ -115,7 +115,7 @@ def DCTF(I, typeflag):
                 idx = idx + len(coefB2)
 
                 # calculate important features of the 2D DCT
-                temp = [np.std(B2) np.std(np.std(B2)), np.mean(B2), np.linalg.matrix_rank(B2), np.max(B2), np.min(B2) np.count_nonzero(B2)]
+                temp = [np.std(B2, ddof=1) np.std(np.std(B2, ddof=1), ddof=1), np.mean(B2), np.linalg.matrix_rank(B2), np.max(B2), np.min(B2) np.count_nonzero(B2)]
                 f(z,idx+1:idx+ len(temp)) = temp
                 idx = idx + len(temp)
             end
@@ -132,7 +132,7 @@ def DCTF(I, typeflag):
 
             if typeflag.transform || typeflag.global:
                 temp = [np.swapaxes(eUB2(1:50), 0, 1), np.swapaxes(eVB2(1:50), 0, 1),
-                np.std(U2), np.std(S2), np.std(V2), np.mean(U2), np.mean(S2), np.mean(V2),
+                np.std(U2, ddof=1), np.std(S2, ddof=1), np.std(V2, ddof=1), np.mean(U2), np.mean(S2), np.mean(V2),
                 np.max(U2), np.max(S2), np.max(V2), np.min(U2), np.min(S2), np.min(V2),
                 np.count_nonzero(B2), det(U2), det(V2), trace(U2), trace(V2)]
                 f(z,idx:idx + len(temp)-1) = temp
@@ -148,7 +148,7 @@ def DCTF(I, typeflag):
             correU = np.corrcoef(eUB,eUB2)
             xcorreV = np.correlate(eVB,eVB2)
             xcorreU = np.correlate(eUB,eUB2)
-            temp = [corrS[0,1], corrU[0,1], corrV[0,1], correV[0,1], correU[0,1], mean(xcorreV), std(xcorreV), np.min(xcorreV), np.max(xcorreV). np.mean(xcorreU), std(xcorreU), np.min(xcorreU), np.max(xcorreU)]
+            temp = [corrS[0,1], corrU[0,1], corrV[0,1], correV[0,1], correU[0,1], mean(xcorreV), std(xcorreV, ddof=1), np.min(xcorreV), np.max(xcorreV). np.mean(xcorreU), std(xcorreU, ddof=1), np.min(xcorreU), np.max(xcorreU)]
 
             f[z,idx:idx + len(temp) -1] = temp
             idx = idx + len(temp)

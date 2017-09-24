@@ -3,6 +3,7 @@ from ImFEATbox.__helperCommands import conv2float
 from scipy.signal import convolve2d
 from scipy.stats import moment
 
+
 def LawF(I, returnShape=False):
     """
  Input:     - I: A 2D image
@@ -101,8 +102,8 @@ def LawF(I, returnShape=False):
     mean_m4 = np.mean(m4)
 
     # standard deviation of the moments
-    std_m2 = np.std(m2)
-    std_m4 = np.std(m4)
+    std_m2 = np.std(m2, ddof=1)
+    std_m4 = np.std(m4, ddof=1)
 
     # maximum and minimum values of the moments
     max_m2 = np.max(m2)
@@ -117,6 +118,6 @@ def LawF(I, returnShape=False):
 def convolve2d_image(h1, h2, I):
     # first convolves each column of A with the vector h1
     # and then convolves each row of the result with the vector h2.
-    I = convolve2d(I, h1.T, 'same')
-    I = convolve2d(I, h2, 'same')
+    I = convolve2d(I, h1.T, boundary='fill', mode='same')
+    I = convolve2d(I, h2, boundary='fill', mode='same')
     return I

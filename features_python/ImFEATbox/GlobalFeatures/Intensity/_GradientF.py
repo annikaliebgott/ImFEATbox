@@ -221,17 +221,17 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
         # standard deviation of normalized gradients
         if gradtype['first']:
-            G1_x_norm_std = np.std(G1_x_norm)
-            G1_y_norm_std = np.std(G1_y_norm)
-            G2_x_norm_std = np.std(G2_x_norm)
-            G2_y_norm_std = np.std(G2_y_norm)
+            G1_x_norm_std = np.std(G1_x_norm, ddof=1)
+            G1_y_norm_std = np.std(G1_y_norm, ddof=1)
+            G2_x_norm_std = np.std(G2_x_norm, ddof=1)
+            G2_y_norm_std = np.std(G2_y_norm, ddof=1)
 
         if gradtype['second']:
-            L1_x_norm_std = np.std(L1_x_norm)
-            L1_y_norm_std = np.std(L1_y_norm)
-            L2_norm_std = np.std(L2_norm)
-            L3_norm_std = np.std(L3_norm)
-            L4_norm_std = np.std(L3_norm)
+            L1_x_norm_std = np.std(L1_x_norm, ddof=1)
+            L1_y_norm_std = np.std(L1_y_norm, ddof=1)
+            L2_norm_std = np.std(L2_norm, ddof=1)
+            L3_norm_std = np.std(L3_norm, ddof=1)
+            L4_norm_std = np.std(L3_norm, ddof=1)
 
         # mean of normalized gradients
         if gradtype['first']:

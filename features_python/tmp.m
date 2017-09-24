@@ -1,4 +1,4 @@
 I = csvread('testimg.csv');
-addpath('ImFEATbox/GlobalFeatures/Intensity/');
-Out = SVDF(I);
+addpath('ImFEATbox/GlobalFeatures/Moment/');
+Out = ZernikeF(I);
 csvwrite('matlab-out.csv', Out);

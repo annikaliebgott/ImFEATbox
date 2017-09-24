@@ -1,5 +1,6 @@
 import numpy as np
-from ImFEATbox.__helperCommands import conv2float
+from ImFEATbox.__helperCommands import conv2float, _complex_dtype
+from scipy.misc import factorial
 
 def ZernikeF(I, returnShape=False):
     """
@@ -43,7 +44,7 @@ def ZernikeF(I, returnShape=False):
         return (92,1)
 
     # reserve space for the variables
-    Z = np.zeros(20)
+    Z = np.zeros(20, dtype=_complex_dtype())
     A = np.zeros(20)
     Phi = np.zeros(20)
 
@@ -63,45 +64,51 @@ def ZernikeF(I, returnShape=False):
 
         # determine Zernike moments
         N = np.shape(p)[0]
-        x = range(0, N) #1:N
+        x = range(1, N+1) #1:N
         y = x
         [X,Y] = np.meshgrid(x,y)
-        R = np.array(np.sqrt(np.power(np.power(2,X)-N-1,2)+(np.power(np.power(2,Y)-N-1,2)))/N)
-        Theta = np.arctan2((N-1-np.power(2,Y)+2),(np.power(2,X)-N+1-2))
-        R[R<=1] = np.power(R[R<=1], R[R<=1])
+        R = np.sqrt(np.power((2*X)-N-1,2)+(np.power((2*Y)-N-1,2)))/float(N)
+        Theta = np.arctan2((N-1-(2*Y)+2),((2*X)-N+1-2))
+        #R[R<=1] = (R[R<=1] * R[R<=1])
+
+        #R[np.less_equal(R,1)] = R[np.less_equal(R,1)] * R[np.less_equal(R,1)]
+        #R = np.reshape(np.less_equal(R,np.ones(R.shape))*1, R.shape ) * R
         R[R>1] = 0
+        #R[np.less(R,1)] = 0
+        #plt.imshow(R);plt.show()
 
         # compute Zernike Polynomials
-        Rad = np.zeros(len(R))
-        for s in range(0,(n-abs(m))/2): # 0:(n-abs(m))/2
-            c = np.power(-1,s)*np.factorial(n-s)/(np.factorial(s)*np.factorial((n+np.abs(m))/2-s)*np.factorial((n-np.abs(m))/2-s))
+        Rad = np.zeros(R.shape, dtype=_complex_dtype())
+
+        # TODO: for loop does not make sense...?
+        for s in range(0,(n-abs(m))/2+1): # 0:(n-abs(m))/2
+            c = np.power(-1,s)*factorial(n-s)/(factorial(s)*factorial((n+np.abs(m))/2.0-s)*factorial((n-np.abs(m))/2.0-s))
             Rad = Rad + c * np.power(R,(n-2*s))
-        Rad = conv2float(Rad)
 
         # calculate moments
-        Product = np.power(np.power(p[x,y],Rad),np.exp(-1j*m*Theta))
+        Product = p*Rad*np.exp(-1j*m*Theta)
         Zernike = np.sum(Product)
 
         # count number of pixels inside the unit circle and normalize moments
         cnt = np.count_nonzero(R)+1
-        Z[m/2-1] = (n+1)*Zernike/cnt
+        Z[m/2-1] = (n+1)*Zernike / float(cnt)
 
         # calculate amplitude and phase (in degrees) of the moments
-        A[m/2-1] = np.real(conv2float(np.abs(Zernike)))
-        Phi[m/2-1] = np.real(conv2float(np.angle(Zernike)*180/np.pi))
+        A[m/2-1] = np.real(np.abs(Zernike))
+        Phi[m/2-1] = np.real(np.angle(Zernike)*180/np.pi)
 
-        # calculate mean, std and max values for Z, A and Phi
-        mean_Z = np.mean(Z)
-        mean_A = np.mean(A)
-        mean_Phi = np.mean(Phi)
+    # calculate mean, std and max values for Z, A and Phi
+    mean_Z = np.mean(Z)
+    mean_A = np.mean(A)
+    mean_Phi = np.mean(Phi)
 
-        std_Z = np.std(Z)
-        std_A = np.std(A)
-        std_Phi = np.std(Phi)
+    std_Z = np.std(Z, ddof=1)
+    std_A = np.std(A, ddof=1)
+    std_Phi = np.std(Phi, ddof=1)
 
-        max_Z = np.max(Z)
-        max_A = np.max(A)
-        max_Phi = np.max(Phi)
+    max_Z = Z[np.argmax(np.abs(Z))]
+    max_A = np.max(A)
+    max_Phi = np.max(Phi)
 
     ## return feature vector
 
