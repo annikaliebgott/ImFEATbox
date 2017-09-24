@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-featureWhiteList.append("Gradient")
+featureWhiteList.append("svd")
 
 
 featureFolderList = ["GlobalFeatures", "LocalFeatures"]
@@ -299,20 +299,20 @@ for r in pyFileList:
             print(parameterSetup)
 
         diff = pOut - mOut
-        diff_norm = diff/mOut
-        max_diff_norm = np.max(diff_norm)*100
+        diff_norm = np.abs(diff/mOut)
+        max_diff_norm = np.max(np.abs(diff_norm))*100
 
         if max_diff_norm < 1:
             reportx += "\t* value test passed: all value deviations < " + str(max_diff_norm) + " %" + os.linesep
         else:
             featurePassed = False
             reportx += "\t* value test FAILED !!!" + os.linesep
+            reportx += "maximum deviation: " + str(max_diff_norm) + " %" + os.linesep
+            reportx += os.linesep
             reportx += "Matlab:" + os.linesep
             reportx += str(mOut) + os.linesep
             reportx += "Python:" + os.linesep
             reportx += str(pOut) + os.linesep
-            reportx += "maximum deviation: " + str(max_diff_norm) + " %" + os.linesep
-            reportx += os.linesep
             reportx += "(Python-Matlab):" + os.linesep
             reportx += str(diff) + os.linesep
             reportx += "(Python-Matlab)/Matlab:" + os.linesep

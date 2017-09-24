@@ -192,17 +192,17 @@ def FourierTrafoF(I, typeflag):
             sd_F4[z] = np.std(F4)
 
             # rank
-            r_M[z] = np.rank(M)
-            r_M1[z] = np.rank(M1)
-            r_M2[z] = np.rank(M2)
-            r_M3[z] = np.rank(M3)
-            r_M4[z] = np.rank(M4)
+            r_M[z] = np.linalg.matrix_rank(M)
+            r_M1[z] = np.linalg.matrix_rank(M1)
+            r_M2[z] = np.linalg.matrix_rank(M2)
+            r_M3[z] = np.linalg.matrix_rank(M3)
+            r_M4[z] = np.linalg.matrix_rank(M4)
 
-            r_F[z] = np.rank(F)
-            r_F1[z] = np.rank(F1)
-            r_F2[z] = np.rank(F2)
-            r_F3[z] = np.rank(F3)
-            r_F4[z] = np.rank(F4)
+            r_F[z] = np.linalg.matrix_rank(F)
+            r_F1[z] = np.linalg.matrix_rank(F1)
+            r_F2[z] = np.linalg.matrix_rank(F2)
+            r_F3[z] = np.linalg.matrix_rank(F3)
+            r_F4[z] = np.linalg.matrix_rank(F4)
 
             # trace
             tr_M[z] = np.trace(M)

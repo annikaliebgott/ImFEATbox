@@ -89,8 +89,6 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     n = I.size
 
-    I = I.T # to match matlab code
-
     ## define gradients
     if gradtype['first']:
         # gradient 1
@@ -137,17 +135,17 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
     ## convolve image
     if gradtype['first']:
-        G1_x = convolve2d(I,g1_x, boundary='fill', mode='same')
-        G1_y = convolve2d(I,g1_y, boundary='fill', mode='same')
-        G2_x = convolve2d(I,g2_x, boundary='fill', mode='same')
-        G2_y = convolve2d(I,g2_y, boundary='fill', mode='same')
+        G1_x = convolve2d(I,g1_x, boundary='fill', mode='full')
+        G1_y = convolve2d(I,g1_y, boundary='fill', mode='full')
+        G2_x = convolve2d(I,g2_x, boundary='fill', mode='full')
+        G2_y = convolve2d(I,g2_y, boundary='fill', mode='full')
 
     if gradtype['second']:
-        L1_x = convolve2d(I,l1_x, boundary='fill', mode='same')
-        L1_y = convolve2d(I,l1_y, boundary='fill', mode='same')
-        L2 = convolve2d(I,l2, boundary='fill', mode='same')
-        L3 = convolve2d(I,l3, boundary='fill', mode='same')
-        L4 = convolve2d(I,l4, boundary='fill', mode='same')
+        L1_x = convolve2d(I,l1_x, boundary='fill', mode='full')
+        L1_y = convolve2d(I,l1_y, boundary='fill', mode='full')
+        L2 = convolve2d(I,l2, boundary='fill', mode='full')
+        L3 = convolve2d(I,l3, boundary='fill', mode='full')
+        L4 = convolve2d(I,l4, boundary='fill', mode='full')
 
     ## extract features
 
@@ -291,48 +289,47 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
         L3_E = -np.sum(L3_norm[L3_norm != 0] * np.log2(L3_norm[L3_norm != 0]))
         L4_E = -np.sum(L4_norm[L4_norm != 0] * np.log2(L4_norm[L4_norm != 0]))
 
-    ## Build output vector Out
+    ## Build output vector Out, we swapped x and y here to match the matlab code
     if typeflag['global'] or typeflag['texture'] or typeflag['gradient']:
         if gradtype['first'] and gradtype['second']:
-            Out = np.array([G1_x_sum,G1_y_sum,G2_x_sum,G2_y_sum,L1_x_sum,L1_y_sum,L2_sum,L3_sum,L4_sum,
-                G1_x_2,G1_y_2,G2_x_2,G2_y_2,L1_x_2,L1_y_2,L2_2,L3_2,L4_2,
-                G1_x_4,G1_y_4,G2_x_4,G2_y_4,L1_x_4,L1_y_4,L2_4,L3_4,L4_4,
-                G1_x_norm_max,G1_y_norm_max,G2_x_norm_max,G2_y_norm_max,
-                L1_x_norm_max,L1_y_norm_max,L2_norm_max,L3_norm_max,L4_norm_max,
-                G1_x_norm_std,G1_y_norm_std,G2_x_norm_std,G2_y_norm_std,
-                L1_x_norm_std,L1_y_norm_std,L2_norm_std,L3_norm_std,L4_norm_std,
-                G1_x_norm_mean,G1_y_norm_mean,G2_x_norm_mean,G2_y_norm_mean,
-                L1_x_norm_mean,L1_y_norm_mean,L2_norm_mean,L3_norm_mean,L4_norm_mean,
-                G1_x_norm_2,G1_y_norm_2,G2_x_norm_2,G2_y_norm_2,
-                L1_x_norm_2,L1_y_norm_2,L2_norm_2,L3_norm_2,L4_norm_2,
-                G1_x_norm_4,G1_y_norm_4,G2_x_norm_4,G2_y_norm_4,
-                L1_x_norm_4,L1_y_norm_4,L2_norm_4,L3_norm_4,L4_norm_4,
-                G1_x_E,G1_y_E,G2_x_E,G2_y_E,L1_x_E,L1_y_E,L2_E,L3_E,L4_E])
+            Out = np.array([G1_y_sum,G1_x_sum,G2_y_sum,G2_x_sum,L1_y_sum,L1_x_sum,L2_sum,L3_sum,L4_sum,
+                G1_y_2,G1_x_2,G2_y_2,G2_x_2,L1_y_2,L1_x_2,L2_2,L3_2,L4_2,
+                G1_y_4,G1_x_4,G2_y_4,G2_x_4,L1_y_4,L1_x_4,L2_4,L3_4,L4_4, #G2_y_4
+                G1_y_norm_max,G1_x_norm_max,G2_y_norm_max,G2_x_norm_max,
+                L1_y_norm_max,L1_x_norm_max,L2_norm_max,L3_norm_max,L4_norm_max,
+                G1_y_norm_std,G1_x_norm_std,G2_y_norm_std,G2_x_norm_std,
+                L1_y_norm_std,L1_x_norm_std,L2_norm_std,L3_norm_std,L4_norm_std,
+                G1_y_norm_mean,G1_x_norm_mean,G2_y_norm_mean,G2_x_norm_mean,
+                L1_y_norm_mean,L1_x_norm_mean,L2_norm_mean,L3_norm_mean,L4_norm_mean,
+                G1_y_norm_2,G1_x_norm_2,G2_y_norm_2,G2_x_norm_2,
+                L1_y_norm_2,L1_x_norm_2,L2_norm_2,L3_norm_2,L4_norm_2,
+                G1_y_norm_4,G1_x_norm_4,G2_y_norm_4,G2_x_norm_4,
+                L1_y_norm_4,L1_x_norm_4,L2_norm_4,L3_norm_4,L4_norm_4,
+                G1_y_E,G1_x_E,G2_y_E,G2_x_E,L1_y_E,L1_x_E,L2_E,L3_E,L4_E])
         elif gradtype['first']:
-            Out = [G1_x_sum,G1_y_sum,G2_x_sum,G2_y_sum,
-                G1_x_2,G1_y_2,G2_x_2,G2_y_2,
-                G1_x_4,G1_y_4,G2_x_4,G2_y_4,
-                G1_x_norm_max,G1_y_norm_max,G2_x_norm_max,G2_y_norm_max,
-                G1_x_norm_std,G1_y_norm_std,G2_x_norm_std,G2_y_norm_std,
-                G1_x_norm_mean,G1_y_norm_mean,G2_x_norm_mean,G2_y_norm_mean,
-                G1_x_norm_2,G1_y_norm_2,G2_x_norm_2,G2_y_norm_2,
-                G1_x_norm_4,G1_y_norm_4,G2_x_norm_4,G2_y_norm_4,
-                G1_x_E,G1_y_E,G2_x_E,G2_y_E]
+            Out = [G1_y_sum,G1_x_sum,G2_y_sum,G2_x_sum,
+                G1_y_2,G1_x_2,G2_y_2,G2_x_2,
+                G1_y_4,G1_x_4,G2_y_4,G2_x_4,
+                G1_y_norm_max,G1_x_norm_max,G2_y_norm_max,G2_x_norm_max,
+                G1_y_norm_std,G1_x_norm_std,G2_y_norm_std,G2_x_norm_std,
+                G1_y_norm_mean,G1_x_norm_mean,G2_y_norm_mean,G2_x_norm_mean,
+                G1_y_norm_2,G1_x_norm_2,G2_y_norm_2,G2_x_norm_2,
+                G1_y_norm_4,G1_x_norm_4,G2_y_norm_4,G2_x_norm_4,
+                G1_y_E,G1_x_E,G2_y_E,G2_x_E]
         else:
-            Out = [L1_x_sum,L1_y_sum,L2_sum,L3_sum,L4_sum,
-                L1_x_2,L1_y_2,L2_2,L3_2,L4_2,
-                L1_x_4,L1_y_4,L2_4,L3_4,L4_4,
-                L1_x_norm_max,L1_y_norm_max,L2_norm_max,L3_norm_max,L4_norm_max,
-                L1_x_norm_std,L1_y_norm_std,L2_norm_std,L3_norm_std,L4_norm_std,
-                L1_x_norm_mean,L1_y_norm_mean,L2_norm_mean,L3_norm_mean,L4_norm_mean,
-                L1_x_norm_2,L1_y_norm_2,L2_norm_2,L3_norm_2,L4_norm_2,
-                L1_x_norm_4,L1_y_norm_4,L2_norm_4,L3_norm_4,L4_norm_4,
-                L1_x_E,L1_y_E,L2_E,L3_E,L4_E]
+            Out = [L1_y_sum,L1_x_sum,L2_sum,L3_sum,L4_sum,
+                L1_y_2,L1_x_2,L2_2,L3_2,L4_2,
+                L1_y_4,L1_x_4,L2_4,L3_4,L4_4,
+                L1_y_norm_max,L1_x_norm_max,L2_norm_max,L3_norm_max,L4_norm_max,
+                L1_y_norm_std,L1_x_norm_std,L2_norm_std,L3_norm_std,L4_norm_std,
+                L1_y_norm_mean,L1_x_norm_mean,L2_norm_mean,L3_norm_mean,L4_norm_mean,
+                L1_y_norm_2,L1_x_norm_2,L2_norm_2,L3_norm_2,L4_norm_2,
+                L1_y_norm_4,L1_x_norm_4,L2_norm_4,L3_norm_4,L4_norm_4,
+                L1_y_E,L1_x_E,L2_E,L3_E,L4_E]
     elif gradtype['first'] and gradtype['second']:
-        Out = [G1_x_E,G1_y_E,G2_x_E,G2_y_E,L1_x_E,L1_y_E,L2_E,L3_E,L4_E]
+        Out = [G1_y_E,G1_x_E,G2_y_E,G2_x_E,L1_y_E,L1_x_E,L2_E,L3_E,L4_E]
     elif gradtype['first']:
-        Out = [G1_x_E,G1_y_E,G2_x_E,G2_y_E]
+        Out = [G1_y_E,G1_x_E,G2_y_E,G2_x_E]
     else:
-        Out = [L1_x_E,L1_y_E,L2_E,L3_E,L4_E]
-
+        Out = [L1_y_E,L1_x_E,L2_E,L3_E,L4_E]
     return Out

@@ -32,6 +32,8 @@ def SVDF(I, returnShape=False):
     # convert image to float
     I = conv2float(I)
 
+    I = I.T
+
     # initialize feature variables
     dia_elements = np.zeros((np.shape(I)[0],3))
     eig_U = np.zeros((np.shape(I)[0],3))
@@ -57,6 +59,7 @@ def SVDF(I, returnShape=False):
     kurtosis_U = np.zeros(3)
     kurtosis_V = np.zeros(3)
 
+
     # Calculate the measures for 3 different orientations
     for z in range(0,3):
 
@@ -71,11 +74,12 @@ def SVDF(I, returnShape=False):
         # unitary matrices U and V
         [U,S,V] = np.linalg.svd(I)
 
+        #U, V = U.T, V.T
         ## feature extraction
 
         # calculate diagonal elements of matrix S
-        for i in range(0, np.count_nonzero(S)):
-            dia_elements[i,z] = S[i]
+        #for i in range(0, np.count_nonzero(S)):
+        dia_elements[:,z] = S[:]
 
         # eigen values of U and V
         eig_U[:,z] = np.linalg.eig(U)[0]
@@ -90,16 +94,16 @@ def SVDF(I, returnShape=False):
         trace_V[z] = np.trace(V)
 
         # rank of U and V
-        rank_U[z] = np.rank(U)
-        rank_V[z] = np.rank(V)
+        rank_U[z] = np.linalg.matrix_rank(U)
+        rank_V[z] = np.linalg.matrix_rank(V)
 
         # skewness of U and V
         skewness_U[z] = skew(np.ndarray.flatten(U))
         skewness_V[z] = skew(np.ndarray.flatten(V))
 
         # kurtosis of U and V
-        kurtosis_U[z] = kurtosis(np.ndarray.flatten(U))
-        kurtosis_V[z] = kurtosis(np.ndarray.flatten(V))
+        kurtosis_U[z] = kurtosis(np.ndarray.flatten(U), fisher=False, bias=False)
+        kurtosis_V[z] = kurtosis(np.ndarray.flatten(V), fisher=False, bias=False)
 
         # mean of U, V and S
         mean_U[z] = np.mean(U)
@@ -112,20 +116,20 @@ def SVDF(I, returnShape=False):
         std_S[z] = np.std(S)
 
         # median of eigen values of U and V
-        median_eig_U[z] = np.median(eig_U[z,:])
-        median_eig_V[z] = np.median(eig_V[z,:])
+        median_eig_U[z] = np.median(eig_U[:,z])
+        median_eig_V[z] = np.median(eig_V[:,z])
 
         # maximum of eigen values of U and V
-        max_eig_U[z] = np.max(eig_U[z,:])
-        max_eig_V[z] = np.max(eig_V[z,:])
+        max_eig_U[z] = np.max(eig_U[:,z])
+        max_eig_V[z] = np.max(eig_V[:,z])
 
     ## return feature vector
 
-    np.prod(np.shape(eig_U[:100,:]))
+    #np.prod(np.shape(eig_U[:100,:]))
 
-    Out = np.hstack([np.reshape(dia_elements[:40,:],np.prod(np.shape(dia_elements[:40,:]))),
-        np.reshape(eig_U[:100,:],np.prod(np.shape(eig_U[:100,:]))),
-        np.reshape(eig_V[:100,:],np.prod(np.shape(eig_V[:100,:]))),
+    Out = np.hstack([np.ndarray.flatten(dia_elements[:40,:]),
+        np.ndarray.flatten(eig_U[:100,:]),
+        np.ndarray.flatten(eig_V[:100,:]),
         det_U, det_V, trace_U, trace_V, rank_U, rank_V, skewness_U, skewness_V,
         kurtosis_U, kurtosis_V, mean_U, mean_V, mean_S, std_U, std_V, std_S,
         median_eig_U, median_eig_V, max_eig_U, max_eig_V])

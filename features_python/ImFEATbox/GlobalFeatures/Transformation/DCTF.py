@@ -115,7 +115,7 @@ def DCTF(I, typeflag):
                 idx = idx + len(coefB2)
 
                 # calculate important features of the 2D DCT
-                temp = [np.std(B2) np.std(np.std(B2)), np.mean(B2), np.rank(B2), np.max(B2), np.min(B2) np.count_nonzero(B2)]
+                temp = [np.std(B2) np.std(np.std(B2)), np.mean(B2), np.linalg.matrix_rank(B2), np.max(B2), np.min(B2) np.count_nonzero(B2)]
                 f(z,idx+1:idx+ len(temp)) = temp
                 idx = idx + len(temp)
             end
