@@ -1,4 +1,9 @@
 I = csvread('testimg.csv');
-addpath('ImFEATbox/GlobalFeatures/Moment/');
-Out = ZernikeF(I);
+plotflag = false;
+typeflag.moments = true;
+typeflag.local = true;
+typeflag.corr = true;
+typeflag.texture = true;
+addpath('ImFEATbox/LocalFeatures/Line/');
+Out = LineProfileF(I, plotflag, typeflag);
 csvwrite('matlab-out.csv', Out);

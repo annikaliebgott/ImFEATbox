@@ -92,7 +92,6 @@ def LineProfileF(I, typeflag=None, plotflag=False, returnShape=False):
         profile_line(I, src=(0,0), dst=(y1[1],x2[1]))
         # TODO draw with matplotlib
 
-
     # extract intensity profiles along the defined lines
     c1 = profile_line(I, src=(y1[0],x1[0]), dst=(y1[1],x1[1]))
     c2 = profile_line(I, src=(y2[0],x2[0]), dst=(y2[1],x2[1]))
