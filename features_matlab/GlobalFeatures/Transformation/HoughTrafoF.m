@@ -103,7 +103,11 @@ if strcmp(houghtype,'linear') || strcmp(houghtype,'both')
     end    
     % calculate line with mean direction of all lines
     line_mean = [sum(line_start)./N_lines; sum(line_end)./N_lines];
-    line_mean_slope = (line_mean(2,2)-line_mean(1,2))/(line_mean(2,1)-line_mean(1,1));
+    if N_lines > 1
+        line_mean_slope = (line_mean(2,2)-line_mean(1,2))/(line_mean(2,1)-line_mean(1,1));
+    else
+        line_mean_slope = 0;
+    end    
     
     % calculate length of line with mean direction of all lines
     line_mean_length = norm(line_mean(1,:) - line_mean(2,:));
