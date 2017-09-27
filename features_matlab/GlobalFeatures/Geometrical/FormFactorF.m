@@ -63,7 +63,11 @@ if N > 0
     end
     
     % avoid Inf values which cause problems in further calculations
-    form(form == Inf) = max(form(form ~= Inf));
+    if any(form~=Inf)
+        form(form == Inf) = max(form(form ~= Inf));
+    else
+        form(form == Inf) = 4*pi*max(area_obj);
+    end   
     
     eccentricity = [s.Eccentricity];
     orientation = [s.Orientation];
