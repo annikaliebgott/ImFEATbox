@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-featureWhiteList.append("lineprofile")
+featureWhiteList.append("harris")
 # TODO:
 # SVD: not solvable?
 
@@ -141,6 +141,9 @@ for r in pyFileList:
             gradTypeParameter = True
         elif par == "plotflag":
             plotParameter = True
+        elif par == "N_s":
+            mParameterList.remove(par)
+            pyParameters.remove(par)
         else:
             print("unknown parameter: " + par)
             quit()

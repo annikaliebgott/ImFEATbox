@@ -9,4 +9,4 @@ from ImFEATbox.__Features__ import __Feature
 from _LawF import LawF as __LawF
 
 # Point features
-law = __Feature('LawF', __LawF, [__fg.local, __fg.moments, __fg.texture])
+law = __Feature('law', __LawF, [__fg.local, __fg.moments, __fg.texture])
