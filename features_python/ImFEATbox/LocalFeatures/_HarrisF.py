@@ -37,7 +37,11 @@ def HarrisF(I, plotflag=False, N_s=0, returnShape=False):
         I = np.real(I)
 
     # calculation of corner points using Harris-Stephens algorithm
-    c = corner_peaks(corner_harris(I), min_distance=5)
+    threshold = 7e-3
+
+    N_s = 0
+    c = corner_peaks(corner_harris(I), min_distance=3, threshold_rel=threshold)
+
 
     ## extract features
     N = c.shape[0]
@@ -45,7 +49,9 @@ def HarrisF(I, plotflag=False, N_s=0, returnShape=False):
     if N_s == 0 or N_s > 0.5*N:
         N_s = int(np.ceil(0.1*N))
 
-    c_s = corners = corner_peaks(corner_harris(I), min_distance=5, num_peaks=N_s)
+    c_s = corners = corner_peaks(corner_harris(I), min_distance=3, num_peaks=N_s, threshold_rel=threshold)
+
+
 
     # determine center  of gravity for all points
     x_gravity = np.sum(c[:,0]/float(N))
@@ -57,9 +63,10 @@ def HarrisF(I, plotflag=False, N_s=0, returnShape=False):
 
     # display the results
     if plotflag:
-        pass
-        # TODO
-        #imshow(I) hold on
+        plt.scatter(c[:,1],c[:,0], color='blue', marker="+", s=50)
+        plt.scatter(c_s[:,1],c_s[:,0], color='red', marker="+", s=100)
+        plt.plot(x_gravity_s, y_gravity_s, color='green', marker="*", MarkerSize=30)
+        plt.show()
         #scatter(c(:,1),c(:,2),'+')
         #scatter(c_s(:,1),c_s(:,2),'g+')
         #plot(x_gravity_s, y_gravity_s,'r*','MarkerSize',10)
