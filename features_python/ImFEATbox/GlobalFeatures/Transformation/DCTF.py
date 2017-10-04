@@ -2,8 +2,9 @@ import numpy as np
 from scipy.misc import imrotate
 from scipy.fftpack import dct
 from numpy.linalg import eig, svd, det
+from ImFEATbox.__helperCommands import conv2float
 
-def DCTF(I, typeflag):
+def DCTF(I, typeflag=None):
 """
      Input:     - I: A 2D image
                 - typeflag: Struct of logicals to permit extracting features
@@ -13,7 +14,6 @@ def DCTF(I, typeflag):
                        + typeflag.corr: only features based on correlation
                   default: all features are being extracted
                   For more information see README.txt
-
 
      Output:    - Out: A (1x2901) vector containing 2901 metrics calculated
                        from the discrete cosine transform
@@ -31,12 +31,14 @@ def DCTF(I, typeflag):
     # Contact: annika.liebgott@iss.uni-stuttgart.de
     # ************************************************************************
 
-    if 'typeflag' not in globals():
-       typeflag.global = True
-       typeflag.transform = True
-       typeflag.corr = True
+    if typeflag == None:
+        typeflag = dict()
+        typeflag['global'] = True
+        typeflag['transform'] = True
+        typeflag['corr'] = True
 
-    I = np.array(I, dtype='float')
+
+    I = conv2float(I)
 
     # reserve space for the feature vector
     # if typeflag.transform || typeflag.global == true: extract all features
