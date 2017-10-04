@@ -1,5 +1,4 @@
 I = csvread('testimg.csv');
-plotflag = false;
-addpath('ImFEATbox/LocalFeatures/');
-Out = HarrisF(I, plotflag);
+addpath('ImFEATbox/LocalFeatures/Point/');
+Out = LawF(I);
 csvwrite('matlab-out.csv', Out);

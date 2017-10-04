@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-featureWhiteList.append("harris")
+#featureWhiteList.append("harris")
 # TODO:
 # SVD: not solvable?
 
@@ -70,6 +70,11 @@ for r in rmList:
     pyFileList.remove(r)
 print(pyFileList)
 print("")
+
+passedFeatureList = []
+failedFeatureList = []
+failedFeatureDeviationList = []
+
 # find corresponding matlab files:
 mFileList = []
 for r in pyFileList:
@@ -185,7 +190,7 @@ for r in pyFileList:
     mMethod = mFileName[:-2].split(os.sep)[-1]
 
 
-
+    max_diff_norm_feature = 0
 
     # single script testing:
 
@@ -310,6 +315,9 @@ for r in pyFileList:
         diff_norm[diff==0] = 0
         max_diff_norm = np.max(np.abs(diff_norm))*100
 
+        if max_diff_norm_feature < max_diff_norm:
+            max_diff_norm_feature = max_diff_norm
+
         if max_diff_norm < 1:
             reportx += "\t* value test passed: all value deviations < " + str(max_diff_norm) + " %" + os.linesep
         else:
@@ -337,12 +345,32 @@ for r in pyFileList:
         reportx += os.linesep
     if featurePassed:
         passedFeatures += 1
+        passedFeatureList.append(imFeature)
+    else:
+        failedFeatureList.append(imFeature)
+        failedFeatureDeviationList.append(max_diff_norm_feature)
 
 report += "Overall Stats:" + os.linesep
 #report += "\t* " + str(testedFeatures) + " features tested." + os.linesep
 report += "\t* " + str(testedCases) + " cases tested." + os.linesep
 report += "\t* " + str(passedFeatures) + "/" + str(testedFeatures) + " features passed." + os.linesep
+
+
+if len(passedFeatureList) > 0:
+    report += "\t " + "following features passed:" + os.linesep
+    for passedFeature in passedFeatureList:
+        report += "\t\t* " + str(passedFeature) + os.linesep
+
+if len(failedFeatureList) > 0:
+    report += "\t " + "following features failed:" + os.linesep
+    for i in range(len(failedFeatureList)):
+        report += "\t\t* " + str(failedFeatureList[i]) + " , max deviation: " + str(failedFeatureDeviationList[i]) + "%" + os.linesep
+
 report += os.linesep
+
+
+
+
 report += reportx
 
 with open('matlab.log', 'w+') as matlablog:

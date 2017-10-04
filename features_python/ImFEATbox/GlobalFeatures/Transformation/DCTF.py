@@ -9,9 +9,9 @@ def DCTF(I, typeflag=None):
      Input:     - I: A 2D image
                 - typeflag: Struct of logicals to permit extracting features
                   based on desired characteristics:
-                       + typeflag.global: all features
-                       + typeflag.transform: all features
-                       + typeflag.corr: only features based on correlation
+                       + typeflag['global']: all features
+                       + typeflag['transform']: all features
+                       + typeflag['corr']: only features based on correlation
                   default: all features are being extracted
                   For more information see README.txt
 
@@ -41,13 +41,13 @@ def DCTF(I, typeflag=None):
     I = conv2float(I)
 
     # reserve space for the feature vector
-    # if typeflag.transform || typeflag.global == true: extract all features
-    # if only typeflag.corr == true: extract especially correlation based
+    # if typeflag['transform'] || typeflag['global'] == true: extract all features
+    # if only typeflag['corr'] == true: extract especially correlation based
     # features
-    if typeflag.transform or typeflag.global:
-        f = np.zeros(3,967)
+    if typeflag['transform'] or typeflag['global']:
+        f = np.zeros((3,967))
     else:
-        f = np.zeros(3,84)
+        f = np.zeros((3,84))
 
     ## calculate DCT for different orientations: horizontal,vertical, diagonal
 
@@ -75,8 +75,8 @@ def DCTF(I, typeflag=None):
         eVB = eig(V)[0]
 
         # extract features
-        if typeflag.transform || typeflag.global:
-            f(z,idx:idx+99) = [np.swapaxes(eUB(1:50), 0, 1) np.swapaxes(eVB(1:50), 0, 1)]
+        if typeflag['transform'] || typeflag['global']:
+            f[z,idx:idx+99] = [np.swapaxes(eUB(1:50), 0, 1) np.swapaxes(eVB(1:50), 0, 1)]
             idx = idx+99
 
             if np.shape(B)[1] < 150:
@@ -84,10 +84,10 @@ def DCTF(I, typeflag=None):
             else:
                 coefB = [B[0,0], B[0,39], B[19,59], B[79,99], B[99, 149]]
             end
-            f(z,idx:idx+ len(coefB)-1) = coefB
+            f[z,idx:idx+ len(coefB)-1] = coefB
             idx = idx + len(coefB)
 
-            f(z,idx:idx+3) = [det(U), trace(U), det(V), trace(V)]
+            f[z,idx:idx+3] = [det(U), trace(U), det(V), trace(V)]
             idx = idx + 4
 
         ## calculate transform for different block decomposition sizes
@@ -107,24 +107,24 @@ def DCTF(I, typeflag=None):
 
             # output of some coefficients
             # 3D zigzag transversal to select 25# of the coefficents
-            if typeflag.transform || typeflag.global:
+            if typeflag['transform'] || typeflag['global']:
                 if np.shape(B2)[1] < 150:
                     coefB2 = [B[0,0], B[0,39], B[19,59], B[79,99], B[99, np.shape(B)[1]]]
                 else:
                     coefB2 = [B[0,0], B[0,39], B[19,59], B[79,99], B[99, 149]]
                 end
-                f(z,idx+1:idx + len(coefB2)) = coefB2
+                f[z,idx+1:idx + len(coefB2)] = coefB2
                 idx = idx + len(coefB2)
 
                 # calculate important features of the 2D DCT
                 temp = [np.std(B2, ddof=1) np.std(np.std(B2, ddof=1), ddof=1), np.mean(B2), np.linalg.matrix_rank(B2), np.max(B2), np.min(B2) np.count_nonzero(B2)]
-                f(z,idx+1:idx+ len(temp)) = temp
+                f[z,idx+1:idx+ len(temp)] = temp
                 idx = idx + len(temp)
             end
 
             # correlation between DCT of I and decomposed I
             Corr = np.corrcoef(B, B2)
-            f(z,idx) = Corr(1,2)
+            f[z,idx] = Corr(1,2)
             idx = idx +1
 
             # singular value deomposition, U & V are square matrices
@@ -132,12 +132,12 @@ def DCTF(I, typeflag=None):
             eUB2 = eig(U2)[0]
             eVB2 = eig(V2)[0]
 
-            if typeflag.transform || typeflag.global:
+            if typeflag['transform'] || typeflag['global']:
                 temp = [np.swapaxes(eUB2(1:50), 0, 1), np.swapaxes(eVB2(1:50), 0, 1),
                 np.std(U2, ddof=1), np.std(S2, ddof=1), np.std(V2, ddof=1), np.mean(U2), np.mean(S2), np.mean(V2),
                 np.max(U2), np.max(S2), np.max(V2), np.min(U2), np.min(S2), np.min(V2),
                 np.count_nonzero(B2), det(U2), det(V2), trace(U2), trace(V2)]
-                f(z,idx:idx + len(temp)-1) = temp
+                f[z,idx:idx + len(temp)-1] = temp
                 idx = idx + len(temp)
 
             # correlation between SVD matrices
