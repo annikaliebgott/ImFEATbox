@@ -1,4 +1,5 @@
 import numpy as np
+import skimage
 
 def GillesF(I, radius=10, th=0.95):
     """
@@ -21,48 +22,46 @@ def GillesF(I, radius=10, th=0.95):
 
 
 
-    if any(~real(I))
-       I = real(I);
-    end
+    if np.iscomplexobj(I):
+        I = np.real(I)
 
     ## extract Gilles points
 
     # convert image to binary
-    BW = im2bw(I, graythresh(I));
-    im = BW(:,:,1);
+    im = I < skimage.filter.threshold_otsu(I)
 
     # define a region mask
-    mask = fspecial('disk',radius) > 0;
+    mask = skimage.morphology.disk(r)
 
     # compute local entropy
-    loc_entropy = entropyfilt(im,mask);
+    loc_entropy = skimage.filter.rank.entropy(im,mask)
 
     # find the local maxima
-    [~,~,local_max] = findLocalMaximum(loc_entropy,radius);
+    [~,~,local_max] = findLocalMaximum(loc_entropy,radius)
 
     # keep only points above a threshold
-    [row,col] = find(local_max > th*max(local_max(:)));
+    [row,col] = find(local_max > th*max(local_max(:)))
 
     # normalize coordinates for better comparison of different sized images
-    points_gilles = [row col]/numel(I);
+    points_gilles = [row col]/numel(I)
 
     ## feature extraction
-    points_gilles_num = size(points_gilles,1);
+    points_gilles_num = size(points_gilles,1)
     if points_gilles_num > 1
-        points_gilles_mean = mean(points_gilles);
-        points_gilles_std = std(points_gilles);
-        points_gilles_std2 = std2(points_gilles);
+        points_gilles_mean = mean(points_gilles)
+        points_gilles_std = std(points_gilles)
+        points_gilles_std2 = std2(points_gilles)
     else
         if points_gilles_num == 0
-            points_gilles_mean = [0 0];
+            points_gilles_mean = [0 0]
         else
-            points_gilles_mean = points_gilles;
+            points_gilles_mean = points_gilles
         end
-        points_gilles_std = [0 0];
-        points_gilles_std2 = 0;
+        points_gilles_std = [0 0]
+        points_gilles_std2 = 0
     end
 
     ## return features
-    Out = [points_gilles_num points_gilles_mean points_gilles_std points_gilles_std2];
+    Out = [points_gilles_num points_gilles_mean points_gilles_std points_gilles_std2]
 
     end

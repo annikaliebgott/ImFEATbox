@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-#featureWhiteList.append("harris")
+featureWhiteList.append("gilles")
 # TODO:
 # SVD: not solvable?
 
