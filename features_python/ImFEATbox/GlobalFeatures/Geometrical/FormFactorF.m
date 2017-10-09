@@ -37,10 +37,10 @@ end
 
 if typeflag.global || typeflag.form
     typeflag.corr = true;
-end    
+end
 
 % convert image, image must be real valued!
-BW = im2bw(double(real(I)));
+BW = imbinarize(double(real(I)), 'global');
 [L,N] = bwlabel(BW);
 
 % check if any objects have been detected
@@ -48,31 +48,31 @@ if N > 0
     % extract region properties
     s = regionprops(L, 'area', 'perimeter', ...
         'Orientation', 'Eccentricity', 'EquivDiameter', 'Solidity');
-    
+
     % initialize variables
     roundness = zeros(1,N);
     form = zeros(1,N);
     area_obj = zeros(1,N);
     perimeter_obj = zeros(1,N);
-    
+
     for i = 1 : N
         area_obj(i) = s(i).Area;
         perimeter_obj(i) = s(i).Perimeter;
         form(i) = 4*pi*area_obj(i)/(perimeter_obj(i)^2);
         roundness(i) = (4*s(i).Area )/(s(i).EquivDiameter*pi);
     end
-    
+
     % avoid Inf values which cause problems in further calculations
     form(form == Inf) = max(form(form ~= Inf));
-    
+
     eccentricity = [s.Eccentricity];
     orientation = [s.Orientation];
     solidity = [s.Solidity];
-    
-    
-    
+
+
+
     %% feature extraction
-    
+
     if (typeflag.global || typeflag.form)
         % mean
         mean_roundness = mean(roundness);
@@ -82,7 +82,7 @@ if N > 0
         mean_orientation = mean(orientation);
         mean_solidity = mean(solidity);
         mean_form = mean(form);
-        
+
         % standard deviation
         std_roundness = std(roundness);
         std_area = std(area_obj);
@@ -91,7 +91,7 @@ if N > 0
         std_orientation = std(orientation);
         std_solidity = std(solidity);
         std_form = std(form);
-        
+
         % maximum/minimum values (orientation is neglected for this measure)
         max_roundness = max(roundness);
         max_area = max(area_obj);
@@ -99,7 +99,7 @@ if N > 0
         max_eccentricity = max(eccentricity);
         max_solidity = max(solidity);
         max_form = max(form);
-        
+
         min_roundness = min(roundness);
         min_area = min(area_obj);
         min_perimeter = min(perimeter_obj);
@@ -114,7 +114,7 @@ if N > 0
         std_corr = std(corr_FR);
         max_corr = max(corr_FR);
         min_corr = min(corr_FR);
-        
+
         % determine cross correlation coefficient
         corrcoef_FR = corrcoef(form, roundness);
         corrcoef_FR = corrcoef_FR(1,2);
@@ -125,8 +125,8 @@ if N > 0
         min_corr = 0;
         corrcoef_FR = 0;
     end
-    
-    
+
+
     %% return feature vector
     if (typeflag.global || typeflag.form)
         Out = [N mean_eccentricity mean_solidity mean_orientation...

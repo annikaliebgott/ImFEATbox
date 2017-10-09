@@ -1,4 +1,5 @@
-import ImFEATbox, csv
+import ImFEATbox
+import csv
 import numpy as np
 with open('testimg.csv', 'r') as csvfile:
 	I = np.array(list(csv.reader(csvfile, delimiter=','))).astype(np.float)

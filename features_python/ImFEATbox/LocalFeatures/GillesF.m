@@ -8,9 +8,9 @@ function Out = GillesF(I,radius,th)
 %                   detected Gilles points
 %
 % ************************************************************************
-% Implemented for MRI feature extraction by the Department of Diagnostic 
-% and Interventional Radiology, University Hospital of Tübingen, Germany 
-% and the Institute of Signal Processing and System Theory University of 
+% Implemented for MRI feature extraction by the Department of Diagnostic
+% and Interventional Radiology, University Hospital of Tübingen, Germany
+% and the Institute of Signal Processing and System Theory University of
 % Stuttgart, Germany. Last modified: November 2016
 %
 % Contact: annika.liebgott@iss.uni-stuttgart.de
@@ -18,19 +18,19 @@ function Out = GillesF(I,radius,th)
 
 if ~exist('radius','var')
     radius = 10;
-end    
+end
 if ~exist('th','var')
     th = 0.95;
-end    
+end
 
 if any(~real(I))
-   I = real(I); 
-end   
+   I = real(I);
+end
 
 %% extract Gilles points
 
 % convert image to binary
-BW = im2bw(I, graythresh(I));    
+BW = im2bw(I, graythresh(I));
 im = BW(:,:,1);
 
 % define a region mask
@@ -57,7 +57,7 @@ if points_gilles_num > 1
 else
     if points_gilles_num == 0
         points_gilles_mean = [0 0];
-    else    
+    else
         points_gilles_mean = points_gilles;
     end
     points_gilles_std = [0 0];

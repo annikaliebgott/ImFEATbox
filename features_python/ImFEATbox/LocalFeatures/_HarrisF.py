@@ -86,7 +86,4 @@ def HarrisF(I, plotflag=False, N_s=0, returnShape=False):
     Out = np.array([N, x_gravity, y_gravity, x_gravity_s, y_gravity_s, dens,
         std_x, std_y, std_x_s, std_y_s])
 
-    print(Out)
-    print(Out.shape)
-
     return Out

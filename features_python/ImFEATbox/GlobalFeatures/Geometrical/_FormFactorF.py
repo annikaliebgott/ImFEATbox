@@ -1,14 +1,15 @@
 from skimage import measure
 import numpy as np
+from __helperCommands import grayscale2bw
 
-def FormFactorF(I, typeflag, test=False):
+def FormFactorF(I, typeflag=None, returnShape=False):
 """
  Input:     - I: A 2D image
             - typeflag: Struct of logicals to permit extracting features
               based on desired characteristics:
-                   + typeflag.global: all features
-                   + typeflag.form: all features
-                   + typeflag.corr: only features based on correlation
+                   + typeflag['global']: all features
+                   + typeflag['form']: all features
+                   + typeflag['corr']: only features based on correlation
               default: all features are being extracted
               For more information see README.txt
 
@@ -33,22 +34,30 @@ def FormFactorF(I, typeflag, test=False):
 ## extract properties of regions in the image
 
     #if ~exist('typeflag','var')
-    if 'typeflag' not in globals():
-        typeflag.global = True
-        typeflag.form = True
-        typeflag.corr = True
+    if typeflag == None:
+        typeflag = dict()
+        typeflag['global'] = True
+        typeflag['form'] = True
+        typeflag['corr'] = True
 
 
-    if typeflag.global || typeflag.form:
-        typeflag.corr = True;
+    if typeflag['global'] or typeflag['form']:
+        typeflag['corr'] = True;
+
+    if returnShape:
+        if N > 0:
+            if (typeflag['global'] or typeflag['form']):
+                return (32,1)
+            else:
+                return (5,1)
+
+        else:
+            return (32,1)
 
 
     # convert image, image must be real valued!
-    #BW = im2bw(double(real(I)))
-    BW = I.convert('1')
-    #[L,N] = bwlabel(BW);
-    L = measure.label(blobs, background=0)
-    N = len(L)
+    BW = grayscale2bw(I)
+    L, N = measure.label(BW, background=0, return_num=True)
 
     # check if any objects have been detected
     if N > 0:
@@ -68,27 +77,26 @@ def FormFactorF(I, typeflag, test=False):
         form = np.zeros(N)
         area_obj = np.zeros(N)
         perimeter_obj = np.zeros(N)
+        eccentricity = np.zeros(N)
+        orientation = np.zeros(N)
+        solidity = np.zeros(N)
 
         for i in range(N):
             area_obj[i] = s[i].area
             perimeter_obj[i] = s[i].perimeter
             form[i] = 4*np.pi*area_obj[i]/(perimeter_obj[i]^2)
-            roundness[i] = (4*s[i].area )/(s[i].EquivDiameter*np.pi)
-
+            roundness[i] = (4*s[i].area )/(s[i].equivalent_diameter*np.pi)
+            eccentricity[i] = s[i].eccentricity
+            orientation[i] = s[i].orientation
+            solidity[i] = s[i].solidity
 
         # avoid Inf values which cause problems in further calculations
         #form(form == Inf) = max(form(form ~= Inf))
         form[np.isinf(form)] = form[~np.isinf(form)].max()
 
-        eccentricity = s.eccentricity
-        orientation = s.orientation
-        solidity = s.solidity
-
-
-
         ## feature extraction
 
-        if (typeflag.global || typeflag.form):
+        if (typeflag['global'] or typeflag['form']):
             # mean
             mean_roundness = np.mean(roundness)
             mean_area = np.mean(area_obj)
@@ -102,7 +110,7 @@ def FormFactorF(I, typeflag, test=False):
             std_roundness = np.std(roundness, ddof=1)
             std_area = np.std(area_obj, ddof=1)
             std_perimeter = np.std(perimeter_obj, ddof=1)
-            std_eccentricity = np.std (eccentricity, ddof=1)
+            std_eccentricity = np.std(eccentricity, ddof=1)
             std_orientation = np.std(orientation, ddof=1)
             std_solidity = np.std(solidity, ddof=1)
             std_form = np.std(form, ddof=1)
@@ -147,7 +155,7 @@ def FormFactorF(I, typeflag, test=False):
 
 
         ## return feature vector
-        if (typeflag.global || typeflag.form):
+        if (typeflag['global'] or typeflag['form']):
             return np.array([N, mean_eccentricity, mean_solidity, mean_orientation,
                 mean_roundness, mean_area, mean_perimeter, mean_form,
                 std_eccentricity, std_solidity, std_orientation,

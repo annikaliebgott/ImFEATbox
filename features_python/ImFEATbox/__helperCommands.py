@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+import skimage
 
 __float_dtype = np.float64
 __complex_dtype = np.complex128
@@ -10,6 +11,9 @@ def _complex_dtype():
 
 def _float_dtype():
     return __float_dtype
+
+def grayscale2bw(Image):
+    return Image < skimage.filter.threshold_otsu(Image)
 
 def rgb2grayscale(Image):
     """

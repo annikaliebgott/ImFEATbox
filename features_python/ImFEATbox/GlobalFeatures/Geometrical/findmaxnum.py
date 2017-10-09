@@ -20,12 +20,12 @@ def findmaxnum(seq):
 #
     if type(seq) == list:
 
-        numseq = len(seq);
-        maxnum = 1;
+        numseq = len(seq)
+        maxnum = 1
         for i in range(numseq):
-            temp = seq[i];
-            numseq = len(temp);
+            temp = seq[i]
+            numseq = len(temp)
             if numseq > maxnum:
-                maxnum = numseq;
+                maxnum = numseq
     else:
         raise ValueError('I was only designed to handle cell sequence')
