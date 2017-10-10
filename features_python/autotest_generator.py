@@ -308,8 +308,9 @@ for r in pyFileList:
             print(parameterSetup)
 
         diff = pOut - mOut
+        diff_norm = np.zeros(len(pOut))
         try:
-            diff_norm = np.abs(diff/mOut)
+            diff_norm[np.where(mOut != 0)] = np.abs(diff[np.where(mOut != 0)]/mOut[np.where(mOut != 0)])
         except ValueError:
             pass
         diff_norm[diff==0] = 0

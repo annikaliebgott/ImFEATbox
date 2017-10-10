@@ -1,4 +1,6 @@
 I = csvread('testimg.csv');
-addpath('ImFEATbox/LocalFeatures/Point/');
-Out = LawF(I);
+typeflag.form = true;
+typeflag.global = true;
+addpath('ImFEATbox/GlobalFeatures/Geometrical/');
+Out = FormFactorF(I, typeflag);
 csvwrite('matlab-out.csv', Out);

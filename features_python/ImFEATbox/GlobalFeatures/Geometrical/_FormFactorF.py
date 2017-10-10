@@ -1,22 +1,22 @@
 from skimage import measure
 import numpy as np
-from __helperCommands import grayscale2bw
+from ImFEATbox.__helperCommands import grayscale2bw
 
 def FormFactorF(I, typeflag=None, returnShape=False):
-"""
- Input:     - I: A 2D image
-            - typeflag: Struct of logicals to permit extracting features
-              based on desired characteristics:
-                   + typeflag['global']: all features
-                   + typeflag['form']: all features
-                   + typeflag['corr']: only features based on correlation
-              default: all features are being extracted
-              For more information see README.txt
+    """
+        Input:     - I: A 2D image
+                - typeflag: Struct of logicals to permit extracting features
+                  based on desired characteristics:
+                       + typeflag['global']: all features
+                       + typeflag['form']: all features
+                       + typeflag['corr']: only features based on correlation
+                  default: all features are being extracted
+                  For more information see README.txt
 
 
- Output:    - Out: A (1x32) vector containing 32 metrics based on the form
-                   of detected objects in am image
-"""
+        Output:    - Out: A (1x32) vector containing 32 metrics based on the form
+                       of detected objects in am image
+    """
 # ************************************************************************
 # Implemented for MRI feature extraction by the Department of Diagnostic
 # and Interventional Radiology, University Hospital of Tuebingen, Germany
@@ -44,15 +44,13 @@ def FormFactorF(I, typeflag=None, returnShape=False):
     if typeflag['global'] or typeflag['form']:
         typeflag['corr'] = True;
 
-    if returnShape:
-        if N > 0:
-            if (typeflag['global'] or typeflag['form']):
-                return (32,1)
-            else:
-                return (5,1)
 
-        else:
+    if returnShape:
+    #if N > 0: # we assume here that N > 0
+        if (typeflag['global'] or typeflag['form']):
             return (32,1)
+        else:
+            return (5,1)
 
 
     # convert image, image must be real valued!
@@ -70,8 +68,6 @@ def FormFactorF(I, typeflag=None, returnShape=False):
         # TODO only extract needed properties
         s = measure.regionprops(L, intensity_image=None, cache=True)
 
-
-
         # initialize variables
         roundness = np.zeros(N)
         form = np.zeros(N)
@@ -81,18 +77,23 @@ def FormFactorF(I, typeflag=None, returnShape=False):
         orientation = np.zeros(N)
         solidity = np.zeros(N)
 
-        for i in range(N):
+        for i in range(len(s)):
             area_obj[i] = s[i].area
             perimeter_obj[i] = s[i].perimeter
-            form[i] = 4*np.pi*area_obj[i]/(perimeter_obj[i]^2)
-            roundness[i] = (4*s[i].area )/(s[i].equivalent_diameter*np.pi)
+            #print(str(s[i].area) + ":" + str(s[i].perimeter))
+            if perimeter_obj[i] == 0:
+                form[i] = np.inf
+            else:
+                form[i] = 4*np.pi*area_obj[i]/float(np.power(perimeter_obj[i], 2))
+
+            roundness[i] = (4*s[i].area )/float((s[i].equivalent_diameter*np.pi))
             eccentricity[i] = s[i].eccentricity
             orientation[i] = s[i].orientation
             solidity[i] = s[i].solidity
 
         # avoid Inf values which cause problems in further calculations
         #form(form == Inf) = max(form(form ~= Inf))
-        form[np.isinf(form)] = form[~np.isinf(form)].max()
+        form[np.isinf(form)] = np.max(form[~np.isinf(form)])
 
         ## feature extraction
 
@@ -152,11 +153,9 @@ def FormFactorF(I, typeflag=None, returnShape=False):
             min_corr = 0
             corrcoef_FR = 0
 
-
-
         ## return feature vector
-        if (typeflag['global'] or typeflag['form']):
-            return np.array([N, mean_eccentricity, mean_solidity, mean_orientation,
+        if typeflag['global'] or typeflag['form']:
+            Out = np.hstack([N, mean_eccentricity, mean_solidity, mean_orientation,
                 mean_roundness, mean_area, mean_perimeter, mean_form,
                 std_eccentricity, std_solidity, std_orientation,
                 std_roundness, std_area, std_perimeter, std_form,
@@ -164,7 +163,9 @@ def FormFactorF(I, typeflag=None, returnShape=False):
                 min_eccentricity, min_solidity, min_roundness, min_area, min_perimeter, min_form,
                 corrcoef_FR, mean_corr, std_corr, max_corr, min_corr])
         else:
-            return np.array([corrcoef_FR, mean_corr, std_corr, max_corr, min_corr])
+            Out = np.hstack([corrcoef_FR, mean_corr, std_corr, max_corr, min_corr])
 
     else:
-        return np.zeros(32)
+        Out = np.zeros(32)
+
+    return Out
