@@ -9,7 +9,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-featureWhiteList.append("FormFactor")
+featureWhiteList.append("GLCMF")
 # TODO:
 # SVD: not solvable?
 

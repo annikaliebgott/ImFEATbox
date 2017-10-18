@@ -1,30 +1,31 @@
+# -*- coding: utf-8 -*-
+
 import numpy as np
-
-
-
+from ImFEATbox.__helperCommands import rgb2gray, isColorImage
+from skimage.feature import greycomatrix, greycoprops
 
 def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.array([np.min(Image), np.max(Image)]), typeflag):
-""" Input:     - I: A 2D image
-               - DisplacementVector: A (nx2) vector composed of offset
-                   and orientation (default = [0 1])
-               - NumLevels: An integer number specifying the number of
-                   gray level intensities (default = 8)
-               - GrayLimits: A (1x2) vector containing the min/max
-                   gray levels which are needed to sort gray levels of I
-                   into number of gray levels specified by NumLevels
-               - typeflag: Struct of logicals to permit extracting features
-                    based on desired characteristics:
-                   + typeflag.global: all features
-                   + typeflag.form: all features
-                   + typeflag.texture: all features
-                   + typeflag.corr: only features based on correlation
-                   + typeflag.entropy: only features based on entropy
-              default: all features are being extracted
-              For more information see README.txt
+    """ Input:     - I: A 2D image
+                   - DisplacementVector: A (nx2) vector composed of offset
+                       and orientation (default = [0 1])
+                   - NumLevels: An integer number specifying the number of
+                       gray level intensities (default = 8)
+                   - GrayLimits: A (1x2) vector containing the min/max
+                       gray levels which are needed to sort gray levels of I
+                       into number of gray levels specified by NumLevels
+                   - typeflag: Struct of logicals to permit extracting features
+                        based on desired characteristics:
+                       + typeflag['global']: all features
+                       + typeflag['form']: all features
+                       + typeflag['texture']: all features
+                       + typeflag['corr']: only features based on correlation
+                       + typeflag['entropy']: only features based on entropy
+                  default: all features are being extracted
+                  For more information see README.txt
 
- Output:    - Out: A (1xn*21) vector containing n*21 metrics calculated
-              from the gray level co-occurence matrix
-"""
+     Output:    - Out: A (1xn*21) vector containing n*21 metrics calculated
+                  from the gray level co-occurence matrix
+    """
 # ************************************************************************
 # Implemented for MRI feature extraction by the Department of Diagnostic
 # and Interventional Radiology, University Hospital of Tuebingen, Germany
@@ -48,13 +49,8 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
 
     # Check for color image and convert to grayscale
 
-    if len(Image.shape) == 4 and Image.shape[3] == 3      #image is 3D and color
-        if(size(Image,3)==3) # TODO FIX correct detection
-            Image = rgb2gray(Image)
-
-
-
-
+    if isColorImage:
+        Image = rgb2gray(Image)
 
     # graycomatrix.m can't process complex input values
     #Image = double(real(Image));
@@ -64,55 +60,53 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
     # Default Parameters (Offset value = 1 pixel)
 
 #    if 'typeflag' not in globals():
-    # if ~exist('InputParameters','var') || ~isfield(InputParameters,'DisplacementVector')
+    # if ~exist('InputParameters','var') or ~isfield(InputParameters,'DisplacementVector')
     #     InputParameters.DisplacementVector = [0 1];
     # end
 
-    # if ~exist('InputParameters','var') || ~isfield(InputParameters,'NumLevels')
+    # if ~exist('InputParameters','var') or ~isfield(InputParameters,'NumLevels')
     #     InputParameters.NumLevels = 8;
     # end
     #
-    # if ~exist('InputParameters','var') || ~isfield(InputParameters,'GrayLimits')
+    # if ~exist('InputParameters','var') or ~isfield(InputParameters,'GrayLimits')
     #     InputParameters.GrayLimits = [min(Image(:)) max(Image(:))];
     # end
 
-    if 'typeflag' not in globals():
-    #if ~exist('typeflag', 'var')
-        typeflag.global = True
-        typeflag.texture = True
-        typeflag.form = True
-        typeflag.corr = True
-        typeflag.entropy = True
+    if typeflag == None:
+        typeflag = dict()
+        typeflag['global'] = True
+        typeflag['texture'] = True
+        typeflag['form'] = True
+        typeflag['corr'] = True
+        typeflag['entropy'] = True
 
 
-    if typeflag.global || typeflag.texture:
-        typeflag.corr = True
-        typeflag.entropy = True
+    if typeflag['global'] or typeflag['texture']:
+        typeflag['corr'] = True
+        typeflag['entropy'] = True
 
 
     # Image must be uint8
     GLCM_Matrices = graycomatrix(image = Image,
-        distances = InputParameters.DisplacementVector
-        levels = InputParameters.NumLevels,
+        distances = DisplacementVector
+        levels = NumLevels,
         # TODO limits wichtig??
         #'GrayLimits', InputParameters.GrayLimits,
         symmetric = False)
 
-    if typeflag.texture || typeflag.global
+    if typeflag['texture'] or typeflag['global']:
         # extract all features of GLCM
-        Out = np.zeros(np.shape(GLCM_Matrices)[2], 21)
-    elif typeflag.corr
-        if typeflag.entropy
+        Out = np.zeros((np.shape(GLCM_Matrices)[2], 21))
+    elif typeflag['corr']:
+        if typeflag['entropy']:
             # ectract correlation based and entropy based features
-            Out = np.zeros(np.shape(GLCM_Matrices)[2], 7)
-        else
+            Out = np.zeros((np.shape(GLCM_Matrices)[2], 7))
+        else:
             # extract only correlation based features
-            Out = np.zeros(np.shape(GLCM_Matrices)[2], 4)
-        end
-    else
+            Out = np.zeros((np.shape(GLCM_Matrices)[2], 4))
+    else:
         # extract only entropy based features
-        Out = np.zeros(np.shape(GLCM_Matrices)[2], 5)
-    end
+        Out = np.zeros((np.shape(GLCM_Matrices)[2], 5))
 
 
     #for n=1:1:size(GLCM_Matrices,3)
@@ -125,46 +119,45 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
         s1, s2 = np.shape(G)[0:2]
 
         # Initialization
-        p_x   = np.zeros(s1,1)
-        p_y   = np.zeros(s2,1)
-        u_x   = 0
-        u_y   = 0
-        HXY1  = 0
-        HXY2  = 0
+        p_x = np.zeros(s1)
+        p_y = np.zeros(s2)
+        u_x = 0
+        u_y = 0
+        HXY1 = 0
+        HXY2 = 0
         sigma_x = 0
         sigma_y = 0
-        p_xplusy = np.zeros((s1*2 - 1),1)
-        p_xminusy = np.zeros(s1,1)
-        CO      = 0
-        CORR    = 0
-        IDM     = 0
-        SE      = 0
-        H       = 0
-        DE      = 0
-        IMC1    = 0
-        IMC2    = 0
-        ACORR   = 0
-        DIS     = 0
-        CLS     = 0
-        CLP     = 0
-        INV     = 0
-        INVN    = 0
-        IDMN    = 0
+        p_xplusy = np.zeros(s1*2 - 1)
+        p_xminusy = np.zeros(s1)
+        CO = 0
+        CORR = 0
+        IDM = 0
+        SE = 0
+        H = 0
+        DE = 0
+        IMC1 = 0
+        IMC2 = 0
+        ACORR = 0
+        DIS = 0
+        CLS = 0
+        CLP = 0
+        INV = 0
+        INVN = 0
+        IDMN = 0
 
 
         m = range(1, s1+1) #replace one for-loop by using a vector of length s1
         o = range(1, s2+1) #replace one for-loop by using a vector of length s2
 
         # Angular Second Moment or Energy (ASM)
-        ASM = np.sum(np.power(GNormalized[:], 2))
+        ASM = np.sum(np.power(GNormalized, 2))
 
         # Sum of squared variance (SSV)
         SSV = np.sum(np.power(m - MeanOfGLCM, 2) * GNormalized)
 
         # Entropy (H)
-        if typeflag.entropy:
-            H = - np.sum(np.dot(GNormalized[:], np.log(GNormalized[:])))
-        end
+        if typeflag['entropy']:
+            H = - np.sum(np.dot(GNormalized, np.log(GNormalized)))
 
         #for i = 1:s1
         for i in range(0, s1):
@@ -176,7 +169,7 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
             p_y[i] = np.sum(GNormalized[:,i])
 
             k = (i+1)+(1:s2)
-            l = abs(i-(1:s2))
+            l = np.abs(i-(1:s2))
             p_xplusy[k-1] = p_xplusy[k-1] + GNormalized[i,(1:s2)].T
 
             # since there are multiple equal values in index vector l (i.e. some
@@ -191,23 +184,23 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
             CO = CO + np.sum(((np.power(i+1 - o),2) * GNormalized[i,:]))
 
             # Inverse difference moment or homogenity (IDM)
-            IDM = IDM + np.sum(GNormalized[i,o]/( 1 + np.power(i+1 - o,2)))
+            IDM = IDM + np.sum(GNormalized[i,o] / float( 1 + np.power(i+1 - o,2)))
 
             # Dissimilarity (DIS)
             DIS = DIS + np.sum(np.abs(i+1 - o) * GNormalized[i,:])
 
             # Autocorrelation (ACORR)
-            if typeflag.corr
+            if typeflag['corr']:
                 ACORR = ACORR + np.sum((i+1) * o * GNormalized[i,o])
 
             # Inverse difference (INV)
-            INV = INV + np.sum(GNormalized[i,o] / ( 1 + np.abs(i+1 - o)))
+            INV = INV + np.sum(GNormalized[i,o] / float( 1 + np.abs(i+1 - o)))
 
             # Inverse difference normalized (INVN)
-            INVN = INVN + np.sum(GNormalized[i,o] / ( 1 + (np.abs(i+1-o) / (s1))))
+            INVN = INVN + np.sum(GNormalized[i,o] / float( 1 + (np.abs(i+1-o) / (s1))))
 
             # Inverse difference moment normalized (IDMN)
-            IDMN = IDMN + np.sum(GNormalized[i,o] / ( 1 + np.power((i+1-o) / (s1),2)))
+            IDMN = IDMN + np.sum(GNormalized[i,o] / float( 1 + np.power((i+1-o) / float(s1),2)))
 
 
         #for i = 1:s1
@@ -219,13 +212,13 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
             # Cluster prominence (CLP)
             CLP = CLP + (np.power(i+1 + o - u_x - u_y,4)) * GNormalized[i,o].T
 
-            sigma_x  = sigma_x  + np.sum((np.power((i+1) - u_x, 2)) * GNormalized[i,o])
-            sigma_y  = sigma_y  + np.sum((np.power((o) - u_y, 2)) * GNormalized[i,o])
+            sigma_x = sigma_x  + np.sum((np.power((i+1) - u_x, 2)) * GNormalized[i,o])
+            sigma_y = sigma_y  + np.sum((np.power((o) - u_y, 2)) * GNormalized[i,o])
 
 
         # Correlation (CORR)
-        if typeflag.corr
-            CORR = (ACORR - (u_x*u_y)) / (sqrt(sigma_x)*np.sqrt(sigma_y))
+        if typeflag['corr']:
+            CORR = (ACORR - (u_x*u_y)) / float(np.sqrt(sigma_x)*np.sqrt(sigma_y))
 
 
         # Summed average (SA)
@@ -233,7 +226,7 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
         SA = range(2:2*s1+1) * p_xplusy
 
         # Summed entropy (SE)
-        if typeflag.entropy
+        if typeflag['entropy']:
             SE = -np.sum(p_xplusy * np.log(p_xplusy))
 
         # Summed Variance (SV)
@@ -243,7 +236,7 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
         DV = np.power(range(0:s1), 2) * p_xminusy
 
         # Difference entropy (DE)
-        if typeflag.entropy
+        if typeflag['entropy']:
             DE = - np.sum(p_xminusy * np.log(p_xminusy))
 
             HXY = H
@@ -257,22 +250,21 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
 
             # Information measure of correlation 1 (IMC1)
             # Information measure of correlation 2 (IMC2)
-            IMC1 = (HXY - HXY1) / ( np.max([Hx, Hy]))
+            IMC1 = (HXY - HXY1) / float(np.max([Hx, Hy]))
             IMC2 = np.power(1 - np.exp(-2*(HXY2 - HXY))),0.5)
 
         # Maximum probability (MAXP)
-        MAXP = np.max(GNormalized[:])
+        MAXP = np.max(GNormalized)
 
-        if typeflag.texture || typeflag.global:
-            Out[n,:] = [ACORR , CO, CORR, CLP, CLS ,  DIS, ASM, H, IDM, MAXP,
-                SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV,INVN, IDMN]
-        elif typeflag.corr:
-            if typeflag.entropy
-                Out[n,:] = [ACORR, CORR, H, SE, DE, IMC1, IMC2]
+        if typeflag['texture'] or typeflag['global']:
+            Out[n,:] = np.array([ACORR , CO, CORR, CLP, CLS ,  DIS, ASM, H, IDM, MAXP,
+                SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV,INVN, IDMN])
+        elif typeflag['corr']:
+            if typeflag['entropy']:
+                Out[n,:] = np.array([ACORR, CORR, H, SE, DE, IMC1, IMC2])
             else:
-                Out[n,:] = [ACORR, CORR, IMC1, IMC2]
+                Out[n,:] = np.array([ACORR, CORR, IMC1, IMC2])
         else:
-            Out[n,:] = [H, SE, DE, IMC1, IMC2]
+            Out[n,:] = np.array([H, SE, DE, IMC1, IMC2])
 
-
-    return reshape(Out, [1,np.shape(Out)[0]*np.shape(Out)[1]])
+    return np.hstack(Out)
