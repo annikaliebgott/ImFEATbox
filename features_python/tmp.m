@@ -1,6 +1,8 @@
 I = csvread('testimg.csv');
-typeflag.form = true;
-typeflag.global = true;
+typeflag.corr = false;
+typeflag.texture = false;
+typeflag.global = false;
+typeflag.entropy = false;
 addpath('ImFEATbox/GlobalFeatures/Geometrical/');
-Out = FormFactorF(I, typeflag);
+Out = GLCMF(I, Image, InputParameters, typeflag);
 csvwrite('matlab-out.csv', Out);

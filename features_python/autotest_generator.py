@@ -149,12 +149,30 @@ for r in pyFileList:
         elif par == "N_s":
             mParameterList.remove(par)
             pyParameters.remove(par)
+        elif par == "DisplacementVector":
+            mParameterList.remove(par)
+            pyParameters.remove(par)
         else:
             print("unknown parameter: " + par)
+            print(mParameterList)
             quit()
     #print(typeFlagList)
 
     # now convert to python-parameters:
+
+
+    if "DisplacementVector" in pyParameters:
+        pyParameters.remove("DisplacementVector")
+
+    if "NumLevels" in pyParameters:
+        pyParameters.remove("NumLevels")
+
+    if "GrayLimits" in pyParameters:
+        pyParameters.remove("GrayLimits")
+
+    if "Angles" in pyParameters:
+        pyParameters.remove("Angles")
+
 
     if "returnShape" in pyParameters:
         pyParameters.remove("returnShape")

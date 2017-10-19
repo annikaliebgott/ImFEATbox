@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from ImFEATbox.__helperCommands import rgb2gray, isColorImage
+from ImFEATbox.__helperCommands import rgb2grayscale, isColorImage
 from skimage.feature import greycomatrix, greycoprops
 
-def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.array([np.min(Image), np.max(Image)]), typeflag):
-    """ Input:     - I: A 2D image
+def GLCMF(I, DisplacementVector=np.array([0,1]), Angles=None, NumLevels=8, GrayLimits=None, typeflag=None, returnShape=False):
+    """
+        Input:     - I: A 2D image
                    - DisplacementVector: A (nx2) vector composed of offset
                        and orientation (default = [0 1])
                    - NumLevels: An integer number specifying the number of
@@ -45,17 +46,24 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
 #                           Cybernetics. SMC-3 (6): 610–621.
 
 
-    Image = np.array(Image)
+
+    if GrayLimits == None:
+        GrayLimits = np.array([np.min(I), np.max(I)])
+
+    if Angles == None:
+        Angles = [0, np.pi/2]
+
+    I = np.array(I)
 
     # Check for color image and convert to grayscale
 
-    if isColorImage:
-        Image = rgb2gray(Image)
+    if isColorImage(I):
+        I = rgb2grayscale(I)
 
     # graycomatrix.m can't process complex input values
     #Image = double(real(Image));
-    if np.any(np.iscomplex(Image)):
-        Image = Image.real
+    if np.any(np.iscomplex(I)):
+        I = I.real
 
     # Default Parameters (Offset value = 1 pixel)
 
@@ -86,9 +94,25 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
         typeflag['entropy'] = True
 
 
+    if returnShape:
+        if typeflag['texture'] or typeflag['global']:
+            Out[n,:] = np.array([ACORR , CO, CORR, CLP, CLS ,  DIS, ASM, H, IDM, MAXP,
+                SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV,INVN, IDMN])
+        elif typeflag['corr']:
+            if typeflag['entropy']:
+                Out[n,:] = np.array([ACORR, CORR, H, SE, DE, IMC1, IMC2])
+            else:
+                Out[n,:] = np.array([ACORR, CORR, IMC1, IMC2])
+        else:
+            Out[n,:] = np.array([H, SE, DE, IMC1, IMC2])
+
+
+
+
     # Image must be uint8
-    GLCM_Matrices = graycomatrix(image = Image,
-        distances = DisplacementVector
+    GLCM_Matrices = greycomatrix(image = I,
+        distances = DisplacementVector,
+        angles = Angles,
         levels = NumLevels,
         # TODO limits wichtig??
         #'GrayLimits', InputParameters.GrayLimits,
@@ -168,17 +192,18 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
             p_x[i] = np.sum(GNormalized[i,:])
             p_y[i] = np.sum(GNormalized[:,i])
 
-            k = (i+1)+(1:s2)
-            l = np.abs(i-(1:s2))
-            p_xplusy[k-1] = p_xplusy[k-1] + GNormalized[i,(1:s2)].T
+            #k = (i+1)+(1:s2)
+            #l = np.abs(i-(1:s2))
+            p_xplusy[i+1:i+1+s2] = p_xplusy[i+1:i+1+s2] + GNormalized[i,:s2].T
 
             # since there are multiple equal values in index vector l (i.e. some
             # indices are in there twice) and matlab can't automatically assign
             # the sum of multiple values to the same index, the calculation has
             # to be divided into two parts (on from first index down until l==1,
             # then up from l==0 to l(end)
-            p_xminusy[l[1:i]+1] = p_xminusy[l[1:i]+1] + GNormalized[i,1:i-1].T
-            p_xminusy[l[i:]+1] = p_xminusy[l[i:]+1] + GNormalized[i,i:s2].T
+
+            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,1:i-1].T
+            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,i:s2].T
 
             # Contrast (CO)
             CO = CO + np.sum(((np.power(i+1 - o),2) * GNormalized[i,:]))
@@ -223,17 +248,17 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
 
         # Summed average (SA)
         #SA = (2:2*s1)*p_xplusy
-        SA = range(2:2*s1+1) * p_xplusy
+        SA = range(2,2*s1+1) * p_xplusy
 
         # Summed entropy (SE)
         if typeflag['entropy']:
             SE = -np.sum(p_xplusy * np.log(p_xplusy))
 
         # Summed Variance (SV)
-        SV = (np.power(range(2:2*s1+1) - SE, 2)) * p_xplusy
+        SV = (np.power(range(2,2*s1+1) - SE, 2)) * p_xplusy
 
         # Difference varience (DV)
-        DV = np.power(range(0:s1), 2) * p_xminusy
+        DV = np.power(range(0,s1), 2) * p_xminusy
 
         # Difference entropy (DE)
         if typeflag['entropy']:
@@ -251,7 +276,7 @@ def GLCMF(Image, DisplacementVector=np.array([0,1]), NumLevels=8, GrayLimits=np.
             # Information measure of correlation 1 (IMC1)
             # Information measure of correlation 2 (IMC2)
             IMC1 = (HXY - HXY1) / float(np.max([Hx, Hy]))
-            IMC2 = np.power(1 - np.exp(-2*(HXY2 - HXY))),0.5)
+            IMC2 = np.power(1 - np.exp(-2*(HXY2 - HXY)), 0.5)
 
         # Maximum probability (MAXP)
         MAXP = np.max(GNormalized)
