@@ -152,6 +152,8 @@ for r in pyFileList:
         elif par == "DisplacementVector":
             mParameterList.remove(par)
             pyParameters.remove(par)
+        elif par == "InputParameters":
+            mParameterList.remove(par)
         else:
             print("unknown parameter: " + par)
             print(mParameterList)
@@ -185,10 +187,10 @@ for r in pyFileList:
         mParameterList.remove("I")
 
     if len(mParameterList) > len(pyParameters):
-        print("error: missing paramters! " + imFeature)
+        print("warning: missing paramters! " + imFeature)
         print("python: " + str(pyParameters))
         print("matlab: " + str(mParameterList))
-        quit()
+        #quit()
 
 
     # create test cases:

@@ -4,5 +4,5 @@ typeflag.texture = false;
 typeflag.global = false;
 typeflag.entropy = false;
 addpath('ImFEATbox/GlobalFeatures/Geometrical/');
-Out = GLCMF(I, Image, InputParameters, typeflag);
+Out = GLCMF(I, typeflag);
 csvwrite('matlab-out.csv', Out);

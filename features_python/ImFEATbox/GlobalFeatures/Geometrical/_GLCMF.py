@@ -3,8 +3,10 @@
 import numpy as np
 from ImFEATbox.__helperCommands import rgb2grayscale, isColorImage
 from skimage.feature import greycomatrix, greycoprops
+from skimage import exposure
+from scipy.stats import entropy
 
-def GLCMF(I, DisplacementVector=np.array([0,1]), Angles=None, NumLevels=8, GrayLimits=None, typeflag=None, returnShape=False):
+def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayLimits=None, returnShape=False):
     """
         Input:     - I: A 2D image
                    - DisplacementVector: A (nx2) vector composed of offset
@@ -50,8 +52,11 @@ def GLCMF(I, DisplacementVector=np.array([0,1]), Angles=None, NumLevels=8, GrayL
     if GrayLimits == None:
         GrayLimits = np.array([np.min(I), np.max(I)])
 
+
+    # Angles could be implemented in the future as input parameter
+    Angles=None
     if Angles == None:
-        Angles = [0, np.pi/2]
+        Angles = np.array([0])
 
     I = np.array(I)
 
@@ -94,47 +99,69 @@ def GLCMF(I, DisplacementVector=np.array([0,1]), Angles=None, NumLevels=8, GrayL
         typeflag['entropy'] = True
 
 
+    numDist = len(DisplacementVector)
+
     if returnShape:
         if typeflag['texture'] or typeflag['global']:
-            Out[n,:] = np.array([ACORR , CO, CORR, CLP, CLS ,  DIS, ASM, H, IDM, MAXP,
-                SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV,INVN, IDMN])
+            return (numDist * 21, 1)
         elif typeflag['corr']:
             if typeflag['entropy']:
-                Out[n,:] = np.array([ACORR, CORR, H, SE, DE, IMC1, IMC2])
+                return (numDist * 7, 1)
             else:
-                Out[n,:] = np.array([ACORR, CORR, IMC1, IMC2])
+                return (numDist * 4, 1)
         else:
-            Out[n,:] = np.array([H, SE, DE, IMC1, IMC2])
+            return (numDist * 5, 1)
 
+
+
+
+
+
+    uI = exposure.equalize_hist(I, nbins=8)
+    uI = uI-uI.min()
+    uI = 7*uI/float(np.max(uI))
+    uI = uI.astype('uint8')
+    DisplacementVector = np.array([1])
+    #DisplacementVector = np.array([1])
+    #Angles = [0, np.pi/2]
+    Angles = np.array([0])
+    #NumLevels = 8
 
 
 
     # Image must be uint8
-    GLCM_Matrices = greycomatrix(image = I,
+    GLCM_Matrices = greycomatrix(image = uI,
         distances = DisplacementVector,
         angles = Angles,
         levels = NumLevels,
         # TODO limits wichtig??
         #'GrayLimits', InputParameters.GrayLimits,
         symmetric = False)
+        # levels x levels x number of distances x number of angles.
+
+
+    GLCM_Matrices = GLCM_Matrices[:,:,:,0] # angles are not implemented yet
+
+
+    nMax = np.shape(GLCM_Matrices)[2]
 
     if typeflag['texture'] or typeflag['global']:
         # extract all features of GLCM
-        Out = np.zeros((np.shape(GLCM_Matrices)[2], 21))
+        Out = np.zeros((nMax, 21))
     elif typeflag['corr']:
         if typeflag['entropy']:
             # ectract correlation based and entropy based features
-            Out = np.zeros((np.shape(GLCM_Matrices)[2], 7))
+            Out = np.zeros((nMax, 7))
         else:
             # extract only correlation based features
-            Out = np.zeros((np.shape(GLCM_Matrices)[2], 4))
+            Out = np.zeros((nMax, 4))
     else:
         # extract only entropy based features
-        Out = np.zeros((np.shape(GLCM_Matrices)[2], 5))
+        Out = np.zeros((nMax, 5))
 
 
     #for n=1:1:size(GLCM_Matrices,3)
-    for n in range(np.shape(GLCM_Matrices)[2]):
+    for n in range(nMax):
 
         G = GLCM_Matrices[:,:,n]
         SumOfGLCM = np.sum(G)
@@ -181,7 +208,9 @@ def GLCMF(I, DisplacementVector=np.array([0,1]), Angles=None, NumLevels=8, GrayL
 
         # Entropy (H)
         if typeflag['entropy']:
-            H = - np.sum(np.dot(GNormalized, np.log(GNormalized)))
+            #H = - np.sum(GNormalized.flatten() * np.log(GNormalized.flatten()))
+            H = entropy(GNormalized.flatten())
+
 
         #for i = 1:s1
         for i in range(0, s1):
@@ -202,8 +231,8 @@ def GLCMF(I, DisplacementVector=np.array([0,1]), Angles=None, NumLevels=8, GrayL
             # to be divided into two parts (on from first index down until l==1,
             # then up from l==0 to l(end)
 
-            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,1:i-1].T
-            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,i:s2].T
+            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,1:i-1]
+            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,i:s2]
 
             # Contrast (CO)
             CO = CO + np.sum(((np.power(i+1 - o),2) * GNormalized[i,:]))
