@@ -197,8 +197,8 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
         IDMN = 0
 
 
-        m = range(1, s1+1) #replace one for-loop by using a vector of length s1
-        o = range(1, s2+1) #replace one for-loop by using a vector of length s2
+        m = np.array(range(1, s1+1)) #replace one for-loop by using a vector of length s1
+        o = np.array(range(1, s2+1)) #replace one for-loop by using a vector of length s2
 
         # Angular Second Moment or Energy (ASM)
         ASM = np.sum(np.power(GNormalized, 2))
@@ -223,22 +223,22 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
 
             #k = (i+1)+(1:s2)
             #l = np.abs(i-(1:s2))
-            p_xplusy[i+1:i+1+s2] = p_xplusy[i+1:i+1+s2] + GNormalized[i,:s2].T
+            p_xplusy[i:i+s2] = p_xplusy[i:i+s2] + GNormalized[i,:s2].T
 
             # since there are multiple equal values in index vector l (i.e. some
             # indices are in there twice) and matlab can't automatically assign
             # the sum of multiple values to the same index, the calculation has
             # to be divided into two parts (on from first index down until l==1,
             # then up from l==0 to l(end)
-
-            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,1:i-1]
-            p_xminusy[i::-s2] = p_xminusy[i::-s2] + GNormalized[i,i:s2]
+            print(i)
+            p_xminusy[:i][::-1] = p_xminusy[:i][::-1] + GNormalized[i,:i]
+            p_xminusy[:s2-i] = p_xminusy[:s2-i] + GNormalized[i,i:s2]
 
             # Contrast (CO)
-            CO = CO + np.sum(((np.power(i+1 - o),2) * GNormalized[i,:]))
+            CO = CO + np.sum(np.power((i+1 - o), 2) * GNormalized[i,:])
 
             # Inverse difference moment or homogenity (IDM)
-            IDM = IDM + np.sum(GNormalized[i,o] / float( 1 + np.power(i+1 - o,2)))
+            IDM = IDM + np.sum(GNormalized[i,o-1] / ( 1 + np.power(i+1 - o.astype('float'),2)))
 
             # Dissimilarity (DIS)
             DIS = DIS + np.sum(np.abs(i+1 - o) * GNormalized[i,:])
@@ -248,26 +248,26 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
                 ACORR = ACORR + np.sum((i+1) * o * GNormalized[i,o])
 
             # Inverse difference (INV)
-            INV = INV + np.sum(GNormalized[i,o] / float( 1 + np.abs(i+1 - o)))
+            INV = INV + np.sum(GNormalized[i,o-1] / ( 1 + np.abs(i+1 - o.astype('float'))))
 
             # Inverse difference normalized (INVN)
-            INVN = INVN + np.sum(GNormalized[i,o] / float( 1 + (np.abs(i+1-o) / (s1))))
+            INVN = INVN + np.sum(GNormalized[i,o-1] / ( 1 + (np.abs(i+1-o) / float(s1))))
 
             # Inverse difference moment normalized (IDMN)
-            IDMN = IDMN + np.sum(GNormalized[i,o] / float( 1 + np.power((i+1-o) / float(s1),2)))
+            IDMN = IDMN + np.sum(GNormalized[i,o-1] / ( 1 + np.power(i+1-o / float(s1),2)))
 
 
         #for i = 1:s1
         for i in range(s1):
 
             # Cluster shade (CLS)
-            CLS = CLS + (np.power(i+1 + o - u_x - u_y,3)) * GNormalized[i,o].T
+            CLS = CLS + (np.power(i + o - u_x - u_y,3)) * GNormalized[i,o-1].T
 
             # Cluster prominence (CLP)
-            CLP = CLP + (np.power(i+1 + o - u_x - u_y,4)) * GNormalized[i,o].T
+            CLP = CLP + (np.power(i + o - u_x - u_y,4)) * GNormalized[i,o-1].T
 
-            sigma_x = sigma_x  + np.sum((np.power((i+1) - u_x, 2)) * GNormalized[i,o])
-            sigma_y = sigma_y  + np.sum((np.power((o) - u_y, 2)) * GNormalized[i,o])
+            sigma_x = sigma_x  + np.sum((np.power((i+1) - u_x, 2)) * GNormalized[i,o-1])
+            sigma_y = sigma_y  + np.sum((np.power((o) - u_y, 2)) * GNormalized[i,o-1])
 
 
         # Correlation (CORR)
@@ -284,7 +284,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
             SE = -np.sum(p_xplusy * np.log(p_xplusy))
 
         # Summed Variance (SV)
-        SV = (np.power(range(2,2*s1+1) - SE, 2)) * p_xplusy
+        SV = (np.power(np.array(range(2,2*s1+1)) - SE, 2)) * p_xplusy
 
         # Difference varience (DV)
         DV = np.power(range(0,s1), 2) * p_xminusy
@@ -320,5 +320,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
                 Out[n,:] = np.array([ACORR, CORR, IMC1, IMC2])
         else:
             Out[n,:] = np.array([H, SE, DE, IMC1, IMC2])
+
+    print(Out)
 
     return np.hstack(Out)

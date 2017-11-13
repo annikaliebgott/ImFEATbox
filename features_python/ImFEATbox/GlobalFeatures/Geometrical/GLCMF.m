@@ -147,8 +147,9 @@ for n=1:1:size(GLCM_Matrices,3)
 
     % Entropy (H)
     if typeflag.entropy
-    % TODO: at GNormalized == 0 -> -inf -> whole H = 0 ...?
-        H = - sum(GNormalized(:).*log(GNormalized(:)));
+        % fixed entropy
+        % H = - sum(GNormalized(:).*log(GNormalized(:)));
+        H = entropy(GNormalized(:));
     end
 
     for i = 1:s1
@@ -168,7 +169,30 @@ for n=1:1:size(GLCM_Matrices,3)
         % the sum of multiple values to the same index, the calculation has
         % to be divided into two parts (on from first index down until l==1,
         % then up from l==0 to l(end)
+
+
+% l(1:i-1)+1):
+% i=1: 1×0 empty double row vector <- problem?
+% i=2: 2
+% i=3: 3 2
+% ...
+% i=8: 8     7     6     5     4     3     2
+
+
+
         p_xminusy(l(1:i-1)+1) = p_xminusy(l(1:i-1)+1) + GNormalized(i,(1:i-1)).';
+
+
+
+
+
+% l(i:end)+1:
+% i=1:  1     2     3     4     5     6     7     8
+% i=2:  1     2     3     4     5     6     7
+% ...
+% i=8: 1
+
+
         p_xminusy(l(i:end)+1) = p_xminusy(l(i:end)+1) + GNormalized(i,(i:s2)).';
 
 
