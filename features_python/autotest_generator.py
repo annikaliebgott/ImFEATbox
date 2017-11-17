@@ -153,7 +153,8 @@ for r in pyFileList:
             mParameterList.remove(par)
             pyParameters.remove(par)
         elif par == "InputParameters":
-            mParameterList.remove(par)
+            pass
+            # mParameterList.remove(par)
         else:
             print("unknown parameter: " + par)
             print(mParameterList)
