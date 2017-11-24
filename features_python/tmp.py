@@ -5,7 +5,7 @@ with open('testimg.csv', 'r') as csvfile:
 typeflag = dict()
 typeflag['corr'] = False
 typeflag['texture'] = False
-typeflag['global'] = False
+typeflag['global'] = True
 typeflag['entropy'] = False
 out = ImFEATbox.GlobalFeatures.Geometrical.glcm.cFeatures(I, typeflag)
 with open('python-out.csv', 'wb') as csvfile:

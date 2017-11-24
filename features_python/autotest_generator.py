@@ -230,6 +230,8 @@ for r in pyFileList:
             matlabScript += "plotflag = false;" + os.linesep
             parameterSetup += "plotflag = False" + os.linesep
             exec("plotflag = False")
+        if "InputParameters" in mParameterList:
+            matlabScript += "InputParameters = {};" + os.linesep
         if gradTypeParameter:
             pythonScript += "gradtype = dict()" + os.linesep
             exec("gradtype = dict()")
@@ -324,6 +326,7 @@ for r in pyFileList:
         else:
             featurePassed = False
             reportx += "\t* shape test FAILED !!!" + os.linesep
+            print(mOut)
             print("mOut: " + str(len(mOut)) + ", pOut: " + str(len(pOut)) + ", shape: " + str(pyShape))
             print("length wrong!")
             print(parameterSetup)

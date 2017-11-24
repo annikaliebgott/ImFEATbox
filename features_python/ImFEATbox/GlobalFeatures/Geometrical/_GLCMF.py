@@ -245,7 +245,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
 
             # Autocorrelation (ACORR)
             if typeflag['corr']:
-                ACORR = ACORR + np.sum((i+1) * o * GNormalized[i,o])
+                ACORR = ACORR + np.sum((i+1) * o * GNormalized[i,o-1])
 
             # Inverse difference (INV)
             INV = INV + np.sum(GNormalized[i,o-1] / ( 1 + np.abs(i+1 - o.astype('float'))))
@@ -261,10 +261,10 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
         for i in range(s1):
 
             # Cluster shade (CLS)
-            CLS = CLS + (np.power(i + o - u_x - u_y,3)) * GNormalized[i,o-1].T
+            CLS = CLS + np.dot((np.power(i + o - u_x - u_y,3)), GNormalized[i,o-1])
 
             # Cluster prominence (CLP)
-            CLP = CLP + (np.power(i + o - u_x - u_y,4)) * GNormalized[i,o-1].T
+            CLP = CLP + np.dot((np.power(i + o - u_x - u_y,4)), GNormalized[i,o-1])
 
             sigma_x = sigma_x  + np.sum((np.power((i+1) - u_x, 2)) * GNormalized[i,o-1])
             sigma_y = sigma_y  + np.sum((np.power((o) - u_y, 2)) * GNormalized[i,o-1])
@@ -277,7 +277,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
 
         # Summed average (SA)
         #SA = (2:2*s1)*p_xplusy
-        SA = range(2,2*s1+1) * p_xplusy
+        SA = np.dot(np.array(range(2,2*s1+1)), p_xplusy)
 
         # Summed entropy (SE)
         if typeflag['entropy']:
@@ -296,7 +296,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
             HXY = H
 
             for i in range(s1):
-                HXY1 = HXY1 - GNormalized[i,:] * np.log(p_x[i] * p_y)
+                HXY1 = HXY1 - np.dot(GNormalized[i,:]* np.log(p_x[i]), p_y)
                 HXY2 = HXY2 - np.sum(p_x[i] * p_y * np.log(p_x[i] * p_y))
 
             Hx = - np.sum(p_x * np.log(p_x))
@@ -311,6 +311,10 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
         MAXP = np.max(GNormalized)
 
         if typeflag['texture'] or typeflag['global']:
+            print(SA)
+            print("...")
+            print([ACORR , CO, CORR, CLP, CLS, DIS, ASM, H, IDM, MAXP,
+                SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV, INVN, IDMN])
             Out[n,:] = np.array([ACORR , CO, CORR, CLP, CLS ,  DIS, ASM, H, IDM, MAXP,
                 SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV,INVN, IDMN])
         elif typeflag['corr']:
@@ -320,7 +324,5 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
                 Out[n,:] = np.array([ACORR, CORR, IMC1, IMC2])
         else:
             Out[n,:] = np.array([H, SE, DE, IMC1, IMC2])
-
-    print(Out)
 
     return np.hstack(Out)
