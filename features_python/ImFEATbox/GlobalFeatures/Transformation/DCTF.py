@@ -159,6 +159,6 @@ def DCTF(I, typeflag=None):
 
     ## return feature vector
     f = np.swapaxes(f, 0, 1)
-    Out = f[:].T
+    Out = f #.T
 
     return Out

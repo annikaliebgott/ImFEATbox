@@ -207,17 +207,17 @@ def GradientF(I, typeflag=None, gradtype=None, returnShape=False):
 
         # maximum of normalized gradients
         if gradtype['first']:
-            G1_x_norm_max = np.max(G1_x_norm[:])
-            G1_y_norm_max = np.max(G1_y_norm[:])
-            G2_x_norm_max = np.max(G2_x_norm[:])
-            G2_y_norm_max = np.max(G2_y_norm[:])
+            G1_x_norm_max = np.max(G1_x_norm)
+            G1_y_norm_max = np.max(G1_y_norm)
+            G2_x_norm_max = np.max(G2_x_norm)
+            G2_y_norm_max = np.max(G2_y_norm)
 
         if gradtype['second']:
-            L1_x_norm_max = np.max(L1_x_norm[:])
-            L1_y_norm_max = np.max(L1_y_norm[:])
-            L2_norm_max = np.max(L2_norm[:])
-            L3_norm_max = np.max(L3_norm[:])
-            L4_norm_max = np.max(L4_norm[:])
+            L1_x_norm_max = np.max(L1_x_norm)
+            L1_y_norm_max = np.max(L1_y_norm)
+            L2_norm_max = np.max(L2_norm)
+            L3_norm_max = np.max(L3_norm)
+            L4_norm_max = np.max(L4_norm)
 
         # standard deviation of normalized gradients
         if gradtype['first']:

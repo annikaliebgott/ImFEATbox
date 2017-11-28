@@ -1,10 +1,13 @@
+import numpy as np
+from ImFEATbox.__helperCommands import _float_dtype
+
 ## Function to calculate the 11 run length statistical features.
 
 # The script has been written by Xunkai Wei <xunkai.wei@gmail.com>
 # Beijing Aeronautical Technology Research Center
 
 def grayrlprops(GLRLM):
-"""
+    """
     GRAYCOPROPS Properties of gray-level run-length matrix.
       -------------------------------------------
       STATS = GRAYCOPROPS(GLRLM,PROPERTIES) Each element in  GLRLM, (r,c),
@@ -29,7 +32,7 @@ def grayrlprops(GLRLM):
        Short Run High Gray-Level Emphasis (SRHGE)
        Long Run Low Gray-Level Emphasis (LRLGE)
        Long Run High Gray-Level Emphasis (LRHGE)
-"""
+    """
     #  --------------------------------------------
     #  Reference:
     #  --------------------------------------------
@@ -57,14 +60,15 @@ def grayrlprops(GLRLM):
     # check InputParameters
     # classes = {'logical','numeric'} -> either logical numeric
     # attributes = {'real','nonnegative','integer'} -> must apply
-    if !isinstance(GLRLM, np.ndarray):
+    if type(GLRLM) != np.ndarray:
         GLRLM = np.array(GLRLM)
 
-    if !(GLRLM.dtype == 'float64' || GLRLM.dtype == 'int16' || GLRLM.dtype == 'bool' || GLRLM.dtype == 'float'):
+    if not (GLRLM.dtype == 'float64' or GLRLM.dtype or 'int16'
+            or GLRLM.dtype or 'bool' or GLRLM.dtype or 'float'):
         raise ValueError('Wrong input Parameter type')
 
     # Check GLRLM
-    # [GLRLM numGLRLM] = ParseInputs(varargin{:});
+    # [GLRLM numGLRLM] = ParseInputs(varargin{:})
 
     numGLRLM = np.shape(GLRLM)[-1]
 
@@ -75,7 +79,7 @@ def grayrlprops(GLRLM):
     numStats = 11
 
     # # count number of GLRLM
-    # numGLRLM = length(GLRLM);
+    numGLRLM = len(GLRLM)
 
     # Initialization default 4*11 matrix
     stats = np.zeros((numGLRLM,numStats))
@@ -90,9 +94,9 @@ def grayrlprops(GLRLM):
             tGLRLM = GLRLM
         #     if numGLRLM ~= 1
         #         # transfer to double matrix
-        #         tGLRLM = normalizeGLRL(GLRLM{p});
+        #         tGLRLM = normalizeGLRL(GLRLM{p})
         #     else
-        #         tGLRLM = normalizeGLRL(GLRLM);
+        #         tGLRLM = normalizeGLRL(GLRLM)
         #     end
         # Get row and column subscripts of GLRLM.  These subscripts correspond to the
         # pixel values in the GLRLM.
@@ -108,28 +112,28 @@ def grayrlprops(GLRLM):
         c_matrix,r_matrix = np.meshgrid(c_vector, r_vector)
 
         # Total number of runs
-        N_runs = np.sum(np.sum(tGLRLM))
+        N_runs = np.sum(np.sum(tGLRLM), dtype=_float_dtype())
 
         # total number of elements
         N_tGLRLM = s[0]*s[1]
 
         #--------------------Prepare four matrix for speedup--------------
         # 1.Gray Level Run-Length Pixel Number Matrix
-        #     p_p = calculate_p_p(tGLRLM,c_matrix');
+        #     p_p = calculate_p_p(tGLRLM,c_matrix')
 
         # 2.Gray-Level Run-Number Vector
         #   This vector represents the sum distribution of the number of runs
         #   with gray level i.
-        p_g = np.sum(tGLRLM)
+        p_g = np.sum(tGLRLM, axis=0, dtype=_float_dtype())
 
         # 3.Run-Length Run-Number Vector
         #   This vector represents the sum distribution of the number of runs
         #   with run length j.
-        p_r = np.sum(tGLRLM, 1).T # Sum of each row
+        p_r = np.sum(tGLRLM, axis=1, dtype=_float_dtype()).T # Sum of each row
 
         # 4.Gray-Level Run-Length-One Vector
         #
-        # p_o = tGLRLM(:,1); # Not used yet
+        # p_o = tGLRLM(:,1) # Not used yet
         # ----------------------End four matrix---------------------------
         #
         #------------------------Statistics-------------------------------
@@ -146,7 +150,7 @@ def grayrlprops(GLRLM):
         # 6. Low Gray-Level Run Emphasis (LGRE)
         LGRE = np.sum(p_g/np.power(r_vector, 2))/N_runs
         # 7. High Gray-Level Run Emphasis (HGRE)
-        HGRE = np.sum(p_g.*np.power(r_vector, 2))/N_runs
+        HGRE = np.sum(p_g*np.power(r_vector, 2))/N_runs
         # 8. Short Run Low Gray-Level Emphasis (SRLGE)
         SGLGE = calculate_SGLGE(tGLRLM,r_matrix.T,c_matrix.T,N_runs)
         # 9. Short Run High Gray-Level Emphasis (SRHGE)
@@ -165,7 +169,7 @@ def grayrlprops(GLRLM):
 #
 # # Normalize glcm so that sum(glcm(:)) is one.
 # if any(glrl(:))
-#   glrl = glrl ./ sum(glrl(:));
+#   glrl = glrl ./ sum(glrl(:))
 # end
 # function p_p = calculate_p_p(GLRLM,c) # Note: currently not used
 #
@@ -174,9 +178,9 @@ def grayrlprops(GLRLM):
 # # j and gray-level i. Compared to the original matrix, the new matrix gives
 # # equal emphasis to all length of runs in an image.
 #
-# term1 =  c; # j index in matrix size
-# term2 = GLRLM;
-# p_p = term1 .* term2;
+# term1 =  c # j index in matrix size
+# term2 = GLRLM
+# p_p = term1 .* term2
 
 #---------------------------------
 def calculate_SGLGE(tGLRLM,r_matrix,c_matrix,N_runs):
@@ -213,15 +217,15 @@ def calculate_LRHGE(tGLRLM,r_matrix,c_matrix,N_runs):
 #     # check stability of inputs
 #     #
 #     # first receive all inputs
-#     glrlm = varargin{:};
+#     glrlm = varargin{:}
 #     # get numbers total
-#     num_glrlm=length(glrlm);
+#     num_glrlm=length(glrlm)
 #     # then for each element, check its stability
 #     for i=1:num_glrlm
 #         # The 'nonnan' and 'finite' attributes are not added to iptcheckinput because the
 #         # 'integer' attribute takes care of these requirements.
 #         # iptcheckinput(glrlm,{'cell'},{'real','nonnegative','integer'}, ...
-#         # mfilename,'GLRLM',1);
+#         # mfilename,'GLRLM',1)
 #
 # # iptcheckinput(A, classes, attributes, func_name, var_name, arg_pos)
 # # A = glrlm{i}
@@ -235,10 +239,10 @@ def calculate_LRHGE(tGLRLM,r_matrix,c_matrix,N_runs):
 #
 #
 #         iptcheckinput(glrlm{i},{'logical','numeric'},{'real','nonnegative','integer'},...
-#             mfilename,'GLRLM',1);
+#             mfilename,'GLRLM',1)
 #         # Cast GLRLM to double to avoid truncation by data type. Note that GLRLM is not an
 #         # image.
 #         if ~isa(glrlm,'double')
-#             glrlm{i}= double(glrlm{i});
+#             glrlm{i}= double(glrlm{i})
 #         end
 #     return np.array(glrlm, num_glrlm])

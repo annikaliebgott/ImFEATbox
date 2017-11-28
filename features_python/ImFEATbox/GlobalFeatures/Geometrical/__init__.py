@@ -8,7 +8,9 @@ from ImFEATbox.__Features__ import __Feature
 
 from _FormFactorF import FormFactorF as __FormFactorF
 from _GLCMF import GLCMF as __GLCMF
+from _RunLengthF import RunLengthF as __RunLengthF
 
 # Geometrical features
 formfactor = __Feature('formfactor', __FormFactorF, [__fg.global_, __fg.corr, __fg.form])
 glcm = __Feature('glcm', __GLCMF, [__fg.global_, __fg.corr, __fg.texture, __fg.form, __fg.entropy])
+runlength = __Feature('runlength', __RunLengthF, [__fg.global_, __fg.texture])

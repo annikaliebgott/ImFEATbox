@@ -33,10 +33,10 @@ def HuF(I, returnShape=False):
     height, width = np.shape(I)
 
     # define a coordinate system for the image
-    xgrid = np.repeat(np.array(range(int(-np.floor(height/2.0)),int(np.ceil(height/2.0)))), width)
+    xgrid = np.repeat(np.arange(int(-np.floor(height/2.0)),int(np.ceil(height/2.0))), width)
     xgrid = np.reshape(xgrid, (height, width))
 
-    ygrid = np.repeat(np.array(range(int(-np.floor(width/2.0)),int(np.ceil(width/2.0)))), height)
+    ygrid = np.repeat(np.arange(int(-np.floor(width/2.0)),int(np.ceil(width/2.0))), height)
     ygrid = np.reshape(ygrid, (height,width), order='F')
 
     x_bar, y_bar = centerOfMass(I,xgrid,ygrid)

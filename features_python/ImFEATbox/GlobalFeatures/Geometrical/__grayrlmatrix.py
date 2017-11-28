@@ -1,10 +1,13 @@
+import numpy as np
+from __rle_0 import rle_0
+
 ## Function to compute the Run length matrix
 
 # The script has been written by Xunkai Wei <xunkai.wei@gmail.com>
 # Beijing Aeronautical Technology Research Center
 
 def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None):
-"""
+    """
   Description
   -------------------------------------------
    Computes the graylevel run length (GLRL) matrix used for textural
@@ -109,7 +112,7 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
  -------------------------------------------
  See also zigzag rle_0 rle_45
  -------------------------------------------
-"""
+    """
 # Author:
 # -------------------------------------------
 #    (C)Xunkai Wei <xunkai.wei@gmail.com>
@@ -126,23 +129,31 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
 # 1.Issue wrong results for nonsquare matrix,now output cells instead of
 #   multi-dim arrays
 # 2.Add support for inputs checking inspired by MATLAB style
-#
-    [I, Offset, NumLevels, GrayLimits] = ParseInputs(varargin{:})
+
+
+
+    # checking inputs
+
+    if len(np.shape(Offset)) != 1:
+        raise ValueError("Offset must be a 1-D array.")
 
     if NumLevels == None:
         if I.dtype == bool:
             NumLevels = 2
         else:
             NumLevels = 8
+    elif np.prod(np.shape(NumLevels)) > 1:
+        raise ValueError("NumLevels cannot contain more than one element.")
 
-    # gl = getrangefromclass(I)
     if GrayLimits == None:
         if I.dtype == bool:
-            GrayLimits = [0 , 1]
+            GrayLimits = [0, 1]
         elif I.dtype == 'uint8':
-            GrayLimits = [0 , 255]
+            GrayLimits = [0, 255]
         elif I.dtype == float:
-            GrayLimits = [0 , 1]
+            GrayLimits = [0, 1]
+    elif np.prod(np.shape(GrayLimits)) != 2:
+        raise ValueError("GrayLimits must be a two-element vector.")
 
 
 
@@ -151,8 +162,9 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
         SI = np.ones(np.shape(I))
     else:
         slope = (NumLevels-1) / (GrayLimits[1] - GrayLimits[0])
-        intercept = 1 - (slope*(GrayLimits[0])
-        SI = np.round(imlincomb(slope,I,intercept,'double'))
+        intercept = 1 - (slope*(GrayLimits[0]))
+        #SI = np.round(imlincomb(slope,I,intercept,'double'))
+        SI = np.round((slope*I+intercept), decimals=0)
 
     # Clip values if user had a value that is outside of the range, e.g., double
     # image = [0 .5 2;0 1 1]; 2 is outside of [0,1]. The order of the following
@@ -160,8 +172,9 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
     SI[SI > NumLevels] = NumLevels
     SI[SI < 1] = 1
     # total numbers of direction
-    numOffsets = np.size(Offset,1)
-
+    numOffsets = np.shape(Offset)[0]
+    print("SI=" + str(SI.shape))
+    print(NumLevels)
     GLRLMS = np.array([])
     if NumLevels != 0:
         # make direction matrix for all given directions
@@ -192,89 +205,3 @@ def computeGLRLM(si,offset,NumLevels):
         raise ValueError('Only 4 directions supported')
 
     return oneGLRLM
-
-
-# TODO end here
-    # --------------------------------------------------------------------
-    function [I, offset, NumLevels, gl] = ParseInputs(varargin)
-    # parsing parameter checking
-    # Inputs must be max seven item
-    iptchecknargin(1,7,nargin,mfilename)
-    #
-    # Check I
-    I = varargin{1}
-    iptcheckinput(I,{'logical','numeric'},{'2d','real','nonsparse'}, ...
-        mfilename,'I',1)
-    # ------------------------
-    # Assign Defaults
-    # -------------------------
-    # four directions 0, 45, 90,135
-    offset = [1;2;3;4]
-
-    gl = getrangefromclass(I)
-
-    # Parse Input Arguments
-    if nargin ~= 1
-
-        paramStrings = {'Offset','NumLevels','GrayLimits'}
-
-        for k = 2:2:nargin
-
-            param = lower(varargin{k})
-            inputStr = iptcheckstrs(param, paramStrings, mfilename, 'PARAM', k)
-            idx = k + 1  #Advance index to the VALUE portion of the input.
-            if idx > nargin
-                eid = sprintf('Images:#s:missingParameterValue', mfilename)
-                msg = sprintf('Parameter ''#s'' must be followed by a value.', inputStr)
-                error(eid,'#s', msg)
-            end
-
-            switch (inputStr)
-
-                case 'Offset'
-
-                    offset = varargin{idx}
-                    iptcheckinput(offset,{'logical','numeric'},...
-                        {'d','nonempty','integer','real'},...
-                        mfilename, 'OFFSET', idx)
-                    # must be row vector
-                    if size(offset,2) ~= 1
-                        eid = sprintf('Images:#s:invalidOffsetSize',mfilename)
-                        msg = 'OFFSET must be an n x 1 array.'
-                        error(eid,'#s',msg)
-                    end
-                    offset = double(offset)
-
-                case 'NumLevels'
-
-                    NumLevels = varargin{idx}
-                    iptcheckinput(NumLevels,{'logical','numeric'},...
-                        {'real','integer','nonnegative','nonempty','nonsparse'},...
-                        mfilename, 'NumLevels', idx)
-                    if np.prod(np.shape(NumLevels)) > 1:
-                        eid = sprintf('Images:#s:invalidNumLevels',mfilename)
-                        msg = 'NumLevels cannot contain more than one element.'
-                        error(eid,'#s',msg)
-                    elseif islogical(I) && NumLevels ~= 2
-                        eid = sprintf('Images:#s:invalidNumLevelsForBinary',mfilename)
-                        msg = 'NumLevels must be two for a binary image.'
-                        error(eid,'#s',msg)
-                    end
-                    NumLevels = double(NumLevels)
-
-                case 'GrayLimits'
-
-                    gl = varargin{idx}
-                    iptcheckinput(gl,{'logical','numeric'},{'vector','real'},...
-                        mfilename, 'GL', idx)
-                    if isempty(gl)
-                        gl = [min(I(:)) max(I(:))]
-                    elif np.prod(np.shape(gl)) != 2:
-                        eid = sprintf('Images:#s:invalidGrayLimitsSize',mfilename)
-                        msg = 'GL must be a two-element vector.'
-                        error(eid,'#s',msg)
-                    end
-                    gl = double(gl)
-            end
-        end
-    return GLRLMS, SI

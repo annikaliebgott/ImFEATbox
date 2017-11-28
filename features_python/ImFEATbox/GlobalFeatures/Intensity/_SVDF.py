@@ -79,7 +79,7 @@ def SVDF(I, returnShape=False):
 
         # calculate diagonal elements of matrix S
         #for i in range(0, np.count_nonzero(S)):
-        dia_elements[:,z] = S[:]
+        dia_elements[:,z] = S
 
         # eigen values of U and V
         eig_U[:,z] = np.linalg.eig(U)[0]

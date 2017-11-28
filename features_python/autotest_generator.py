@@ -9,9 +9,9 @@ from subprocess import Popen, PIPE, STDOUT
 
 
 featureWhiteList = []
-featureWhiteList.append("GLCMF")
+featureWhiteList.append("RunLengthF")
 # TODO:
-# SVD: not solvable?
+# SVD: not solvable?, GLCMF 250%...
 
 featureFolderList = ["GlobalFeatures", "LocalFeatures"]
 
@@ -338,6 +338,7 @@ for r in pyFileList:
         except ValueError:
             pass
         diff_norm[diff==0] = 0
+        diff_norm[np.isnan(diff)] = 0
         max_diff_norm = np.max(np.abs(diff_norm))*100
 
         if max_diff_norm_feature < max_diff_norm:

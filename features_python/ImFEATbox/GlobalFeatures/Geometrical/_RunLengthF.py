@@ -1,7 +1,10 @@
 import numpy as np
+from __grayrlmatrix import grayrlmatrix
+from __grayrlprops import grayrlprops
 
-def RunLengthF(I):
-"""
+
+def RunLengthF(I, returnShape=False):
+    """
      Input:     - I: A 2D image
 
 
@@ -12,7 +15,7 @@ def RunLengthF(I):
            also included in ImFEATbox and have been implemented by:
            Xunkai Wei <xunkai.wei@gmail.com>, Beijing Aeronautical Technology
            Research Center
-"""
+    """
     # ************************************************************************
     # Implemented for MRI feature extraction by the Department of Diagnostic
     # and Interventional Radiology, University Hospital of Tuebingen, Germany
@@ -26,10 +29,14 @@ def RunLengthF(I):
     # Contact: annika.liebgott@iss.uni-stuttgart.de
     # ************************************************************************
 
-    # grayrlmatrix.m can not process complex values
-    I = double(np.real(I))
+    if returnShape:
+        return (44,1)
 
-    [GLRLMS,~] = grayrlmatrix(I,NumLevels=255, GrayLimits=[np.min(I[:]), np.max(I[:])])
+    # grayrlmatrix.m can not process complex values
+    if np.iscomplexobj(I):
+        I = np.real(I)
+
+    GLRLMS = grayrlmatrix(I,NumLevels=255, GrayLimits=[np.min(I), np.max(I)])[0]
     VectorDegree = grayrlprops(GLRLMS)
     Out = [VectorDegree[1,:], VectorDegree[2,:], VectorDegree[3,:], VectorDegree[4,:]]
 

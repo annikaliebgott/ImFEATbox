@@ -1,7 +1,9 @@
+import numpy as np
+
 def rle_0(si, NL):
-"""
-     RLE   image gray level Run Length matrix for 0degree
-"""
+    """
+     RLE   image gray level Run Length matrix for 0 degree
+    """
     #
     # Author:
     # ---------------------------------------------
@@ -16,14 +18,17 @@ def rle_0(si, NL):
     # Assure row number is exactly the gray level
     m, n = np.shape(si)
 
-    oneglrlm = zeros(NL, n)
+    oneglrlm = np.zeros((NL, n))
 
     for i in range(m):
         x = si[i,:]
         # run length Encode of each vector
-        index = [ np.where(x[:-2] != x[1:]), len(x) ]
-        lenX = np.diff([ 0, index ]) # run lengths
-        val = x[index]          # run values
-        temp = accumarray([val, lenX].T, 1, [NLn n]) # compute current numbers (or contribution) for each bin in GLRLM
+        index = np.where(x[:-1] != x[1:])[0][:len(x)]
+        # run lengths
+        lenX = np.diff(np.append(0, index+1))
+        # run values
+        val = x[index]
+        # compute current numbers (or contribution) for each bin in GLRLM
+        temp = np.ufunc.at(np.hstack([val, lenX]), 1, np.hstack([NL, n]))
         oneglrlm = temp + oneglrlm # accumulate each contribution
     return oneglrlm

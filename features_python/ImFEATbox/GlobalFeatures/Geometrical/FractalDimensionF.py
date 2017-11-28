@@ -68,8 +68,8 @@ def FractalDimensionF(I, width=256, plotflag=False, test=False):
                 testim = RescaledI[i:i+stepnum-1,j:j+stepnum-1]
 
                 # Differential(Modified) Box Counting
-                MaxGrayLevel = np.max(testim[:])
-                MinGrayLevel = np.min(testim[:])
+                MaxGrayLevel = np.max(testim)
+                MinGrayLevel = np.min(testim)
                 GridCont = MaxGrayLevel-MinGrayLevel+1
                 counter_dbc = counter_dbc + GridCont
                 # Differential(Modified) Box Counting (MBC)

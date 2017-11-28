@@ -114,19 +114,18 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
 
 
 
-
-
-
-    uI = exposure.equalize_hist(I, nbins=8)
+    uI = np.copy(I) #exposure.equalize_hist(I, nbins=8)
     uI = uI-uI.min()
     uI = 7*uI/float(np.max(uI))
+    uI = np.round(uI, decimals=0)
+    #uI = np.floor(uI)
     uI = uI.astype('uint8')
-    DisplacementVector = np.array([1])
     #DisplacementVector = np.array([1])
-    #Angles = [0, np.pi/2]
+    DisplacementVector = np.array([1])
+    #Angles = [0, np.pi/4, np.pi/2, 3*np.pi/4]
     Angles = np.array([0])
+    #Angles = np.array([np.pi/2])
     #NumLevels = 8
-
 
 
     # Image must be uint8
@@ -134,14 +133,12 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
         distances = DisplacementVector,
         angles = Angles,
         levels = NumLevels,
-        # TODO limits wichtig??
-        #'GrayLimits', InputParameters.GrayLimits,
         symmetric = False)
-        # levels x levels x number of distances x number of angles.
+        # OUTPUT is: levels x levels x number of distances x number of angles.
 
 
     GLCM_Matrices = GLCM_Matrices[:,:,:,0] # angles are not implemented yet
-
+    #print(GLCM_Matrices[:,:,0])
 
     nMax = np.shape(GLCM_Matrices)[2]
 
@@ -197,8 +194,8 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
         IDMN = 0
 
 
-        m = np.array(range(1, s1+1)) #replace one for-loop by using a vector of length s1
-        o = np.array(range(1, s2+1)) #replace one for-loop by using a vector of length s2
+        m = np.arange(1, s1+1) #replace one for-loop by using a vector of length s1
+        o = np.arange(1, s2+1) #replace one for-loop by using a vector of length s2
 
         # Angular Second Moment or Energy (ASM)
         ASM = np.sum(np.power(GNormalized, 2))
@@ -212,9 +209,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
             H = entropy(GNormalized.flatten())
 
 
-        #for i = 1:s1
         for i in range(0, s1):
-            # TODO hier weiter! i korrekt anpassen!
             u_x = u_x + np.sum((i+1)*GNormalized[i,:])
             u_y = u_y + np.sum(o * GNormalized[i,:])
 
@@ -277,17 +272,17 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
 
         # Summed average (SA)
         #SA = (2:2*s1)*p_xplusy
-        SA = np.dot(np.array(range(2,2*s1+1)), p_xplusy)
+        SA = np.dot(np.arange(2,2*s1+1), p_xplusy)
 
         # Summed entropy (SE)
         if typeflag['entropy']:
             SE = -np.sum(p_xplusy * np.log(p_xplusy))
 
         # Summed Variance (SV)
-        SV = (np.power(np.array(range(2,2*s1+1)) - SE, 2)) * p_xplusy
+        SV = np.dot((np.power(np.arange(2,2*s1+1) - SE, 2)), p_xplusy)
 
         # Difference varience (DV)
-        DV = np.power(range(0,s1), 2) * p_xminusy
+        DV = np.dot(np.power(range(0,s1), 2), p_xminusy)
 
         # Difference entropy (DE)
         if typeflag['entropy']:
@@ -296,7 +291,7 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
             HXY = H
 
             for i in range(s1):
-                HXY1 = HXY1 - np.dot(GNormalized[i,:]* np.log(p_x[i]), p_y)
+                HXY1 = HXY1 - np.dot(GNormalized[i,:], np.log(p_x[i]) * p_y)
                 HXY2 = HXY2 - np.sum(p_x[i] * p_y * np.log(p_x[i] * p_y))
 
             Hx = - np.sum(p_x * np.log(p_x))
@@ -311,10 +306,6 @@ def GLCMF(I, typeflag=None, DisplacementVector=np.array([1]), NumLevels=8, GrayL
         MAXP = np.max(GNormalized)
 
         if typeflag['texture'] or typeflag['global']:
-            print(SA)
-            print("...")
-            print([ACORR , CO, CORR, CLP, CLS, DIS, ASM, H, IDM, MAXP,
-                SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV, INVN, IDMN])
             Out[n,:] = np.array([ACORR , CO, CORR, CLP, CLS ,  DIS, ASM, H, IDM, MAXP,
                 SSV, SA, SV, SE, DV, DE, IMC1, IMC2, INV,INVN, IDMN])
         elif typeflag['corr']:

@@ -124,7 +124,7 @@ function [GLRLMS,SI]= grayrlmatrix(varargin)
 % 1.Issue wrong results for nonsquare matrix,now output cells instead of
 %   multi-dim arrays
 % 2.Add support for inputs checking inspired by MATLAB style
-% 
+%
 [I, Offset, NL, GL] = ParseInputs(varargin{:});
 
 % Scale I so that it contains integers between 1 and NL.
@@ -223,7 +223,7 @@ if nargin ~= 1
                 iptcheckinput(offset,{'logical','numeric'},...
                     {'d','nonempty','integer','real'},...
                     mfilename, 'OFFSET', idx);
-                % must be row vector 
+                % must be row vector
                 if size(offset,2) ~= 1
                     eid = sprintf('Images:%s:invalidOffsetSize',mfilename);
                     msg = 'OFFSET must be an n x 1 array.';
