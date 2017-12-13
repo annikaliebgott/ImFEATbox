@@ -36,7 +36,7 @@ def RunLengthF(I, returnShape=False):
     if np.iscomplexobj(I):
         I = np.real(I)
 
-    GLRLMS = grayrlmatrix(I,NumLevels=255, GrayLimits=[np.min(I), np.max(I)])[0]
+    GLRLMS = grayrlmatrix(I,NumLevels=256, GrayLimits=[np.min(I), np.max(I)])[0]
     VectorDegree = grayrlprops(GLRLMS)
     Out = [VectorDegree[1,:], VectorDegree[2,:], VectorDegree[3,:], VectorDegree[4,:]]
 

@@ -157,24 +157,25 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
 
 
 
-    # Scale I so that it contains integers between 1 and NumLevels.
+    # Scale I so that it contains integers between 0 and NumLevels.
     if GrayLimits[1] == GrayLimits[0]:
         SI = np.ones(np.shape(I))
     else:
         slope = (NumLevels-1) / (GrayLimits[1] - GrayLimits[0])
-        intercept = 1 - (slope*(GrayLimits[0]))
+        intercept = 0 - (slope*(GrayLimits[0]))
         #SI = np.round(imlincomb(slope,I,intercept,'double'))
-        SI = np.round((slope*I+intercept), decimals=0)
+        SI = np.round((slope*I+intercept), decimals=0).astype(np.int)
 
     # Clip values if user had a value that is outside of the range, e.g., double
     # image = [0 .5 2;0 1 1]; 2 is outside of [0,1]. The order of the following
     # lines matters in the event that NumLevels = 0.
-    SI[SI > NumLevels] = NumLevels
-    SI[SI < 1] = 1
+    SI[SI > (NumLevels-1)] = (NumLevels-1)
+    SI[SI < 0] = 0
     # total numbers of direction
     numOffsets = np.shape(Offset)[0]
     print("SI=" + str(SI.shape))
     print(NumLevels)
+    print(SI.max())
     GLRLMS = np.array([])
     if NumLevels != 0:
         # make direction matrix for all given directions
@@ -190,14 +191,14 @@ def computeGLRLM(si,offset,NumLevels):
     if offset == 1:
         # 0 degree
         oneGLRLM = rle_0(si,NumLevels)
-    if offset == 2:
+    elif offset == 2:
         # 45 degree
         seq = zigzag(si)
         oneGLRLM  = rle_45(seq,NumLevels)
-    if offset == 3:
+    elif offset == 3:
         # 90 degree
         oneGLRLM = rle_0(si.T,NumLevels)
-    if offset == 4:
+    elif offset == 4:
         # 135 degree
         seq = zigzag(fliplr(si))
         oneGLRLM = rle_45(seq,NumLevels)

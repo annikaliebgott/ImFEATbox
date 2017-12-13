@@ -20,6 +20,8 @@ def rle_0(si, NL):
 
     oneglrlm = np.zeros((NL, n))
 
+    print("NL=" + str(NL) + ", n=" + str(n))
+
     for i in range(m):
         x = si[i,:]
         # run length Encode of each vector
@@ -27,8 +29,11 @@ def rle_0(si, NL):
         # run lengths
         lenX = np.diff(np.append(0, index+1))
         # run values
+        print(x.min())
         val = x[index]
         # compute current numbers (or contribution) for each bin in GLRLM
-        temp = np.ufunc.at(np.hstack([val, lenX]), 1, np.hstack([NL, n]))
+        temp = np.zeros((NL,n))
+        temp[val,lenX] = 1
+        #temp = np.ufunc.at(np.hstack([val, lenX]), 1, np.hstack([NL, n]))
         oneglrlm = temp + oneglrlm # accumulate each contribution
     return oneglrlm
