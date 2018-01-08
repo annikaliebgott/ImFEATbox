@@ -1,5 +1,7 @@
 import numpy as np
 from __rle_0 import rle_0
+from __rle_45 import rle_45
+from __zigzag import zigzag
 
 ## Function to compute the Run length matrix
 

@@ -20,7 +20,7 @@ def rle_0(si, NL):
 
     oneglrlm = np.zeros((NL, n))
 
-    print("NL=" + str(NL) + ", n=" + str(n))
+    #print("NL=" + str(NL) + ", n=" + str(n))
 
     for i in range(m):
         x = si[i,:]
@@ -29,7 +29,7 @@ def rle_0(si, NL):
         # run lengths
         lenX = np.diff(np.append(0, index+1))
         # run values
-        print(x.min())
+        #print(x.min())
         val = x[index]
         # compute current numbers (or contribution) for each bin in GLRLM
         temp = np.zeros((NL,n))
