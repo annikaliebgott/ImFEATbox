@@ -25,9 +25,9 @@ cd(currpath);
 %% implemented features
 % ATTENTION:
 % nFeatures is determined by set parametrization (for some) -> future: invoke call to function handle with parametrization to return size of feature vector for current parametrization
-% grouptypes: binary encoded with (undefined,global,local,corr,gradient,moments,texture,form,entropy,transform)
+% grouptypes: binary encoded with (undefined,global,local,corr,gradientgroup,moments,texture,form,entropy,transform)
 %                    algorithm name      function handle     input parameter     nFeatures  group   subgroup   grouptypes                                 
-cMapFeatureGroup = { % GLOBAL FEATURES                                                      0                  (undefined,global, local,corr, gradient,moments, texture,form, entropy,transform)
+cMapFeatureGroup = { % GLOBAL FEATURES                                                      0                  (undefined,global, local,corr, gradientgroup,moments, texture,form, entropy,transform)
                      % #################################################################
                      % -----------------------------------------------------------------
                      % Intensity features                                                           0 
@@ -183,7 +183,7 @@ for iI = 1:length(cFeatureAlgosIn)
         case 'corr' 
             lMask = cellfun(@(x) bitand(x,2^6) > 0, cGroups);
             cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
-        case 'gradient'
+        case 'gradientgroup'
             lMask = cellfun(@(x) bitand(x,2^5) > 0, cGroups);
             cFeatureAlgoGroups = cat(1, cFeatureAlgoGroups, cMapFeatureGroup(lMask,1));
         case 'moments' 
