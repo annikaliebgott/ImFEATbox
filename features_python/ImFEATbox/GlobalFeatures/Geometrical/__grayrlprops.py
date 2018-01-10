@@ -69,7 +69,7 @@ def grayrlprops(GLRLM):
 
     # Check GLRLM
     # [GLRLM numGLRLM] = ParseInputs(varargin{:})
-
+    #print(GLRLM)
     numGLRLM = np.shape(GLRLM)[-1]
 
 

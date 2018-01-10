@@ -30,24 +30,26 @@ def rle_45(seq, NL):
         #print(seq[s])
         if np.size(seq[s]) > 0:
             n = max(n,np.argmax(seq[s]))
-    print("n=" + str(n))
+    #print("n=" + str(n))
 
     oneglrlm = np.zeros(NL, n)
 
-    for i in range(len(seq)):
+    for i in range(len(seq)-1):
         x = seq[i]
+
         # run length Encode of each vector
-        index = np.where(x[:-1] != x[1:])[0][:len(x)]
+        #index = np.where(x[:-1] != x[1:])[0][:len(x)]
+        index = np.where(x[0:] != x[1:])[0][:len(x)] # TODO: check if same output as matlab
         #index = [ find(x(1:end-1) != x(2:end)), length(x) ]
         lenX = np.diff(np.append(0, index+1))
-        val = x[index]     # run values
+        val = np.array((x[index]), dtype=int)     # run values
         temp = np.zeros((NL,n))
 
-        print("val " + str(val))
-        print("lenX " + str(lenX))
+        #print("val " + str(val))
+        #print("lenX " + str(lenX))
         if val != [] and lenX != []:
             temp[val,lenX] = 1
             #temp = accumarray([val;len].T, 1, [NL, n]) # compute current numbers (or contribution) for each bin in GLRLM
-            oneglrlm = temp + oneglrlm # accumulate each contribution
+            oneglrlm = temp.T + oneglrlm # accumulate each contribution
 
     return oneglrlm

@@ -9,7 +9,7 @@ function oneglrlm = rle_45(seq,NL)
 %    Beijing %9203-12,10076
 % History:
 %  -------
-% Creation: beta  Date: 01/11/2007 
+% Creation: beta  Date: 01/11/2007
 % Revision: 1.0   Date: 10/11/2007
 
 
