@@ -60,19 +60,16 @@ def grayrlprops(GLRLM):
     # check InputParameters
     # classes = {'logical','numeric'} -> either logical numeric
     # attributes = {'real','nonnegative','integer'} -> must apply
-    if type(GLRLM) != np.ndarray:
-        GLRLM = np.array(GLRLM)
+#    if type(GLRLM) != list:
+#        GLRLM = np.array(GLRLM)
 
-    if not (GLRLM.dtype == 'float64' or GLRLM.dtype or 'int16'
-            or GLRLM.dtype or 'bool' or GLRLM.dtype or 'float'):
-        raise ValueError('Wrong input Parameter type')
+#    if not (GLRLM.dtype == 'float64' or GLRLM.dtype or 'int16'
+#            or GLRLM.dtype or 'bool' or GLRLM.dtype or 'float'):
+#        raise ValueError('Wrong input Parameter type')
 
     # Check GLRLM
     # [GLRLM numGLRLM] = ParseInputs(varargin{:})
     #print(GLRLM)
-    numGLRLM = np.shape(GLRLM)[-1]
-
-
 
     # Initialize output stats structure.
     # 11 statistics for each GLRLM
@@ -83,6 +80,8 @@ def grayrlprops(GLRLM):
 
     # Initialization default 4*11 matrix
     stats = np.zeros((numGLRLM,numStats))
+
+    print("numGLRLM-shape: " + str(numGLRLM))
 
     for p in range(numGLRLM):
         #N-D indexing not allowed for sparse.
@@ -101,10 +100,14 @@ def grayrlprops(GLRLM):
         # Get row and column subscripts of GLRLM.  These subscripts correspond to the
         # pixel values in the GLRLM.
         s = np.shape(tGLRLM)
+        print("tGLRLM (s) - shape: " + str(s))
         # colum indicator
-        c_vector = range(1, s[0]+1)
+        c_vector = np.arange(1, s[0]+1)
         # row indicator
-        r_vector = range(1, s[1]+1)
+        if len(s) == 1:
+            s = (s[0],1)
+
+        r_vector = np.arange(1, s[1]+1)
         # matrix element indicator
         # Matrix form col and row: using meshgrid, you should transpose before using
         # i.e. if tGLRLM is m*n, then this function return c_matrix n*m,
@@ -112,8 +115,8 @@ def grayrlprops(GLRLM):
         c_matrix,r_matrix = np.meshgrid(c_vector, r_vector)
 
         # Total number of runs
-        N_runs = np.sum(np.sum(tGLRLM), dtype=_float_dtype())
-
+        N_runs = np.sum(tGLRLM, dtype=_float_dtype())
+        print("N_runs " + str(N_runs))
         # total number of elements
         N_tGLRLM = s[0]*s[1]
 
@@ -129,7 +132,10 @@ def grayrlprops(GLRLM):
         # 3.Run-Length Run-Number Vector
         #   This vector represents the sum distribution of the number of runs
         #   with run length j.
-        p_r = np.sum(tGLRLM, axis=1, dtype=_float_dtype()).T # Sum of each row
+        if s[1] == 1:
+            p_r = np.sum(tGLRLM, dtype=_float_dtype()).T # Sum of each row
+        else:
+            p_r = np.sum(tGLRLM, axis=1, dtype=_float_dtype()).T # Sum of each row
 
         # 4.Gray-Level Run-Length-One Vector
         #
@@ -185,8 +191,8 @@ def grayrlprops(GLRLM):
 #---------------------------------
 def calculate_SGLGE(tGLRLM,r_matrix,c_matrix,N_runs):
     # Short Run Low Gray-Level Emphasis (SRLGE):
-    term = tGLRLM/(np.power(r_matrix*c_matrix), 2)
-    SGLGE = np.sum(np.sum(term))/N_runs
+    term = tGLRLM/(1.0 * np.power(r_matrix*c_matrix, 2))
+    SGLGE = np.sum(term)/(1.0 * N_runs)
     return SGLGE
 
 #------------------------------------
@@ -194,21 +200,21 @@ def calculate_SRHGE(tGLRLM,r_matrix,c_matrix,N_runs):
     # Short Run High Gray-Level Emphasis (SRHGE):
     #
     term  = tGLRLM*np.power(r_matrix, 2)/np.power(c_matrix, 2)
-    SRHGE = np.sum(np.sum(term))/N_runs
+    SRHGE = np.sum(term)/(1.0 * N_runs)
     return SRHGE
 #------------------------------------
 def calculate_LRLGE(tGLRLM,r_matrix,c_matrix,N_runs):
     # Long Run Low Gray-Level Emphasis (LRLGE):
     #
     term  = tGLRLM*np.power(c_matrix, 2)/np.power(r_matrix, 2)
-    LRLGE = np.sum(np.sum(term))/N_runs
+    LRLGE = np.sum(term)/(1.0 * N_runs)
     return LRLGE
 #---------------------------------------
 def calculate_LRHGE(tGLRLM,r_matrix,c_matrix,N_runs):
     # Long Run High Gray-Level Emphasis (LRHGE):
     #
     term  = tGLRLM*np.power(c_matrix, 2)*np.power(r_matrix, 2)
-    LRHGE = np.sum(np.sum(term))/N_runs
+    LRHGE = np.sum(term)/(1.0 * N_runs)
     return LRHGE
 #----------------------------------------
 

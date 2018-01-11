@@ -37,7 +37,8 @@ def RunLengthF(I, returnShape=False):
         I = np.real(I)
 
     GLRLMS = grayrlmatrix(I,NumLevels=256, GrayLimits=[np.min(I), np.max(I)])[0]
-    VectorDegree = grayrlprops(GLRLMS)
+    #print("GLRLMS-" + str(np.shape(GLRLMS)))
+    VectorDegree = grayrlprops(GLRLMS) # input should be 4*11 matrix
     print(np.shape(VectorDegree))
     Out = np.hstack([VectorDegree[0,:], VectorDegree[1,:], VectorDegree[2,:], VectorDegree[3,:]])
 
