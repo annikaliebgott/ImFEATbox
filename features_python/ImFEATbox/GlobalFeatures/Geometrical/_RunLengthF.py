@@ -1,6 +1,6 @@
 import numpy as np
-from __grayrlmatrix import grayrlmatrix
-from __grayrlprops import grayrlprops
+from ImFEATbox.GlobalFeatures.Geometrical.__grayrlmatrix import grayrlmatrix
+from ImFEATbox.GlobalFeatures.Geometrical.__grayrlprops import grayrlprops
 
 
 def RunLengthF(I, returnShape=False):
@@ -40,6 +40,6 @@ def RunLengthF(I, returnShape=False):
     #print("GLRLMS-" + str(np.shape(GLRLMS)))
     VectorDegree = grayrlprops(GLRLMS) # input should be 4*11 matrix
     print(np.shape(VectorDegree))
-    Out = np.hstack([VectorDegree[0,:], VectorDegree[1,:], VectorDegree[2,:], VectorDegree[3,:]])
-
+    #Out = np.hstack([VectorDegree[0,:], VectorDegree[1,:], VectorDegree[2,:], VectorDegree[3,:]])
+    Out = np.hstack(VectorDegree)
     return Out

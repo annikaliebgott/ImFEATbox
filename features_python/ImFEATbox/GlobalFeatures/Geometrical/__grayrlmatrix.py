@@ -1,7 +1,7 @@
 import numpy as np
-from __rle_0 import rle_0
-from __rle_45 import rle_45
-from __zigzag import zigzag
+from ImFEATbox.GlobalFeatures.Geometrical.__rle_0 import rle_0
+from ImFEATbox.GlobalFeatures.Geometrical.__rle_45 import rle_45
+from ImFEATbox.GlobalFeatures.Geometrical.__zigzag import zigzag
 
 ## Function to compute the Run length matrix
 
@@ -163,7 +163,7 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
     if GrayLimits[1] == GrayLimits[0]:
         SI = np.ones(np.shape(I))
     else:
-        slope = (NumLevels-1) / (GrayLimits[1] - GrayLimits[0])
+        slope = (NumLevels-1) / float(GrayLimits[1] - GrayLimits[0])
         intercept = 0 - (slope*(GrayLimits[0]))
         #SI = np.round(imlincomb(slope,I,intercept,'double'))
         SI = np.round((slope*I+intercept), decimals=0).astype(np.int)

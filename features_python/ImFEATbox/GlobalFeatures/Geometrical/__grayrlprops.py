@@ -116,7 +116,13 @@ def grayrlprops(GLRLM):
 
         # Total number of runs
         N_runs = np.sum(tGLRLM, dtype=_float_dtype())
+
+
         print("N_runs " + str(N_runs))
+
+        if N_runs == 0:
+            print(tGLRLM)
+
         # total number of elements
         N_tGLRLM = s[0]*s[1]
 
