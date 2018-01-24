@@ -1,4 +1,6 @@
 import numpy as np
+#from ImFEATbox.__helperCommands import *
+from ImFEATbox.__helperCommands import _int_dtype
 
 def rle_0(si, NL):
     """
@@ -18,22 +20,30 @@ def rle_0(si, NL):
     # Assure row number is exactly the gray level
     m, n = np.shape(si)
 
-    oneglrlm = np.zeros((NL, n))
+    oneglrlm = np.zeros((NL-1, n))
 
     #print("NL=" + str(NL) + ", n=" + str(n))
 
     for i in range(m):
         x = si[i,:]
         # run length Encode of each vector
-        index = np.where(x[:-1] != x[1:])[0][:len(x)]
+        index = np.append(np.where(x[:-1] != x[1:])[0], len(x)-1)
         # run lengths
-        lenX = np.diff(np.append(0, index+1))
+        lenX = np.array(np.diff(np.append(0, index+1)), dtype=_int_dtype())
         # run values
         #print(x.min())
-        val = x[index]
+        val = np.array(x[index], dtype=_int_dtype())
         # compute current numbers (or contribution) for each bin in GLRLM
-        temp = np.zeros((NL,n))
-        temp[val,lenX] = 1
+        temp = np.zeros((NL-1,n))
+        #temp[val,lenX] = 1
+        tmp=np.array([val , lenX]).T
+
+
+        # TODO: count occurrence of (x,y) in tmp and save it in matrix at position (x,y) here
+        for j in range(tmp.shape[0]):
+            temp[tmp[j]] += 1
+        print(temp[:12,:12])
+
         #temp = np.ufunc.at(np.hstack([val, lenX]), 1, np.hstack([NL, n]))
         oneglrlm = temp + oneglrlm # accumulate each contribution
     return oneglrlm

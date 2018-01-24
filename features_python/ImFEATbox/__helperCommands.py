@@ -2,9 +2,13 @@
 import numpy as np
 import skimage
 
+__int_dtype = np.int64
 __float_dtype = np.float64
 __complex_dtype = np.complex128
 
+
+def _int_dtype():
+    return __int_dtype
 
 def _complex_dtype():
     return __complex_dtype

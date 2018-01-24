@@ -5,6 +5,8 @@ def rle_45(seq, NL):
          RLE   image gray level Run Length matrix for 45 and 135
          This file is to handle the zigzag scanned sequence for 45 or 135 degree
          direction. Note for 135, just swap the left and the right colum
+         seq: zigzag scanned Sequence
+         NL: NumLevels
     """
     # Author:
     # ---------------------------------------------
@@ -23,7 +25,7 @@ def rle_45(seq, NL):
 
     # number to store the possible max coloums
     #n = np.argmax(np.array(seq))
-    n = 0
+    n = 1
 
     for s in range(len(seq)):
         #print(np.shape(seq))
@@ -32,7 +34,9 @@ def rle_45(seq, NL):
             n = max(n,np.argmax(seq[s]))
     #print("n=" + str(n))
 
-    oneglrlm = np.zeros(NL, n)
+
+
+    oneglrlm = np.zeros((NL, n))
 
     for i in range(len(seq)-1):
         x = seq[i]
