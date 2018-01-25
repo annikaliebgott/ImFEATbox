@@ -1,4 +1,5 @@
 import numpy as np
+from ImFEATbox.__helperCommands import _int_dtype
 
 def zigzag(SI):
     #
@@ -32,7 +33,7 @@ def zigzag(SI):
     rmax, cmax = np.shape(SI) # get row and colum numbers
 
     i = 1 # counter for current ith element
-    j = 0 # indicator for determining sequence interval
+    j = 1 # indicator for determining sequence interval
 
     seq = []
 
@@ -44,7 +45,7 @@ def zigzag(SI):
     # # Output contain value and its flag status
     # the first row contain value
     # the second row contain its flag
-    output = np.zeros( (rmax) * (cmax) )
+    output = np.zeros(rmax * cmax, dtype=_int_dtype())
     # sequence counter
     #
     # # Position Matrix
@@ -54,12 +55,12 @@ def zigzag(SI):
     while (r <= rmax) and (c <= cmax):
         # for current point, judge its zigzag direction up 45, or down 45, or
         # 0,or down 90
-
-        if (c + r % 2) == 0:     # up 45 direction
+        #print("j=" + str(j) + " r=" + str(r) + " c=" + str(c))
+        if ((c + r) % 2) == 0:     # up 45 direction
             #  if we currently walk to the left first colum
             if r == rmin:
                 # First, record current point
-                output[i] = SI[r-1, c-1]
+                output[i-1] = SI[r-1, c-1]
                 # if we walk to right last colum
                 if c == cmax:
                     # add row number move straight down 90
@@ -68,7 +69,7 @@ def zigzag(SI):
                     sq_down_begin = i+1
                     if len(seq) <= j:
                         seq.append([])
-                    seq[j] = output[sq_up_begin-1:sq_up_end-1]
+                    seq[j-1] = output[sq_up_begin-1:sq_up_end]
                     j = j + 1
                 else:
                     # Continue to move to next (1,c+1) point
@@ -78,28 +79,28 @@ def zigzag(SI):
                     sq_down_begin = i + 1
                     if len(seq) <= j:
                         seq.append([])
-                    seq[j] = output[sq_up_begin-1:sq_up_end-1]
+                    seq[j-1] = output[sq_up_begin-1:sq_up_end]
                     j = j + 1
                 # add couter
                 i = i + 1
                 # if we currently walk to the last column
             elif (c == cmax) and (r < rmax):
                 # first record the point
-                output[i] = SI[r-1, c-1]
+                output[i-1] = SI[r-1, c-1]
                 # then move straight down to next row
                 r = r + 1
 
                 sq_up_end = i
                 if len(seq) <= j:
                     seq.append([])
-                seq[j] = output[sq_up_begin-1:sq_up_end-1]
+                seq[j-1] = output[sq_up_begin-1:sq_up_end]
                 sq_down_begin = i + 1
                 j = j + 1
                 # add counter
                 i = i + 1
                 # all other cases i.e. nonboundary points
             elif (r > rmin) and (c < cmax):
-                output[i] = SI[r-1, c-1]
+                output[i-1] = SI[r-1, c-1]
                 # move to next up 45 point
                 r = r - 1
                 c = c + 1
@@ -110,13 +111,13 @@ def zigzag(SI):
             # if we walk to the last row
             if (r == rmax) and (c <= cmax):
                 # firstly record current point
-                output[i] = SI[r-1, c-1]
+                output[i-1] = SI[r-1, c-1]
                 # move right to next point
                 c = c + 1
                 sq_down_end = i
                 if len(seq) <= j:
                     seq.append([])
-                seq[j] = output[sq_down_begin-1:sq_down_end-1]
+                seq[j-1] = output[sq_down_begin-1:sq_down_end]
                 sq_up_begin = i + 1
                 j = j + 1
                 # add counter
@@ -124,13 +125,13 @@ def zigzag(SI):
                 # if we walk to the first column
             elif c == cmin:
                 #first record current point
-                output[i] = SI[r-1, c-1]
+                output[i-1] = SI[r-1, c-1]
                 if r == rmax:
                     c = c + 1
                     sq_down_end = i
                     if len(seq) <= j:
                         seq.append([])
-                    seq[j] = output[sq_down_begin-1:sq_down_end-1]
+                    seq[j-1] = output[sq_down_begin-1:sq_down_end]
                     sq_up_begin = i + 1
                     j = j + 1
                 else:
@@ -139,14 +140,15 @@ def zigzag(SI):
                     sq_down_end = i
                     if len(seq) <= j:
                         seq.append([])
-                    seq[j] = output[sq_down_begin-1:sq_down_end-1]
+                    seq[j-1] = output[sq_down_begin-1:sq_down_end] #list assignment index out of range
+
                     sq_up_begin =i+1
                     j = j + 1
 
                 i = i + 1
                 # all other cases without boundary point
             elif (r < rmax) and (c > cmin):
-                output[i] = SI[r-1, c-1]
+                output[i-1] = SI[r-1, c-1]
                 # position(i) = sub2ind(SI,r,c)
                 r = r + 1
                 c = c - 1
@@ -154,11 +156,11 @@ def zigzag(SI):
                 i = i + 1
 
         if (r == rmax) and (c == cmax): # bottom right element
-            output[i] = SI[r-1, c-1]
+            output[i-1] = SI[r-1, c-1]
             sq_end = i
             if len(seq) <= j:
                 seq.append([])
-            seq[j] = output[sq_end-1]
+            seq[j-1] = output[sq_end-1]
             # position(i) = sub2ind(SI,r,c)
 
             break

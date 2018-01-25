@@ -1,4 +1,5 @@
 import numpy as np
+from ImFEATbox.__helperCommands import _int_dtype
 
 def rle_45(seq, NL):
     """
@@ -30,30 +31,42 @@ def rle_45(seq, NL):
     for s in range(len(seq)):
         #print(np.shape(seq))
         #print(seq[s])
-        if np.size(seq[s]) > 0:
-            n = max(n,np.argmax(seq[s]))
+        if np.size(seq[s]) > 1:
+            n = max(n,len(seq[s]))
     #print("n=" + str(n))
 
+    oneglrlm = np.zeros((NL-1, n), dtype=_int_dtype())
 
-
-    oneglrlm = np.zeros((NL, n))
-
-    for i in range(len(seq)-1):
+    for i in range(len(seq)):
         x = seq[i]
 
         # run length Encode of each vector
         #index = np.where(x[:-1] != x[1:])[0][:len(x)]
-        index = np.where(x[0:] != x[1:])[0][:len(x)] # TODO: check if same output as matlab
+        #index = np.where(x[0:] != x[1:])[0][:len(x)] # TODO: check if same output as matlab
+        if np.size(seq[i]) > 1:
+            index = np.append(np.where(x[:-1] != x[1:])[0], len(x)-1)
+            val = np.array(x[index], dtype=_int_dtype())
         #index = [ find(x(1:end-1) != x(2:end)), length(x) ]
-        lenX = np.diff(np.append(0, index+1))
-        val = np.array((x[index]), dtype=int)     # run values
-        temp = np.zeros((NL,n))
+        else:
+            index = 0
+            val = x
+        lenX = np.array(np.diff(np.append(0, index+1)), dtype=_int_dtype())
+        # run values
+        #print(x.min())
 
+        temp = np.zeros((NL-1,n), dtype=_int_dtype())
+        tmp=np.array([val , lenX]).T - 1
         #print("val " + str(val))
         #print("lenX " + str(lenX))
-        if val != [] and lenX != []:
-            temp[val,lenX] = 1
+        #if val != [] and lenX != []:
+
+        if tmp.shape == (2,):
+            temp[tmp[0],tmp[1]] += 1
             #temp = accumarray([val;len].T, 1, [NL, n]) # compute current numbers (or contribution) for each bin in GLRLM
-            oneglrlm = temp.T + oneglrlm # accumulate each contribution
+        else:
+            for j in range(tmp.shape[0]):
+                temp[tmp[j,0],tmp[j,1]] += 1
+                #temp = accumarray([val;len].T, 1, [NL, n]) # compute current numbers (or contribution) for each bin in GLRLM
+        oneglrlm = temp + oneglrlm # accumulate each contribution
 
     return oneglrlm

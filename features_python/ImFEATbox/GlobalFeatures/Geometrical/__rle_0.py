@@ -20,7 +20,7 @@ def rle_0(si, NL):
     # Assure row number is exactly the gray level
     m, n = np.shape(si)
 
-    oneglrlm = np.zeros((NL-1, n))
+    oneglrlm = np.zeros((NL-1, n), dtype=_int_dtype())
 
     #print("NL=" + str(NL) + ", n=" + str(n))
 
@@ -34,16 +34,16 @@ def rle_0(si, NL):
         #print(x.min())
         val = np.array(x[index], dtype=_int_dtype())
         # compute current numbers (or contribution) for each bin in GLRLM
-        temp = np.zeros((NL-1,n))
+        #temp = np.zeros((NL-1,n))
         #temp[val,lenX] = 1
-        tmp=np.array([val , lenX]).T
+        tmp=np.array([val , lenX]).T - 1
 
 
         # TODO: count occurrence of (x,y) in tmp and save it in matrix at position (x,y) here
         for j in range(tmp.shape[0]):
-            temp[tmp[j]] += 1
-        print(temp[:12,:12])
+            oneglrlm[tmp[j,0],tmp[j,1]] += 1
+        #print(temp[:12,:12])
 
         #temp = np.ufunc.at(np.hstack([val, lenX]), 1, np.hstack([NL, n]))
-        oneglrlm = temp + oneglrlm # accumulate each contribution
+        #oneglrlm = temp + oneglrlm # accumulate each contribution
     return oneglrlm

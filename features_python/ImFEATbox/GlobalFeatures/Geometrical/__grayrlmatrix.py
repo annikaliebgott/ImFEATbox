@@ -175,9 +175,9 @@ def grayrlmatrix(I, Offset=np.array([1,2,3,4]), NumLevels=None, GrayLimits=None)
     SI[SI < 0] = 0
     # total numbers of direction
     numOffsets = np.shape(Offset)[0]
-    print("SI=" + str(SI.shape))
-    print(NumLevels)
-    print(SI.max())
+    #print("SI=" + str(SI.shape))
+    #print(NumLevels)
+    #print(SI.max())
     GLRLMS = []
     if NumLevels != 0:
         # make direction matrix for all given directions
@@ -201,7 +201,7 @@ def computeGLRLM(si,offset,NumLevels):
     elif offset == 2:
         # 45 degree
         seq = zigzag(si) # 1x623 cell
-        print("zigzag-output: " + str(np.shape(seq)))
+        #print("zigzag-output: " + str(np.shape(seq)))
         oneGLRLM  = rle_45(seq,NumLevels) # 256x240 double
     elif offset == 3:
         # 90 degree
@@ -209,9 +209,9 @@ def computeGLRLM(si,offset,NumLevels):
     elif offset == 4:
         # 135 degree
         seq = zigzag(si[::-1]) # 1x623 cell
-        print("zigzag-output: " + str(np.shape(seq)))
+        #print("zigzag-output: " + str(np.shape(seq)))
         oneGLRLM = rle_45(seq,NumLevels) # 256x240 double
     else:
         raise ValueError('Only 4 directions supported')
-    print("offset: " + str(offset) + ", computeGLRLM-shape: " + str(oneGLRLM.shape))
+    #print("offset: " + str(offset) + ", computeGLRLM-shape: " + str(oneGLRLM.shape))
     return oneGLRLM
