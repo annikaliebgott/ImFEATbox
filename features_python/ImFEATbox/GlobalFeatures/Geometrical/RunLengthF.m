@@ -28,7 +28,8 @@ I = double(real(I));
 
 [GLRLMS,~] = grayrlmatrix(I,'NumLevels',255,'G',[min(I(:)) max(I(:))]);
 VectorDegree = grayrlprops(GLRLMS);
-Out(1,:) = [VectorDegree(1,:) VectorDegree(2,:) VectorDegree(3,:) VectorDegree(4,:)];
+%Out(1,:) = [VectorDegree(1,:) VectorDegree(2,:) VectorDegree(3,:) VectorDegree(4,:)];
+Out = GLRLMS{1}(:);
 
 end
 
