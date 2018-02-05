@@ -283,7 +283,7 @@ for r in pyFileList:
         # read both Output csv
         mComplexValues = False
         with open('matlab-out.csv', 'r') as csvfile:
-            mRead = list(csv.reader(csvfile, delimiter=','))[0]
+            mRead = list(csv.reader(csvfile, delimiter=',')) #[0]
             #print("len=" + str(len(mRead)))
             for i in range(0, len(mRead)):
                 #print(mRead[i])
@@ -298,6 +298,11 @@ for r in pyFileList:
                 mOut = np.array(mRead).astype(np.complex128)
             else:
                 mOut = np.array(mRead).astype(np.float)
+
+        # check if matlab output shape is (xx,1) and change it to (xx,) to match python
+        if len(mOut.shape) > 1:
+            if mOut.shape[1] == 1:
+                mOut = mOut[:,0]
 
 
         pComplexValues = False
@@ -321,6 +326,7 @@ for r in pyFileList:
 
         # check if returnShape is correct:
 
+
         if pyShapeNum == len(pOut) == len(mOut):
             reportx += "\t* shape test passed: " + str(pyShapeNum) + os.linesep
         else:
@@ -330,6 +336,7 @@ for r in pyFileList:
             print("mOut: " + str(len(mOut)) + ", pOut: " + str(len(pOut)) + ", shape: " + str(pyShape))
             print("length wrong!")
             print(parameterSetup)
+
 
         diff = pOut - mOut
         diff_norm = np.zeros(len(pOut))
