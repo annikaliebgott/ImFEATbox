@@ -1,81 +1,71 @@
 [?1h=
-                            < M A T L A B (R) >
-                  Copyright 1984-2017 The MathWorks, Inc.
-                   R2017a (9.2.0.556344) 64-bit (glnxa64)
-                               March 27, 2017
+                                                        < M A T L A B (R) >
+                                              Copyright 1984-2017 The MathWorks, Inc.
+                                               R2017a (9.2.0.556344) 64-bit (glnxa64)
+                                                           March 27, 2017
 
  
 For online documentation, see http://www.mathworks.com/support
 For product information, visit www.mathworks.com.
  
-[Warning: Function IPTCHECKNARGIN will be removed in the future. Use NARGINCHK
-instead.] 
+[Warning: Function IPTCHECKNARGIN will be removed in the future. Use NARGINCHK instead.] 
 [> In iptchecknargin (line 40)
   In grayrlmatrix>ParseInputs (line 183)
   In grayrlmatrix (line 128)
   In RunLengthF (line 29)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlmatrix>ParseInputs (line 187)
   In grayrlmatrix (line 128)
   In RunLengthF (line 29)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKSTRS will be removed in the future. Use
-VALIDATESTRING instead.] 
+[Warning: Function IPTCHECKSTRS will be removed in the future. Use VALIDATESTRING instead.] 
 [> In iptcheckstrs (line 42)
   In grayrlmatrix>ParseInputs (line 210)
   In grayrlmatrix (line 128)
   In RunLengthF (line 29)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlmatrix>ParseInputs (line 237)
   In grayrlmatrix (line 128)
   In RunLengthF (line 29)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKSTRS will be removed in the future. Use
-VALIDATESTRING instead.] 
+[Warning: Function IPTCHECKSTRS will be removed in the future. Use VALIDATESTRING instead.] 
 [> In iptcheckstrs (line 42)
   In grayrlmatrix>ParseInputs (line 210)
   In grayrlmatrix (line 128)
   In RunLengthF (line 29)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlmatrix>ParseInputs (line 254)
   In grayrlmatrix (line 128)
   In RunLengthF (line 29)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlprops>ParseInputs (line 209)
   In grayrlprops (line 58)
   In RunLengthF (line 30)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlprops>ParseInputs (line 209)
   In grayrlprops (line 58)
   In RunLengthF (line 30)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlprops>ParseInputs (line 209)
   In grayrlprops (line 58)
   In RunLengthF (line 30)
   In tmp (line 3)
   In run (line 86)] 
-[Warning: Function IPTCHECKINPUT will be removed in the future. Use
-VALIDATEATTRIBUTES instead.] 
+[Warning: Function IPTCHECKINPUT will be removed in the future. Use VALIDATEATTRIBUTES instead.] 
 [> In grayrlprops>ParseInputs (line 209)
   In grayrlprops (line 58)
   In RunLengthF (line 30)

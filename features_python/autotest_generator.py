@@ -6,7 +6,8 @@ from glob import glob
 import ImFEATbox
 import itertools
 from subprocess import Popen, PIPE, STDOUT
-
+import numpy as np
+np.set_printoptions(threshold=np.nan,precision=2)
 
 featureWhiteList = []
 featureWhiteList.append("RunLengthF")
