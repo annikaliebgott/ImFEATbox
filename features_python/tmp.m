@@ -1,4 +1,7 @@
 I = csvread('testimg.csv');
-addpath('ImFEATbox/GlobalFeatures/Geometrical/');
-Out = RunLengthF(I);
+typeflag.transform = false;
+typeflag.corr = false;
+typeflag.global = false;
+addpath('ImFEATbox/GlobalFeatures/Transformation/');
+Out = DCTF(I, typeflag);
 csvwrite('matlab-out.csv', Out);

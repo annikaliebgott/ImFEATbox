@@ -48,3 +48,9 @@ def isColorImage(Image):
         return True
     else:
         return False
+
+def split2dImage(Image, blockSize):
+    """
+    splits image into tiles of BlockSize
+    - Image:
+    - BlockSize: Tuple of (height, width)

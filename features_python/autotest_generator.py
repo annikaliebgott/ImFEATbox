@@ -10,8 +10,9 @@ import numpy as np
 np.set_printoptions(threshold=np.nan,precision=2)
 
 featureWhiteList = []
-featureWhiteList.append("RunLengthF")
+featureWhiteList.append("DCTF")
 # TODO:
+# RunLengthF
 # SVD: not solvable?, GLCMF 250%...
 
 featureFolderList = ["GlobalFeatures", "LocalFeatures"]

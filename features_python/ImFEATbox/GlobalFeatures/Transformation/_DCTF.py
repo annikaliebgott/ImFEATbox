@@ -4,8 +4,8 @@ from scipy.fftpack import dct
 from numpy.linalg import eig, svd, det
 from ImFEATbox.__helperCommands import conv2float
 
-def DCTF(I, typeflag=None):
-"""
+def DCTF(I, typeflag=None, returnShape=False):
+    """
      Input:     - I: A 2D image
                 - typeflag: Struct of logicals to permit extracting features
                   based on desired characteristics:
@@ -17,7 +17,7 @@ def DCTF(I, typeflag=None):
 
      Output:    - Out: A (1x2901) vector containing 2901 metrics calculated
                        from the discrete cosine transform
-"""
+   """
     # ************************************************************************
     # Implemented for MRI feature extraction by the Department of Diagnostic
     # and Interventional Radiology, University Hospital of Tuebingen, Germany
@@ -30,6 +30,9 @@ def DCTF(I, typeflag=None):
     #
     # Contact: annika.liebgott@iss.uni-stuttgart.de
     # ************************************************************************
+
+    if returnShape:
+        return (2901,1)
 
     if typeflag == None:
         typeflag = dict()
@@ -67,7 +70,7 @@ def DCTF(I, typeflag=None):
         idx = 0
 
         # 2D discrete cosine transform, later on used as reference matrix
-        B = dct(I, type=2, norm='ortho')
+        B = dct(I), type=2, norm='ortho')
 
         # perform SVD
         U,S,V = svd(B)
@@ -75,20 +78,21 @@ def DCTF(I, typeflag=None):
         eVB = eig(V)[0]
 
         # extract features
-        if typeflag['transform'] || typeflag['global']:
-            f[z,idx:idx+99] = [np.swapaxes(eUB(1:50), 0, 1) np.swapaxes(eVB(1:50), 0, 1)]
+        if typeflag['transform'] or typeflag['global']:
+            f[z,idx:idx+99] = [np.swapaxes(eUB[:50], 0, 1), np.swapaxes(eVB[:50], 0, 1)]
             idx = idx+99
 
             if np.shape(B)[1] < 150:
                 coefB = [B[0,0], B[0,39], B[19,59], B[79,99], B[99, np.shape(B)[1]]]
             else:
                 coefB = [B[0,0], B[0,39], B[19,59], B[79,99], B[99, 149]]
-            end
-            f[z,idx:idx+ len(coefB)-1] = coefB
+
+            f[z,idx:idx + len(coefB)-1] = coefB
             idx = idx + len(coefB)
 
             f[z,idx:idx+3] = [det(U), trace(U), det(V), trace(V)]
             idx = idx + 4
+
 
         ## calculate transform for different block decomposition sizes
         for i in [2, 4, 8, 16, 32, 64]:
@@ -97,9 +101,9 @@ def DCTF(I, typeflag=None):
 
             # extract spatio-temporal features
             # decompose blocks of images into independent tiles
-            fun = @(block_struct) np.std(block_struct.data, ddof=1) * np.ones(np.shape(block_struct.data))
-            I2 = blockproc(I,[i i],fun)
-
+            #fun = @(block_struct) np.std(block_struct.data, ddof=1) * np.ones(np.shape(block_struct.data))
+            #I2 = blockproc(I,[i i],fun)
+            I2 = 0
 
             # 2D discrete cosine transform
             # I2 has to be grayscale
@@ -107,7 +111,7 @@ def DCTF(I, typeflag=None):
 
             # output of some coefficients
             # 3D zigzag transversal to select 25# of the coefficents
-            if typeflag['transform'] || typeflag['global']:
+            if typeflag['transform'] or typeflag['global']:
                 if np.shape(B2)[1] < 150:
                     coefB2 = [B[0,0], B[0,39], B[19,59], B[79,99], B[99, np.shape(B)[1]]]
                 else:
@@ -117,7 +121,7 @@ def DCTF(I, typeflag=None):
                 idx = idx + len(coefB2)
 
                 # calculate important features of the 2D DCT
-                temp = [np.std(B2, ddof=1) np.std(np.std(B2, ddof=1), ddof=1), np.mean(B2), np.linalg.matrix_rank(B2), np.max(B2), np.min(B2) np.count_nonzero(B2)]
+                temp = [np.std(B2, ddof=1), np.std(np.std(B2, ddof=1), ddof=1), np.mean(B2), np.linalg.matrix_rank(B2), np.max(B2), np.min(B2), np.count_nonzero(B2)]
                 f[z,idx+1:idx+ len(temp)] = temp
                 idx = idx + len(temp)
             end
@@ -132,8 +136,8 @@ def DCTF(I, typeflag=None):
             eUB2 = eig(U2)[0]
             eVB2 = eig(V2)[0]
 
-            if typeflag['transform'] || typeflag['global']:
-                temp = [np.swapaxes(eUB2(1:50), 0, 1), np.swapaxes(eVB2(1:50), 0, 1),
+            if typeflag['transform'] or typeflag['global']:
+                temp = [np.swapaxes(eUB2[:50], 0, 1), np.swapaxes(eVB2[:50], 0, 1),
                 np.std(U2, ddof=1), np.std(S2, ddof=1), np.std(V2, ddof=1), np.mean(U2), np.mean(S2), np.mean(V2),
                 np.max(U2), np.max(S2), np.max(V2), np.min(U2), np.min(S2), np.min(V2),
                 np.count_nonzero(B2), det(U2), det(V2), trace(U2), trace(V2)]
