@@ -119,7 +119,12 @@ if transformation.C
     
     % chirp matrix = square matrix
     temp1 = eig(chirp);
-    chirp_eig = shiftdim(temp1(1:50,1),1);
+    if length(temp1) >= 50
+        chirp_eig = shiftdim(temp1(1:50,1),1);
+    else
+        chirp_eig = zeros(1,50);
+        chirp_eig(1:length(temp1)) = temp1(:);
+    end    
     chirp_trace = trace(chirp);
     chirp_det = det(chirp);
     chirp_rank = rank(chirp);
