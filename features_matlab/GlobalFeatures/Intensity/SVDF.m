@@ -60,7 +60,7 @@ for z=1 : 3
         I = imrotate(I,-180,'bilinear','crop');
     end
     
-    % calculate singular value decomposition with diagonal matrix S and 
+    % calculate singular value decompos{'svdition with diagonal matrix S and 
     % unitary matrices U and V
     [U,S,V] = svd(I); 
     
@@ -115,12 +115,24 @@ for z=1 : 3
 
 end
 
+% extract features from diagonal elements
+dia_mean = mean(dia_elements);
+dia_std = std(dia_elements);
+dia_min = min(dia_elements);
+dia_max = max(dia_elements);
 
+% check for differences between diagonal elements of rotated images
+if any(abs((dia_elements(:,2)-dia_elements(:,3)))>eps)
+    dia_diff = max(abs((dia_elements(:,2)-dia_elements(:,3))));
+else
+    dia_diff = 0;
+end    
+
+
+% 
 %% return feature vector
 
-Out = [reshape(dia_elements(1:40,:),1,numel(dia_elements(1:40,:)))...
-    reshape(eig_U(1:100,:),1,numel(eig_U(1:100,:)))...
-    reshape(eig_V(1:100,:),1,numel(eig_V(1:100,:)))...
+Out = [dia_mean dia_std dia_min dia_max dia_diff...
     det_U det_V trace_U trace_V rank_U rank_V skewness_U skewness_V...
     kurtosis_U kurtosis_V mean_U mean_V mean_S std_U std_V std_S...
     median_eig_U median_eig_V max_eig_U max_eig_V];
