@@ -14,7 +14,7 @@ function Out = LoGF(I, sigma, N_blobs, typeflag)
 %
 %
 % Output:    - Out: A (1x261) vector containing 261 metrics calculated from
-%              points of interest based on Laplacian of Gaussian
+%              points of interest based ),'+');on Laplacian of Gaussian
 %
 % ************************************************************************
 % Implemented for MRI feature extraction by the Department of Diagnostic 
@@ -80,9 +80,6 @@ blob_index = blob_candidate_index( index(1:min(N_blobs,numel(index))) );
 points = [lig,col,3*reshape(sigma_array(sca),[size(lig,1),1])];
 
 
-%plot
-%     imshow(img), hold on;
-%     plot(points);
 
 
 %% feature extraction
@@ -102,7 +99,7 @@ if (typeflag.local || typeflag.texture)
     
     % mean distance between the points
     dist_points = zeros(1,length(points));
-    for i = 1 : length(points)-1
+    for i = 1 : size(points,1)-1
         dist_points(i) = sqrt( (points(i+1,1) - points(i,1))^2 + (points(i+1,2) - points(i,2))^2);
     end
     dist_points_total = sum(dist_points);
@@ -113,6 +110,10 @@ if (typeflag.local || typeflag.texture)
     % relative location of points
     points_x = points(:,1)/size(I,1);
     points_y = points(:,2)/size(I,2);
+    mean_points_x = mean(points_x);
+    mean_points_y = mean(points_y);
+    std_points_x = std(points_x);
+    std_points_y = std(points_y);
     
     % center of gravity in x and y direction and for the points weighting
     av_x = mean2(points(:,1));
@@ -133,11 +134,21 @@ if (typeflag.local || typeflag.texture)
 end
 
 
+%plot
+plotflag = 0;
+if plotflag
+    figure;
+    imagesc(I), hold on;
+    colormap(gray);
+    scatter(points(:,2),points(:,1),'+');
+end
+
 %% return feature vector
 if ~(typeflag.texture || typeflag.local)
     Out = [m2_points_x m2_points_y m4_points_x m4_points_y sca_moment4 sca_moment2];
 else
-    Out = [points_y.' points_x.' m2_points_x m2_points_y m4_points_x m4_points_y...
+    Out = [mean_points_x mean_points_y std_points_x std_points_y... 
+        m2_points_x m2_points_y m4_points_x m4_points_y...
         weight_points dist_points_total dist_points_mean dist_points_min dist_points_max...
         av_x av_y av_w sv_x sv_y sv_w cand_mean cand_std...
         sca_mean sca_std sca_moment4 sca_moment2];
