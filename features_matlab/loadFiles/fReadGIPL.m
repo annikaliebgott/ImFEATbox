@@ -1,10 +1,5 @@
 function [dImg, dDim] = fReadGIPL(sFilename)
 % ************************************************************************
-% Implemented for MRI feature extraction by the Department of Diagnostic
-% and Interventional Radiology, University Hospital of Tuebingen, Germany
-% and the Institute of Signal Processing and System Theory University of
-% Stuttgart, Germany. Last modified: June 2017
-%
 % This implementation is part of ImFEATbox, a toolbox for image feature
 % extraction and analysis. Available online at:
 % https://github.com/annikaliebgott/ImFEATbox
