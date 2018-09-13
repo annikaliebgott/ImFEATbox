@@ -453,7 +453,7 @@ lastfilled = max( 1, round( lastval*psize(1) ) );
 % makes a small speed difference, but every little helps!
 if force || (filled<lastfilled)
     % Create the bar background
-    bgim = entry.BackgroundCData(:,ones( 1, psize(1)-filled ),:);
+    bgim = entry.BackgroundCData(:,ones( 1, round(psize(1)-filled )),:);
     % We use slightly bizarre indexing notation to achieve REPMAT of the
     % column at roughly 10x the speed. Blame Jon Cherrie (who showed me
     % that it was even faster than BSXFUN at doing REPMAT)!
