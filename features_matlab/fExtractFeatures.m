@@ -1,4 +1,4 @@
-function [feat_vector, feat_names] = fExtractFeatures(image, lMask, cFeatures, sFeatureParas)
+function [feat_vector, feat_names, feat_num] = fExtractFeatures(image, lMask, cFeatures, sFeatureParas)
 %% Main function to carry out the feature extraction
 %
 % This function calls all feature extraction algorithms provided by
