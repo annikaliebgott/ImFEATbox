@@ -97,7 +97,7 @@ if(isempty(lMask))
                 [~, ~, BinaryImage(:,:,iSlice)] = Segmentation(image3D(:,:,iSlice), iMargin , cSegParam, 2, false, plotflag); % 2D segmentation
                 if(lDisplay), multiWaitbar( 'Segmentation', 'Value', iSlice/size(image3D,3) ); end;
             end
-            [ SegmentedImage, SegmentedBackground ] = fSegmentCrop ( image3D, BinaryImage );
+            [ SegmentedImage, SegmentedBackground ] = fSegmentCrop ( image3D, BinaryImage, cropMode);
         end
         if(doSegmentation == 1)
             image3D = SegmentedImage;
