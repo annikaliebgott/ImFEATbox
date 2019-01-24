@@ -4,6 +4,8 @@ Source Matlab files are from 9.04.2017
 Matlab files still remain in the folder until
 updated to current version and properly tested
 
+External libraries used:
+- pip install pydicom
 
 ************************************************************************
 This file is part of ImFEATbox, a toolbox for image feature extraction and

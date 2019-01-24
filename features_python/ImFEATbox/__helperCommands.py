@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import skimage
+import os
 
 __int_dtype = np.int64
 __float_dtype = np.float64
@@ -54,3 +55,5 @@ def split2dImage(Image, blockSize):
     splits image into tiles of BlockSize
     - Image:
     - BlockSize: Tuple of (height, width)
+    """
+    pass

@@ -70,7 +70,7 @@ def DCTF(I, typeflag=None, returnShape=False):
         idx = 0
 
         # 2D discrete cosine transform, later on used as reference matrix
-        B = dct(I), type=2, norm='ortho')
+        B = dct(I, type=2, norm='ortho')
 
         # perform SVD
         U,S,V = svd(B)

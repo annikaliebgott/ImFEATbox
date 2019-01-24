@@ -2,7 +2,7 @@
 
 import numpy as np
 import os
-
+import dicom # pip install pydicom
 
 class __ImageFile(object):
     """
@@ -46,6 +46,9 @@ class __ImageLoader(object):
         """
         ok
         """
+
+        for imgf in imageList:
+
         # TODO rework this, a complete loaded image set
         # should be processed
         if self.forceNormalize != None:
@@ -96,3 +99,24 @@ class __ImageLoader(object):
                     if f meets Stringselect and is file: # TODO
                         iLocation = folder + os.sep + f
                         self.imageList.append(__ImageFile(iLocation, label))
+
+
+# def loadImages(folder, extension=None):
+#     """
+#     loads images into a list
+#     - folder: all files in this folder will be added
+#     - extension: specify a extension for the files.
+#                  e.g. for '.jpg' use 'jpg'
+#     """
+#     imageList = []
+#     filesInFolder = os.listdir(folder)
+#     for f in filesInFolder:
+#         if os.path.isfile(f):
+#             if extension != None:
+#                 if "." in f:
+#                     if f.split(".")[-1].lower() == extension.lower():
+#                         imageList.append(f)
+#             else:
+#                 imageList.append(f)
+#     #fNameList = [f for f in os.listdir(capturePath) if os.path.isfile(os.path.join(capturePath, f)) and ".pcapng" in f]
+#     return imageList
