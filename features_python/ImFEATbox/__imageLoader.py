@@ -2,15 +2,14 @@
 
 import numpy as np
 import os
-import dicom # pip install pydicom
+import pydicom # pip install pydicom
+import fnmatch
 
-class __ImageFile(object):
+class _ImageFile(object):
     """
     loads image files to a list and add labels
     split
     """
-
-
 
     def __init__(self, fileLocation, label):
         self.fileLocation = fileLocation
@@ -47,33 +46,31 @@ class __ImageLoader(object):
         ok
         """
 
-        for imgf in imageList:
+        for imgfile in self.imageList:
 
         # TODO rework this, a complete loaded image set
         # should be processed
-        if self.forceNormalize != None:
-            numLevels = None
-            if self.forceDatatype == np.int8:
-                numLevels = 256
+            if self.forceNormalize != None:
+                numLevels = None
+                if self.forceDatatype == np.int8:
+                    numLevels = 256
 
-            if numLevels == None:
-                # scale to self.forceNormalize (may be 1.0)
+                if numLevels == None:
+                    # scale to self.forceNormalize (may be 1.0)
 
-                pass
-            else:
-                GrayLimits = [np.min(Image), np.max(Image)]
-                slope = (numLevels-1) / float(GrayLimits[1] - GrayLimits[0])
-                intercept = 0 - (slope*(GrayLimits[0]))
-                SI = np.round((slope*Image+intercept), decimals=0).astype(self.forceDatatype)
-
-
+                    pass
+                else:
+                    GrayLimits = [np.min(Image), np.max(Image)]
+                    slope = (numLevels-1) / float(GrayLimits[1] - GrayLimits[0])
+                    intercept = 0 - (slope*(GrayLimits[0]))
+                    SI = np.round((slope*Image+intercept), decimals=0).astype(self.forceDatatype)
 
 
-    def loadFolder(folder, stringSelect=None, label=None, subFolderLabel=False):
+    def loadFolder(self, folder, pattern=None, label=None, subFolderLabel=False):
         """
         This method loads image sets.
             - folder: relative or absolute path to image folder
-            - stringSelect: may specifying content of the filenames to load
+            - pattern: may specifying content of the filenames to load
                 String: e.g. "*.jpg", "IMG100*"
             - label:    String: specifying a label for all images to load
             - subFolderLabel:
@@ -81,24 +78,34 @@ class __ImageLoader(object):
                         the subfolder name.
         """
         folderConent = os.listdir(folder)
-            if subFolderLabel:
-                subFolderList = []
-                for f in folderConent:
-                    if os.path.isdir(f):
-                        subFolderList.append(f)
-                for sf in subFolderList:
-                    label = sf
-                    sfLocation = folder + os.sep + sf
-                    for sbf in os.listdir(sfLocation):
-                        if sbf meets Stringselect and is file: # TODO
-                            iLocation = sfLocation + os.sep + sbf
-                            self.imageList.append(__ImageFile(iLocation, label))
+        if subFolderLabel:
+            subFolderList = []
+            for f in folderConent:
+                if os.path.isdir(f):
+                    subFolderList.append(f)
+            for sf in subFolderList:
+                label = sf
+                sfLocation = folder + os.sep + sf
+                for sbf in os.listdir(sfLocation):
+                    if pattern == None or fnmatch.fnmatch(sbf, pattern) and os.path.isfile(sbf):
+                        iLocation = sfLocation + os.sep + sbf
+                        self.imageList.append(_ImageFile(iLocation, label))
 
-            elif labels != None: # no subFolders
-                for f in folderConent:
-                    if f meets Stringselect and is file: # TODO
-                        iLocation = folder + os.sep + f
-                        self.imageList.append(__ImageFile(iLocation, label))
+        else:
+            if label == None:
+                # label=None, just enumerate
+                label = str(len(self.imageList))
+                # TODO: what if label does exist?
+
+
+            for f in folderConent:
+                if pattern == None or fnmatch.fnmatch(f, pattern) and os.path.isfile(f):
+                    iLocation = folder + os.sep + f
+                    self.imageList.append(_ImageFile(iLocation, label))
+
+
+
+
 
 
 # def loadImages(folder, extension=None):
