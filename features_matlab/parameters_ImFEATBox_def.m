@@ -6,7 +6,7 @@ lSegDim = false;
 % 0: no segmentation -> process whole image
 % 1: segmentation -> process foreground image
 % 2: segmentation -> process background image
-doSegmentation = 1;
+doSegmentation = 0;
 
 % Chan-Vese parameters
 % lambda1, lambda2, mu, smoothness, iterations
