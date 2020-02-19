@@ -54,7 +54,7 @@ end
 % convert input image
 I = double(I);
 
-if any(~real(I))
+if any(~isreal(I))
    I = real(I); 
 end   
 
