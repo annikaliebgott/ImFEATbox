@@ -23,7 +23,7 @@ if ~exist('th','var')
     th = 0.95;
 end    
 
-if any(~real(I))
+if any(~isreal(I))
    I = real(I); 
 end   
 
