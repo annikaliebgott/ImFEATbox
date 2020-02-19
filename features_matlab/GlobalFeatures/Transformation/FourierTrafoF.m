@@ -94,9 +94,9 @@ for z=1 : 3
     half = floor(length(I)/2);
     
     I1 = I(1:half, 1:half);
-    I2 = I(1:half,half+1:length(I));
-    I3 = I(half+1:length(I), 1:half);
-    I4 = I(half+1:length(I), half+1:length(I));
+    I2 = I(1:half,half+1:2*half);
+    I3 = I(half+1:2*half, 1:half);
+    I4 = I(half+1:2*half, half+1:2*half);
     
     % Fourier Transform
     F1 = fft2(I1);
