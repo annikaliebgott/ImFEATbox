@@ -19,7 +19,7 @@ function Out = ConnectivityF(I)
 % ************************************************************************
 
 
-if any(~real(I))
+if any(~isreal(I))
    I = real(I); 
 end   
 
