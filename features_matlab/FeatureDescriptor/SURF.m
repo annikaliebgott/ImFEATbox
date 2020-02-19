@@ -30,7 +30,7 @@ function Out = SURF(I,N_s,plotflag)
 % convert image
 I = double(I);
 
-if any(~real(I))
+if any(~isreal(I))
     I = real(I);
 end
 
