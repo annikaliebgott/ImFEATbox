@@ -18,7 +18,7 @@ function Out = SectorF(I)
 % Contact: annika.liebgott@iss.uni-stuttgart.de
 % ************************************************************************
 
-if any(~real(I))
+if any(~isreal(I))
    I = real(I); 
 end   
 
